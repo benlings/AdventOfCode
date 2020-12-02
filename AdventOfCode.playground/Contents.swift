@@ -1,4 +1,4 @@
 
 import AdventOfCode_Sources
 
-day1_2()
+day2_1()

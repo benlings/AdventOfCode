@@ -1,12 +1,5 @@
 import Foundation
 
-func readLines(_ resourceName: String) -> [String] {
-    let url = Bundle.main.url(forResource: resourceName, withExtension: nil)!
-    let text = try! String(contentsOf: url)
-    let lines = text.split(whereSeparator: \.isNewline)
-    return lines.map(String.init)
-}
-
 public func day1_1() {
     let numbers = readLines("day1.txt").compactMap { Int($0) }.lazy
     let match = numbers.flatMap { n1 in

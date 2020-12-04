@@ -1,9 +1,12 @@
 import Foundation
 
 public func readLines(_ resourceName: String) -> [String] {
+    return readFile(resourceName).lines()
+}
+
+public func readFile(_ resourceName: String) -> String {
     let url = Bundle.main.url(forResource: resourceName, withExtension: nil)!
-    let text = try! String(contentsOf: url)
-    return text.lines()
+    return try! String(contentsOf: url)
 }
 
 public extension String {

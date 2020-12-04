@@ -5,7 +5,7 @@ public func readLines(_ resourceName: String) -> [String] {
 }
 
 public func readFile(_ resourceName: String) -> String {
-    let url = Bundle.main.url(forResource: resourceName, withExtension: nil)!
+    let url = Bundle.module.url(forResource: resourceName, withExtension: nil)!
     return try! String(contentsOf: url)
 }
 

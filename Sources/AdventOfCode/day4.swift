@@ -95,21 +95,19 @@ public extension Scanner {
     }
 }
 
-public func day4_1() {
+public func day4_1() -> Int {
     let scanner = Scanner(string: readFile("day4.txt"))
     let required = PassportField.allCases.filter { $0 != .cid }
-    let count = sequence(state: scanner) { $0.scanPassport() }
+    return sequence(state: scanner) { $0.scanPassport() }
         .filter { passport in
             required.allSatisfy { passport.keys.contains($0) }
         }.count
-    print(count)
 }
 
-public func day4_2() {
+public func day4_2() -> Int {
     let scanner = Scanner(string: readFile("day4.txt"))
-    let count = sequence(state: scanner) { $0.scanPassport() }
+    return sequence(state: scanner) { $0.scanPassport() }
         .filter { passport in
             PassportField.allCases.allSatisfy { $0.isValid(value: passport[$0]) }
         }.count
-    print(count)
 }

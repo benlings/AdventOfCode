@@ -26,9 +26,9 @@ public extension Array where Element == String {
     }
 }
 
-public func day3_1() {
+public func day3_1() -> Int {
     let trees = readLines("day3.txt").trees()
-    print("\(count(trees: trees, right: 3, down: 1))")
+    return count(trees: trees, right: 3, down: 1)
 }
 
 /*
@@ -38,14 +38,13 @@ public func day3_1() {
  Right 7, down 1.
  Right 1, down 2.
  */
-public func day3_2() {
+public func day3_2() -> Int {
     let trees = readLines("day3.txt").trees()
-    let product =
+    return
         count(trees: trees, right: 1, down: 1) *
         count(trees: trees, right: 3, down: 1) *
         count(trees: trees, right: 5, down: 1) *
         count(trees: trees, right: 7, down: 1) *
         count(trees: trees, right: 1, down: 2)
-    print("\(product)")
 }
 

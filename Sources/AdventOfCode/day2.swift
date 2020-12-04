@@ -32,22 +32,20 @@ public func parseRow(_ row: String) -> (Policy, String) {
     return (Policy(lower: lower, upper: upper, character: character), password)
 }
 
-public func day2_1() {
-    let count = readLines("day2.txt")
+public func day2_1() -> Int {
+    readLines("day2.txt")
         .map(parseRow)
         .filter { (policy, password) in
             policy.conforms1(password: password)
         }
         .count
-    print("\(count)")
 }
 
-public func day2_2() {
-    let count = readLines("day2.txt")
+public func day2_2() -> Int {
+    readLines("day2.txt")
         .map(parseRow)
         .filter { (policy, password) in
             policy.conforms2(password: password)
         }
         .count
-    print("\(count)")
 }

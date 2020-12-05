@@ -1,4 +1,5 @@
 import Foundation
+import AdventCore
 
 public struct Seat : Equatable {
     var row: UInt
@@ -26,9 +27,10 @@ public extension Seat {
     }
 }
 
+fileprivate let day5_input = Bundle.module.text(named: "day5").lines()
+
 public func day5_1() -> UInt {
-    readFile("day5.txt")
-        .lines()
+    day5_input
         .compactMap(Seat.init(bsp:))
         .map { $0.id }
         .max() ?? 0
@@ -41,8 +43,7 @@ extension Collection where Element: AdditiveArithmetic {
 }
 
 public func day5_2() -> UInt {
-    let seats = readFile("day5.txt")
-        .lines()
+    let seats = day5_input
         .compactMap(Seat.init(bsp:))
     let firstRow = seats.map(\.row).min()!
     let lastRow = seats.map(\.row).max()!

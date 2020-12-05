@@ -1,4 +1,5 @@
 import Foundation
+import AdventCore
 
 public extension Collection {
     func every(nth: Int) -> [Element] {
@@ -26,8 +27,10 @@ public extension Array where Element == String {
     }
 }
 
+fileprivate let day3_input = Bundle.module.text(named: "day3").lines()
+
 public func day3_1() -> Int {
-    let trees = readLines("day3.txt").trees()
+    let trees = day3_input.trees()
     return count(trees: trees, right: 3, down: 1)
 }
 
@@ -39,7 +42,7 @@ public func day3_1() -> Int {
  Right 1, down 2.
  */
 public func day3_2() -> Int {
-    let trees = readLines("day3.txt").trees()
+    let trees = day3_input.trees()
     return
         count(trees: trees, right: 1, down: 1) *
         count(trees: trees, right: 3, down: 1) *

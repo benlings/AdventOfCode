@@ -1,4 +1,5 @@
 import Foundation
+import AdventCore
 
 extension String {
     func valid(years: ClosedRange<Int>) -> Bool {
@@ -95,8 +96,10 @@ public extension Scanner {
     }
 }
 
+fileprivate let day_4_input = Bundle.module.text(named: "day4")
+
 public func day4_1() -> Int {
-    let scanner = Scanner(string: readFile("day4.txt"))
+    let scanner = Scanner(string: day_4_input)
     let required = PassportField.allCases.filter { $0 != .cid }
     return sequence(state: scanner) { $0.scanPassport() }
         .filter { passport in
@@ -105,7 +108,7 @@ public func day4_1() -> Int {
 }
 
 public func day4_2() -> Int {
-    let scanner = Scanner(string: readFile("day4.txt"))
+    let scanner = Scanner(string: day_4_input)
     return sequence(state: scanner) { $0.scanPassport() }
         .filter { passport in
             PassportField.allCases.allSatisfy { $0.isValid(value: passport[$0]) }

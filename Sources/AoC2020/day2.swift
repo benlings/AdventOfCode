@@ -1,4 +1,5 @@
 import Foundation
+import AdventCore
 
 public struct Policy {
     public var lower: Int
@@ -32,8 +33,10 @@ public func parseRow(_ row: String) -> (Policy, String) {
     return (Policy(lower: lower, upper: upper, character: character), password)
 }
 
+fileprivate let day2_input =  Bundle.module.text(named: "day2").lines()
+
 public func day2_1() -> Int {
-    readLines("day2.txt")
+    day2_input
         .map(parseRow)
         .filter { (policy, password) in
             policy.conforms1(password: password)
@@ -42,7 +45,7 @@ public func day2_1() -> Int {
 }
 
 public func day2_2() -> Int {
-    readLines("day2.txt")
+    day2_input
         .map(parseRow)
         .filter { (policy, password) in
             policy.conforms2(password: password)

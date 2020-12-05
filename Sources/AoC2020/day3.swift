@@ -15,7 +15,7 @@ public func count(trees: [[Int]], right: Int, down: Int) -> Int {
     let count = zip(indices,
                     trees.every(nth: down))
         .map { $1[$0] }
-        .reduce(0, +)
+        .sum()
     return count
 }
 

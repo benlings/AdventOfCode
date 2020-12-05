@@ -36,12 +36,6 @@ public func day5_1() -> UInt {
         .max() ?? 0
 }
 
-extension Collection where Element: AdditiveArithmetic {
-    func sum() -> Element {
-        reduce(Element.zero, +)
-    }
-}
-
 public func day5_2() -> UInt {
     let seats = day5_input
         .compactMap(Seat.init(bsp:))

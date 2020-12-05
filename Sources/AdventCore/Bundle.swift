@@ -6,10 +6,3 @@ public extension Bundle {
         return try! String(contentsOf: url)
     }
 }
-
-public extension String {
-    func lines() -> [String] {
-        let lines = self.split(whereSeparator: \.isNewline)
-        return lines.map(String.init)
-    }
-}

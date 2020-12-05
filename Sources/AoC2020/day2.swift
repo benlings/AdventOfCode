@@ -10,7 +10,7 @@ public struct Policy {
     public var character: Character
 
     public func conforms1(password: String) -> Bool {
-        limit.contains(password.filter { $0 == character }.count)
+        limit.contains(password.count { $0 == character })
     }
 
     public func conforms2(password: String) -> Bool {
@@ -38,17 +38,15 @@ fileprivate let day2_input =  Bundle.module.text(named: "day2").lines()
 public func day2_1() -> Int {
     day2_input
         .map(parseRow)
-        .filter { (policy, password) in
+        .count { (policy, password) in
             policy.conforms1(password: password)
         }
-        .count
 }
 
 public func day2_2() -> Int {
     day2_input
         .map(parseRow)
-        .filter { (policy, password) in
+        .count { (policy, password) in
             policy.conforms2(password: password)
         }
-        .count
 }

@@ -1,5 +1,5 @@
 import XCTest
-@testable import AdventOfCode
+@testable import AoC2020
 
 final class Day5Tests: XCTestCase {
 

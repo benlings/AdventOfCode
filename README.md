@@ -1,6 +1,6 @@
-# Advent Of Code 2020
+# Advent Of Code
 
-Solutions to https://adventofcode.com/2020
+Solutions to https://adventofcode.com/
 
 ## Getting started
 

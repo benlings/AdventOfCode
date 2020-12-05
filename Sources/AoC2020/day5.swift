@@ -33,7 +33,7 @@ public func day5_1() -> UInt {
     day5_input
         .compactMap(Seat.init(bsp:))
         .map { $0.id }
-        .max() ?? 0
+        .max()!
 }
 
 public func day5_2() -> UInt {
@@ -43,7 +43,7 @@ public func day5_2() -> UInt {
     let lastRow = seats.map(\.row).max()!
     let middleSeats = seats.filter { $0.row > firstRow && $0.row < lastRow }
         .map(\.id)
-        .sorted(by: <)
+        .sorted()
     let allSeats = middleSeats.first!...middleSeats.last!
     let missingSeat = allSeats.sum() - middleSeats.sum()
     return missingSeat

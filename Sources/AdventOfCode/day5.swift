@@ -34,6 +34,22 @@ public func day5_1() -> UInt {
         .max() ?? 0
 }
 
-public func day5_2() -> Int {
-    0
+extension Collection where Element: AdditiveArithmetic {
+    func sum() -> Element {
+        reduce(Element.zero, +)
+    }
+}
+
+public func day5_2() -> UInt {
+    let seats = readFile("day5.txt")
+        .lines()
+        .compactMap(Seat.init(bsp:))
+    let firstRow = seats.map(\.row).min()!
+    let lastRow = seats.map(\.row).max()!
+    let middleSeats = seats.filter { $0.row > firstRow && $0.row < lastRow }
+        .map(\.id)
+        .sorted(by: <)
+    let allSeats = middleSeats.first!...middleSeats.last!
+    let missingSeat = allSeats.sum() - middleSeats.sum()
+    return missingSeat
 }

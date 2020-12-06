@@ -2,18 +2,18 @@ import Foundation
 import AdventCore
 import Algorithms
 
-public func count(groupAnswers: String) -> Int {
+public func countAnyoneAnswers(groupAnswers: String) -> Int {
     groupAnswers.components(separatedBy: .whitespacesAndNewlines).joined().uniqued().count
 }
 
-public func count(multipleGroupAnswers: String) -> Int {
-    multipleGroupAnswers.components(separatedBy: "\n\n").map(count(groupAnswers:)).sum()
+public func countGroups(multipleGroupAnswers: String, groupCount: (String) -> Int) -> Int {
+    multipleGroupAnswers.components(separatedBy: "\n\n").map(groupCount).sum()
 }
 
 fileprivate let day6_input = Bundle.module.text(named: "day6")
 
 public func day6_1() -> Int {
-    count(multipleGroupAnswers: day6_input)
+    countGroups(multipleGroupAnswers: day6_input, groupCount: countAnyoneAnswers(groupAnswers:))
 }
 
 public func day6_2() -> Int {

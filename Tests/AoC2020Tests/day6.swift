@@ -9,7 +9,7 @@ final class Day6Tests: XCTestCase {
         abcy
         abcz
         """
-        XCTAssertEqual(count(groupAnswers: group), 6)
+        XCTAssertEqual(countAnyoneAnswers(groupAnswers: group), 6)
     }
 
     func testPart1MultipleGroups() {
@@ -30,7 +30,7 @@ final class Day6Tests: XCTestCase {
 
         b
         """
-        XCTAssertEqual(count(multipleGroupAnswers: groups), 11)
+        XCTAssertEqual(countGroups(multipleGroupAnswers: groups, groupCount: countAnyoneAnswers(groupAnswers:)), 11)
     }
 
     func testPart1() {

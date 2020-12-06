@@ -14,9 +14,7 @@ public func countEveryoneAnswers(groupAnswers: String) -> Int {
 }
 
 public func countGroups(multipleGroupAnswers: String, groupCount: (String) -> Int) -> Int {
-    multipleGroupAnswers
-        .trimmingCharacters(in: .newlines)
-        .components(separatedBy: "\n\n").map(groupCount).sum()
+    multipleGroupAnswers.groups().map(groupCount).sum()
 }
 
 fileprivate let day6_input = Bundle.module.text(named: "day6")

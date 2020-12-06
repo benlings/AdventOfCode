@@ -83,33 +83,29 @@ public enum PassportField : String, CaseIterable {
 
 public typealias Passport = [PassportField : String]
 
-public extension Scanner {
-    func scanPassport() -> Passport? {
-        guard let record = scanUpToString("\n\n") else { return nil }
-        var passport = Passport()
-        for field in record.components(separatedBy: .whitespacesAndNewlines) {
-            let components = field.split(separator: ":")
-            guard components.count == 2 else { break }
-            passport[PassportField(rawValue: String(components[0]))!] = String(components[1])
-        }
-        return passport
+func parsePassport(_ record: String) -> Passport {
+    var passport = Passport()
+    for field in record.components(separatedBy: .whitespacesAndNewlines) {
+        let components = field.split(separator: ":")
+        passport[PassportField(rawValue: String(components[0]))!] = String(components[1])
     }
+    return passport
 }
 
-fileprivate let day_4_input = Bundle.module.text(named: "day4")
+fileprivate let day_4_input = Bundle.module.text(named: "day4").groups()
 
 public func day4_1() -> Int {
-    let scanner = Scanner(string: day_4_input)
     let required = PassportField.allCases.filter { $0 != .cid }
-    return sequence(state: scanner) { $0.scanPassport() }
+    return day_4_input
+        .map(parsePassport)
         .count { passport in
             required.allSatisfy { passport.keys.contains($0) }
         }
 }
 
 public func day4_2() -> Int {
-    let scanner = Scanner(string: day_4_input)
-    return sequence(state: scanner) { $0.scanPassport() }
+    return day_4_input
+        .map(parsePassport)
         .count { passport in
             PassportField.allCases.allSatisfy { $0.isValid(value: passport[$0]) }
         }

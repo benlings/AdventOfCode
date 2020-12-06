@@ -5,4 +5,10 @@ public extension String {
         let lines = self.split(whereSeparator: \.isNewline)
         return lines.map(String.init)
     }
+
+    func groups() -> [String] {
+        self
+            .trimmingCharacters(in: .newlines)
+            .components(separatedBy: "\n\n")
+    }
 }

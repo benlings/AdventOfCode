@@ -4,14 +4,14 @@ import XCTest
 final class Day1Tests: XCTestCase {
 
     func testPart1Examples() {
-        XCTAssertEqual(elevator("(())"), 0)
-        XCTAssertEqual(elevator("()()"), 0)
-        XCTAssertEqual(elevator("((("), 3)
-        XCTAssertEqual(elevator("(()(()("), 3)
-        XCTAssertEqual(elevator("())"), -1)
-        XCTAssertEqual(elevator("))("), -1)
-        XCTAssertEqual(elevator(")))"), -3)
-        XCTAssertEqual(elevator(")())())"), -3)
+        XCTAssertEqual(Elevator(instructions:"(())").finalFloor, 0)
+        XCTAssertEqual(Elevator(instructions:"()()").finalFloor, 0)
+        XCTAssertEqual(Elevator(instructions:"(((").finalFloor, 3)
+        XCTAssertEqual(Elevator(instructions:"(()(()(").finalFloor, 3)
+        XCTAssertEqual(Elevator(instructions:"())").finalFloor, -1)
+        XCTAssertEqual(Elevator(instructions:"))(").finalFloor, -1)
+        XCTAssertEqual(Elevator(instructions:")))").finalFloor, -3)
+        XCTAssertEqual(Elevator(instructions:")())())").finalFloor, -3)
     }
     
     func testPart1() {

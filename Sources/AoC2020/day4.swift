@@ -92,11 +92,11 @@ func parsePassport(_ record: String) -> Passport {
     return passport
 }
 
-fileprivate let day_4_input = Bundle.module.text(named: "day4").groups()
+fileprivate let day4_input = Bundle.module.text(named: "day4").groups()
 
 public func day4_1() -> Int {
     let required = PassportField.allCases.filter { $0 != .cid }
-    return day_4_input
+    return day4_input
         .map(parsePassport)
         .count { passport in
             required.allSatisfy { passport.keys.contains($0) }
@@ -104,7 +104,7 @@ public func day4_1() -> Int {
 }
 
 public func day4_2() -> Int {
-    return day_4_input
+    return day4_input
         .map(parsePassport)
         .count { passport in
             PassportField.allCases.allSatisfy { $0.isValid(value: passport[$0]) }

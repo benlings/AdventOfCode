@@ -17,3 +17,9 @@ public extension Sequence where Element: AdditiveArithmetic {
         reduce(Element.zero, +)
     }
 }
+
+public extension Sequence where Element: Numeric {
+    func product() -> Element {
+        reduce(1, *)
+    }
+}

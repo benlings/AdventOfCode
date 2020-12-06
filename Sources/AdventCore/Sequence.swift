@@ -12,6 +12,12 @@ public extension Sequence {
     }
 }
 
+extension Sequence where Element: Equatable {
+    public func count(of element: Element) -> Int {
+        count(where: { $0 == element })
+    }
+}
+
 public extension Sequence where Element: AdditiveArithmetic {
     func sum() -> Element {
         reduce(Element.zero, +)

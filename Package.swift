@@ -12,6 +12,9 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
+            name: "AoC2015",
+            targets: ["AoC2015"]),
+        .library(
             name: "AoC2020",
             targets: ["AoC2020"]),
     ],
@@ -28,6 +31,13 @@ let package = Package(
             dependencies: [
                 .product(name: "Algorithms", package: "swift-algorithms"),
             ]),
+        .target(
+            name: "AoC2015",
+            dependencies: ["AdventCore"],
+            resources: [.process("Resources")]),
+        .testTarget(
+            name: "AoC2015Tests",
+            dependencies: ["AoC2015"]),
         .target(
             name: "AoC2020",
             dependencies: ["AdventCore"],

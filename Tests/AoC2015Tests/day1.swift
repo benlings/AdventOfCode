@@ -18,7 +18,12 @@ final class Day1Tests: XCTestCase {
         XCTAssertEqual(day1_1(), 74)
     }
 
+    func testPart2Examples() {
+        XCTAssertEqual(Elevator(instructions:")").index(reachingFloor: -1)!, 1)
+        XCTAssertEqual(Elevator(instructions:"()())").index(reachingFloor: -1)!, 5)
+    }
+
     func testPart2() {
-//        XCTAssertEqual(day1_2(), 192684960)
+        XCTAssertEqual(day1_2(), 1795)
     }
 }

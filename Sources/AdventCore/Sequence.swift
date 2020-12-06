@@ -10,6 +10,27 @@ public extension Sequence {
         }
         return count
     }
+
+    /// Returns an array containing the results of
+    ///
+    ///   p.reduce(initial, nextPartialResult)
+    ///
+    /// for each prefix `p` of `self`, in order from shortest to
+    /// longest. For example:
+    ///
+    ///     (1..<6).scan(0, +) // [0, 1, 3, 6, 10, 15]
+    ///
+    /// - Complexity: O(n)
+    func scan<Result>(
+        _ initial: Result,
+        _ nextPartialResult: (Result, Element) -> Result
+    ) -> [Result] {
+        var result = [initial]
+        for x in self {
+            result.append(nextPartialResult(result.last!, x))
+        }
+        return result
+    }
 }
 
 extension Sequence where Element: Equatable {

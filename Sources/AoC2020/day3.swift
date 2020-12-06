@@ -1,20 +1,11 @@
 import Foundation
 import AdventCore
 
-public extension Collection {
-    func every(nth: Int) -> [Element] {
-        self.enumerated()
-            .filter { idx, _ in idx % nth == 0 }
-            .map { $1 }
-    }
-}
-
 public func count(trees: [[Int]], right: Int, down: Int) -> Int {
     let rowLength = trees.first!.count
-    let indices = (0...).lazy.map { ($0 * right) % rowLength }
-    let count = zip(indices,
-                    trees.every(nth: down))
-        .map { $1[$0] }
+    let count = zip((0...).striding(by: right),
+                    trees.striding(by: down))
+        .map { $1[$0 % rowLength] }
         .sum()
     return count
 }

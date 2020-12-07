@@ -27,6 +27,9 @@ public extension LuggageRule {
         self.bag = scanner.scanLuggageBag()!
         _ = scanner.scanString("contain")
         while !scanner.isAtEnd {
+            if scanner.scanString("no other bags") != nil {
+                break
+            }
             _ = scanner.scanInt() // Count
             contents.insert(scanner.scanLuggageBag()!)
             _ = scanner.scanString(",") ?? scanner.scanString(".")

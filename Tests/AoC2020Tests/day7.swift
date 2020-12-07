@@ -22,6 +22,13 @@ final class Day7Tests: XCTestCase {
         XCTAssertEqual(expected, LuggageRule(input))
     }
 
+    func testParseLuggageRuleNoBags() {
+        let input = "faded blue bags contain no other bags."
+        let expected = LuggageRule(bag: LuggageBag(bagDescription: "faded blue"),
+                                   contents: [])
+        XCTAssertEqual(expected, LuggageRule(input))
+    }
+
     func testPart1() {
 //        XCTAssertEqual(day7_1(), 0)
     }

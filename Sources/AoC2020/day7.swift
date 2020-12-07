@@ -79,8 +79,8 @@ extension LuggageProcessor {
     }
 }
 
-fileprivate let day5_input = Bundle.module.text(named: "day7")
+fileprivate let day7_input = Bundle.module.text(named: "day7")
 
 func day7_1() -> Int {
-    LuggageProcessor(rulesDescription: day5_input).bags(thatCanContain: "shiny gold").count
+    LuggageProcessor(rulesDescription: day7_input).bags(thatCanContain: "shiny gold").count
 }

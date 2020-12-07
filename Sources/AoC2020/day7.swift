@@ -71,6 +71,21 @@ public struct LuggageProcessor {
         addContainingBags(bag)
         return result
     }
+
+    public func countOfBags(containedWithin bag: LuggageBag) -> Int {
+        let lookup = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0) })
+        func containedBags(_ containingBag: LuggageBag) -> Int {
+            guard let rule = lookup[containingBag] else {
+                fatalError("\(containingBag) not in lookup")
+            }
+            var result = 1
+            for (bag, count) in rule.contents {
+                result += count * containedBags(bag)
+            }
+            return result
+        }
+        return containedBags(bag) - 1
+    }
 }
 
 extension LuggageProcessor {
@@ -83,4 +98,8 @@ fileprivate let day7_input = Bundle.module.text(named: "day7")
 
 func day7_1() -> Int {
     LuggageProcessor(rulesDescription: day7_input).bags(thatCanContain: "shiny gold").count
+}
+
+func day7_2() -> Int {
+    LuggageProcessor(rulesDescription: day7_input).countOfBags(containedWithin: "shiny gold")
 }

@@ -3,12 +3,21 @@ import XCTest
 
 final class Day7Tests: XCTestCase {
 
-    func testParseLuggageRule() {
+    func testParseLuggageRuleMultipleBags() {
         let input = "light red bags contain 1 bright white bag, 2 muted yellow bags."
         let expected = LuggageRule(bag: LuggageBag(bagDescription: "light red"),
                                    contents: [
                                     LuggageBag(bagDescription: "bright white"),
                                     LuggageBag(bagDescription: "muted yellow")
+                                   ])
+        XCTAssertEqual(expected, LuggageRule(input))
+    }
+
+    func testParseLuggageRuleSingleBags() {
+        let input = "bright white bags contain 1 shiny gold bag."
+        let expected = LuggageRule(bag: LuggageBag(bagDescription: "bright white"),
+                                   contents: [
+                                    LuggageBag(bagDescription: "shiny gold"),
                                    ])
         XCTAssertEqual(expected, LuggageRule(input))
     }

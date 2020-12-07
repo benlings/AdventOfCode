@@ -26,11 +26,10 @@ public extension LuggageRule {
         let scanner = Scanner(string: ruleDescription)
         self.bag = scanner.scanLuggageBag()!
         _ = scanner.scanString("contain")
-        _ = scanner.scanInt() // Count
-        contents.insert(scanner.scanLuggageBag()!)
-        _ = scanner.scanString(",")
-        _ = scanner.scanInt() // Count
-        contents.insert(scanner.scanLuggageBag()!)
-        _ = scanner.scanString(".")
+        while !scanner.isAtEnd {
+            _ = scanner.scanInt() // Count
+            contents.insert(scanner.scanLuggageBag()!)
+            _ = scanner.scanString(",") ?? scanner.scanString(".")
+        }
     }
 }

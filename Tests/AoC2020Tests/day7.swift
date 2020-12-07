@@ -5,26 +5,26 @@ final class Day7Tests: XCTestCase {
 
     func testParseLuggageRuleMultipleBags() {
         let input = "light red bags contain 1 bright white bag, 2 muted yellow bags."
-        let expected = LuggageRule(bag: LuggageBag(bagDescription: "light red"),
+        let expected = LuggageRule(bag: "light red",
                                    contents: [
-                                    LuggageBag(bagDescription: "bright white") : 1,
-                                    LuggageBag(bagDescription: "muted yellow") : 2
+                                    "bright white" : 1,
+                                    "muted yellow" : 2
                                    ])
         XCTAssertEqual(expected, LuggageRule(input))
     }
 
     func testParseLuggageRuleSingleBags() {
         let input = "bright white bags contain 1 shiny gold bag."
-        let expected = LuggageRule(bag: LuggageBag(bagDescription: "bright white"),
+        let expected = LuggageRule(bag: "bright white",
                                    contents: [
-                                    LuggageBag(bagDescription: "shiny gold") : 1,
+                                    "shiny gold" : 1,
                                    ])
         XCTAssertEqual(expected, LuggageRule(input))
     }
 
     func testParseLuggageRuleNoBags() {
         let input = "faded blue bags contain no other bags."
-        let expected = LuggageRule(bag: LuggageBag(bagDescription: "faded blue"),
+        let expected = LuggageRule(bag: "faded blue",
                                    contents: [:])
         XCTAssertEqual(expected, LuggageRule(input))
     }
@@ -43,7 +43,7 @@ final class Day7Tests: XCTestCase {
 
     func testBagsThatContain() {
         let processor = LuggageProcessor(rulesDescription: exampleInput1)
-        let expectedBags = ["bright white", "muted yellow", "dark orange", "light red"] as Set<LuggageBag>
+        let expectedBags = ["bright white", "muted yellow", "dark orange", "light red"] as Set<Bag>
         XCTAssertEqual(expectedBags, processor.bags(thatCanContain: "shiny gold"))
     }
 

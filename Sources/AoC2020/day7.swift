@@ -1,29 +1,29 @@
 import Foundation
 import AdventCore
 
-public struct LuggageBag : Hashable, Equatable {
-    var bagDescription: String
+public struct Bag : Hashable, Equatable, CustomStringConvertible {
+    public var description: String
 }
 
-extension LuggageBag : ExpressibleByStringLiteral {
+extension Bag : ExpressibleByStringLiteral {
     public init(stringLiteral value: StringLiteralType) {
-        self = .init(bagDescription: value)
+        self = .init(description: value)
     }
 }
 
 public struct LuggageRule : Equatable {
-    var bag: LuggageBag
-    var contents = Dictionary<LuggageBag, Int>()
+    var bag: Bag
+    var contents = Dictionary<Bag, Int>()
 }
 
 extension Scanner {
-    func scanLuggageBag() -> LuggageBag? {
+    func scanLuggageBag() -> Bag? {
         guard let description1 = scanUpToCharacters(from: .whitespaces),
               let description2 = scanUpToCharacters(from: .whitespaces),
               scanString("bags") ?? scanString("bag") != nil else {
             return nil
         }
-        return LuggageBag(bagDescription: "\(description1) \(description2)")
+        return Bag(description: "\(description1) \(description2)")
     }
 }
 
@@ -46,8 +46,8 @@ public extension LuggageRule {
 public struct LuggageProcessor {
     var rules: [LuggageRule]
 
-    func containingBags() -> Dictionary<LuggageBag, Set<LuggageBag>> {
-        var result = Dictionary<LuggageBag, Set<LuggageBag>>()
+    func containingBags() -> Dictionary<Bag, Set<Bag>> {
+        var result = Dictionary<Bag, Set<Bag>>()
         for rule in rules {
             for containedBag in rule.contents.keys {
                 result[containedBag, default: Set()].insert(rule.bag)
@@ -56,10 +56,10 @@ public struct LuggageProcessor {
         return result
     }
 
-    public func bags(thatCanContain bag: LuggageBag) -> Set<LuggageBag> {
+    public func bags(thatCanContain bag: Bag) -> Set<Bag> {
         let inverted = self.containingBags()
-        var result = Set<LuggageBag>()
-        func addContainingBags(_ containedBag: LuggageBag) {
+        var result = Set<Bag>()
+        func addContainingBags(_ containedBag: Bag) {
             guard let containingBags = inverted[containedBag] else {
                 return
             }
@@ -72,9 +72,9 @@ public struct LuggageProcessor {
         return result
     }
 
-    public func countOfBags(containedWithin bag: LuggageBag) -> Int {
+    public func countOfBags(containedWithin bag: Bag) -> Int {
         let lookup = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0) })
-        func containedBags(_ containingBag: LuggageBag) -> Int {
+        func containedBags(_ containingBag: Bag) -> Int {
             guard let rule = lookup[containingBag] else {
                 fatalError("\(containingBag) not in lookup")
             }

@@ -30,14 +30,20 @@ extension Scanner {
 public extension LuggageRule {
     init?(_ ruleDescription: String) {
         let scanner = Scanner(string: ruleDescription)
-        self.bag = scanner.scanLuggageBag()!
+        guard let bag = scanner.scanLuggageBag() else {
+            return nil
+        }
+        self.bag = bag
         _ = scanner.scanString("contain")
         while !scanner.isAtEnd {
             if scanner.scanString("no other bags") != nil {
                 break
             }
-            let count = scanner.scanInt() // Count
-            contents[scanner.scanLuggageBag()!] = count
+            guard let count = scanner.scanInt(),
+                  let contentsBag = scanner.scanLuggageBag() else {
+                return nil
+            }
+            contents[contentsBag] = count
             _ = scanner.scanString(",") ?? scanner.scanString(".")
         }
     }

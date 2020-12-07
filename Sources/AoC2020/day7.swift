@@ -13,7 +13,7 @@ extension LuggageBag : ExpressibleByStringLiteral {
 
 public struct LuggageRule : Equatable {
     var bag: LuggageBag
-    var contents = Set<LuggageBag>() // FIXME add count
+    var contents = Dictionary<LuggageBag, Int>()
 }
 
 extension Scanner {
@@ -36,8 +36,8 @@ public extension LuggageRule {
             if scanner.scanString("no other bags") != nil {
                 break
             }
-            _ = scanner.scanInt() // Count
-            contents.insert(scanner.scanLuggageBag()!)
+            let count = scanner.scanInt() // Count
+            contents[scanner.scanLuggageBag()!] = count
             _ = scanner.scanString(",") ?? scanner.scanString(".")
         }
     }
@@ -49,7 +49,7 @@ public struct LuggageProcessor {
     func containingBags() -> Dictionary<LuggageBag, Set<LuggageBag>> {
         var result = Dictionary<LuggageBag, Set<LuggageBag>>()
         for rule in rules {
-            for containedBag in rule.contents {
+            for containedBag in rule.contents.keys {
                 result[containedBag, default: Set()].insert(rule.bag)
             }
         }

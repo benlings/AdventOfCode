@@ -7,8 +7,8 @@ final class Day7Tests: XCTestCase {
         let input = "light red bags contain 1 bright white bag, 2 muted yellow bags."
         let expected = LuggageRule(bag: LuggageBag(bagDescription: "light red"),
                                    contents: [
-                                    LuggageBag(bagDescription: "bright white"),
-                                    LuggageBag(bagDescription: "muted yellow")
+                                    LuggageBag(bagDescription: "bright white") : 1,
+                                    LuggageBag(bagDescription: "muted yellow") : 2
                                    ])
         XCTAssertEqual(expected, LuggageRule(input))
     }
@@ -17,7 +17,7 @@ final class Day7Tests: XCTestCase {
         let input = "bright white bags contain 1 shiny gold bag."
         let expected = LuggageRule(bag: LuggageBag(bagDescription: "bright white"),
                                    contents: [
-                                    LuggageBag(bagDescription: "shiny gold"),
+                                    LuggageBag(bagDescription: "shiny gold") : 1,
                                    ])
         XCTAssertEqual(expected, LuggageRule(input))
     }
@@ -25,7 +25,7 @@ final class Day7Tests: XCTestCase {
     func testParseLuggageRuleNoBags() {
         let input = "faded blue bags contain no other bags."
         let expected = LuggageRule(bag: LuggageBag(bagDescription: "faded blue"),
-                                   contents: [])
+                                   contents: [:])
         XCTAssertEqual(expected, LuggageRule(input))
     }
 

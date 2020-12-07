@@ -14,10 +14,6 @@ extension LuggageBag : ExpressibleByStringLiteral {
 public struct LuggageRule : Equatable {
     var bag: LuggageBag
     var contents = Set<LuggageBag>() // FIXME add count
-
-    func transitiveContents(rules: [LuggageRule]) -> Set<LuggageBag> {
-        contents.union(rules.filter { contents.contains($0.bag) }.flatMap { $0.transitiveContents(rules: rules) })
-    }
 }
 
 extension Scanner {
@@ -50,14 +46,30 @@ public extension LuggageRule {
 public struct LuggageProcessor {
     var rules: [LuggageRule]
 
-    public func bags(thatCanContain bag: LuggageBag) -> Set<LuggageBag> {
-        var containingBags = Set<LuggageBag>()
+    func containingBags() -> Dictionary<LuggageBag, Set<LuggageBag>> {
+        var result = Dictionary<LuggageBag, Set<LuggageBag>>()
         for rule in rules {
-            if rule.transitiveContents(rules: rules).contains(bag) {
-                containingBags.insert(rule.bag)
+            for containedBag in rule.contents {
+                result[containedBag, default: Set()].insert(rule.bag)
             }
         }
-        return containingBags
+        return result
+    }
+
+    public func bags(thatCanContain bag: LuggageBag) -> Set<LuggageBag> {
+        let inverted = self.containingBags()
+        var result = Set<LuggageBag>()
+        func addContainingBags(_ containedBag: LuggageBag) {
+            guard let containingBags = inverted[containedBag] else {
+                return
+            }
+            result.formUnion(containingBags)
+            for bag in containingBags {
+                addContainingBags(bag)
+            }
+        }
+        addContainingBags(bag)
+        return result
     }
 }
 

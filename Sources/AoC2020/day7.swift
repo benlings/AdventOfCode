@@ -79,12 +79,12 @@ public struct LuggageProcessor {
     }
 
     public func countOfBags(containedWithin bag: Bag) -> Int {
-        func containedBags(_ containingBag: Bag) -> Int {
+        func containedBags(within containingBag: Bag) -> Int {
             return contents(of: containingBag).map { bag, count in
-                count * (1 + containedBags(bag))
+                count * (1 + containedBags(within: bag))
             }.sum()
         }
-        return containedBags(bag)
+        return containedBags(within: bag)
     }
 }
 

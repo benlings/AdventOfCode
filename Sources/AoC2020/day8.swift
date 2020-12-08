@@ -2,7 +2,7 @@ import Foundation
 import AdventCore
 
 enum Operation {
-    case nop
+    case nop(Int)
     case acc(Int)
     case jmp(Int)
 
@@ -14,7 +14,7 @@ enum Operation {
         }
         switch opCode {
         case "nop":
-            return .nop
+            return .nop(operand)
         case "acc":
             return .acc(operand)
         case "jmp":
@@ -38,11 +38,42 @@ enum Operation {
             return
         }
     }
+
+    mutating func swap() -> Bool {
+        switch self {
+        case .nop(let value):
+            self = .jmp(value)
+        case .jmp(let value):
+            self = .nop(value)
+        case .acc(_):
+            return false
+        }
+        return true
+    }
 }
 
 public struct Instructions {
 
     var operations: [Operation]
+
+    mutating func switchOperation(at index: Int) -> Bool {
+        operations[index].swap()
+    }
+
+    public mutating func fixProgram() -> Int {
+        let originalSelf = self
+        for i in operations.indices {
+            self = originalSelf
+            if switchOperation(at: i) {
+                var context = Context()
+                eval(&context)
+                if context.line >= operations.count {
+                    return context.accumulator
+                }
+            }
+        }
+        preconditionFailure()
+    }
 
     public func execute() -> Int {
         var context = Context()
@@ -52,7 +83,7 @@ public struct Instructions {
 
     public func eval(_ context: inout Context) {
         var visitedLines = Set<Int>()
-        while !visitedLines.contains(context.line) {
+        while !visitedLines.contains(context.line) && context.line < operations.count {
             visitedLines.insert(context.line)
             operations[context.line].eval(context: &context)
         }
@@ -74,4 +105,9 @@ fileprivate let day8_input = Bundle.module.text(named: "day8")
 
 public func day8_1() -> Int {
     return Instructions(day8_input).execute()
+}
+
+public func day8_2() -> Int {
+    var instructions = Instructions(day8_input)
+    return instructions.fixProgram()
 }

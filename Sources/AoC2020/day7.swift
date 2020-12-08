@@ -64,18 +64,13 @@ public struct LuggageProcessor {
 
     public func bags(thatCanContain bag: Bag) -> Set<Bag> {
         let inverted = self.containingBags()
-        var result = Set<Bag>()
-        func addContainingBags(_ containedBag: Bag) {
+        func addContainingBags(_ containedBag: Bag) -> Set<Bag> {
             guard let containingBags = inverted[containedBag] else {
-                return
+                return []
             }
-            result.formUnion(containingBags)
-            for bag in containingBags {
-                addContainingBags(bag)
-            }
+            return containingBags.union(containingBags.flatMap { addContainingBags($0) })
         }
-        addContainingBags(bag)
-        return result
+        return addContainingBags(bag)
     }
 
     public func countOfBags(containedWithin bag: Bag) -> Int {

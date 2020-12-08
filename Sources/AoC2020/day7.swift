@@ -64,13 +64,13 @@ public struct LuggageProcessor {
 
     public func bags(thatCanContain bag: Bag) -> Set<Bag> {
         let inverted = self.createInverseLookup()
-        func addContainingBags(_ containedBag: Bag) -> Set<Bag> {
-            guard let containingBags = inverted[containedBag] else {
+        func containingBags(_ containedBag: Bag) -> Set<Bag> {
+            guard let containing = inverted[containedBag] else {
                 return []
             }
-            return containingBags.union(containingBags.flatMap { addContainingBags($0) })
+            return containing.union(containing.flatMap { containingBags($0) })
         }
-        return addContainingBags(bag)
+        return containingBags(bag)
     }
 
     public func countOfBags(containedWithin bag: Bag) -> Int {

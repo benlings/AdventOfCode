@@ -79,12 +79,12 @@ public struct LuggageProcessor {
     }
 
     public func countOfBags(containedWithin bag: Bag) -> Int {
-        let lookup = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0) })
+        let bagContents = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0.contents) })
         func containedBags(_ containingBag: Bag) -> Int {
-            guard let rule = lookup[containingBag] else {
+            guard let contents = bagContents[containingBag] else {
                 fatalError("\(containingBag) not in lookup")
             }
-            return rule.contents.map { bag, count in
+            return contents.map { bag, count in
                 count * (1 + containedBags(bag))
             }.sum()
         }

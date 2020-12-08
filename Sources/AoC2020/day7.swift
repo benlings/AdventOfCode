@@ -52,25 +52,19 @@ public extension LuggageRule {
 public struct LuggageProcessor {
     var rules: [LuggageRule]
 
-    func createInverseLookup() -> Dictionary<Bag, Set<Bag>> {
-        var result = Dictionary<Bag, Set<Bag>>()
-        for rule in rules {
-            for containedBag in rule.contents.keys {
-                result[containedBag, default: Set()].insert(rule.bag)
+    public func countOfBags(containing bag: Bag) -> Int {
+        let bagContents = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0.contents) })
+        func containsBag(_ containingBag: Bag, _ containedBag: Bag) -> Bool {
+            guard let contents = bagContents[containingBag] else {
+                fatalError("\(containingBag) not in lookup")
+            }
+            return contents.contains { (key, _) in
+                key == containedBag || containsBag(key, containedBag)
             }
         }
-        return result
-    }
-
-    public func bags(thatCanContain bag: Bag) -> Set<Bag> {
-        let inverted = self.createInverseLookup()
-        func containingBags(_ containedBag: Bag) -> Set<Bag> {
-            guard let containing = inverted[containedBag] else {
-                return []
-            }
-            return containing.union(containing.flatMap { containingBags($0) })
+        return rules.count { rule in
+            containsBag(rule.bag, bag)
         }
-        return containingBags(bag)
     }
 
     public func countOfBags(containedWithin bag: Bag) -> Int {
@@ -96,7 +90,7 @@ extension LuggageProcessor {
 fileprivate let day7_input = Bundle.module.text(named: "day7")
 
 func day7_1() -> Int {
-    LuggageProcessor(rulesDescription: day7_input).bags(thatCanContain: "shiny gold").count
+    LuggageProcessor(rulesDescription: day7_input).countOfBags(containing: "shiny gold")
 }
 
 func day7_2() -> Int {

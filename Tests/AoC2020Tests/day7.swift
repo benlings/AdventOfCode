@@ -43,8 +43,7 @@ final class Day7Tests: XCTestCase {
 
     func testBagsThatContain() {
         let processor = LuggageProcessor(rulesDescription: exampleInput1)
-        let expectedBags = ["bright white", "muted yellow", "dark orange", "light red"] as Set<Bag>
-        XCTAssertEqual(expectedBags, processor.bags(thatCanContain: "shiny gold"))
+        XCTAssertEqual(processor.countOfBags(containing: "shiny gold"), 4)
     }
 
     func testPart1() {

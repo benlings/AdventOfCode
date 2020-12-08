@@ -52,7 +52,7 @@ public extension LuggageRule {
 public struct LuggageProcessor {
     var rules: [LuggageRule]
 
-    func containingBags() -> Dictionary<Bag, Set<Bag>> {
+    func createInverseLookup() -> Dictionary<Bag, Set<Bag>> {
         var result = Dictionary<Bag, Set<Bag>>()
         for rule in rules {
             for containedBag in rule.contents.keys {
@@ -63,7 +63,7 @@ public struct LuggageProcessor {
     }
 
     public func bags(thatCanContain bag: Bag) -> Set<Bag> {
-        let inverted = self.containingBags()
+        let inverted = self.createInverseLookup()
         func addContainingBags(_ containedBag: Bag) -> Set<Bag> {
             guard let containingBags = inverted[containedBag] else {
                 return []

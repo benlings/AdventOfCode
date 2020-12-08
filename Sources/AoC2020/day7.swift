@@ -11,9 +11,11 @@ extension Bag : ExpressibleByStringLiteral {
     }
 }
 
+typealias BagContents = Dictionary<Bag, Int>
+
 public struct LuggageRule : Equatable {
     var bag: Bag
-    var contents = Dictionary<Bag, Int>()
+    var contents = BagContents()
 }
 
 extension Scanner {
@@ -50,15 +52,24 @@ public extension LuggageRule {
 }
 
 public struct LuggageProcessor {
-    var rules: [LuggageRule]
+    let rules: [LuggageRule]
+    let bagContents: Dictionary<Bag, BagContents>
+
+    init(rules: [LuggageRule]) {
+        self.rules = rules
+        self.bagContents = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0.contents) })
+    }
+
+    func contents(of bag:Bag) -> BagContents {
+        guard let contents = bagContents[bag] else {
+            fatalError("\(bag) not in lookup")
+        }
+        return contents
+    }
 
     public func countOfBags(containing bag: Bag) -> Int {
-        let bagContents = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0.contents) })
         func containsBag(_ containingBag: Bag, _ containedBag: Bag) -> Bool {
-            guard let contents = bagContents[containingBag] else {
-                fatalError("\(containingBag) not in lookup")
-            }
-            return contents.contains { (key, _) in
+            return contents(of: containingBag).contains { (key, _) in
                 key == containedBag || containsBag(key, containedBag)
             }
         }
@@ -68,12 +79,8 @@ public struct LuggageProcessor {
     }
 
     public func countOfBags(containedWithin bag: Bag) -> Int {
-        let bagContents = Dictionary(uniqueKeysWithValues: rules.map { ($0.bag, $0.contents) })
         func containedBags(_ containingBag: Bag) -> Int {
-            guard let contents = bagContents[containingBag] else {
-                fatalError("\(containingBag) not in lookup")
-            }
-            return contents.map { bag, count in
+            return contents(of: containingBag).map { bag, count in
                 count * (1 + containedBags(bag))
             }.sum()
         }

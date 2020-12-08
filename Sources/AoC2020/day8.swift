@@ -63,3 +63,12 @@ public struct Context {
     var line: Int = 0
     var accumulator: Int = 0
 }
+
+fileprivate let day8_input = Bundle.module.text(named: "day8")
+
+public func day8_1() -> Int {
+    var context = Context()
+    let instructions = Instructions(day8_input)
+    instructions.eval(&context)
+    return context.accumulator
+}

@@ -84,13 +84,11 @@ public struct LuggageProcessor {
             guard let rule = lookup[containingBag] else {
                 fatalError("\(containingBag) not in lookup")
             }
-            var result = 1
-            for (bag, count) in rule.contents {
-                result += count * containedBags(bag)
-            }
-            return result
+            return rule.contents.map { bag, count in
+                count * (1 + containedBags(bag))
+            }.sum()
         }
-        return containedBags(bag) - 1
+        return containedBags(bag)
     }
 }
 

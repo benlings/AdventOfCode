@@ -3,8 +3,7 @@ import XCTest
 
 final class Day8Tests: XCTestCase {
 
-    func testPart1Example() {
-        let input = """
+    let exampleInstructions = Instructions("""
         nop +0
         acc +1
         jmp +4
@@ -14,11 +13,10 @@ final class Day8Tests: XCTestCase {
         acc +1
         jmp -4
         acc +6
-        """
-        var context = Context()
-        let instructions = Instructions(input)
-        instructions.eval(&context)
-        XCTAssertEqual(context.accumulator, 5)
+    """)
+
+    func testPart1Example() {
+        XCTAssertEqual(exampleInstructions.execute(), 5)
     }
 
     func testPart1() {

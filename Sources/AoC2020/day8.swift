@@ -44,6 +44,12 @@ public struct Instructions {
 
     var operations: [Operation]
 
+    public func execute() -> Int {
+        var context = Context()
+        eval(&context)
+        return context.accumulator
+    }
+
     public func eval(_ context: inout Context) {
         var visitedLines = Set<Int>()
         while !visitedLines.contains(context.line) {
@@ -67,8 +73,5 @@ public struct Context {
 fileprivate let day8_input = Bundle.module.text(named: "day8")
 
 public func day8_1() -> Int {
-    var context = Context()
-    let instructions = Instructions(day8_input)
-    instructions.eval(&context)
-    return context.accumulator
+    return Instructions(day8_input).execute()
 }

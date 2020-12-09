@@ -14,16 +14,16 @@ struct XMASCypher {
         }?.last
     }
 
-    func findRange(summingTo sum: Int) -> [Int]? {
+    func findRange(summingTo total: Int) -> Array<Int>.SubSequence? {
         for start in input.startIndex..<(input.endIndex - 2) {
             for end in (start + 2)..<input.endIndex {
                 let range = start..<end
                 let subArray = input[range]
-                let subSum = subArray.sum()
-                if subSum == sum {
-                    return Array(subArray)
+                let sum = subArray.sum()
+                if sum == total {
+                    return subArray
                 }
-                if subSum > sum {
+                if sum > total {
                     break
                 }
             }
@@ -31,7 +31,7 @@ struct XMASCypher {
         return nil
     }
 
-    static func encryptionWeakness(_ range: [Int]) -> Int {
+    static func encryptionWeakness<C>(_ range: C) -> Int where C : Collection, C.Element == Int {
         range.min()! + range.max()!
     }
 }

@@ -3,9 +3,10 @@ import AdventCore
 
 struct XMASCypher {
     let preamble: Int
+    let input: [Int]
 
-    func findFirstInvalid(from numbers:[Int]) -> Int? {
-        let windows = numbers.slidingWindows(ofCount: preamble + 1)
+    func firstInvalid() -> Int? {
+        let windows = input.slidingWindows(ofCount: preamble + 1)
         return windows.first { window in
             !window.dropLast()
                 .combinations(ofCount: 2)
@@ -17,7 +18,7 @@ struct XMASCypher {
 fileprivate let day9_input = Bundle.module.text(named: "day9").lines().compactMap(Int.init)
 
 public func day9_1() -> Int {
-    XMASCypher(preamble: 25).findFirstInvalid(from: day9_input)!
+    XMASCypher(preamble: 25, input: day9_input).firstInvalid()!
 }
 
 public func day9_2() -> Int {

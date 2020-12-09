@@ -3,7 +3,9 @@ import XCTest
 
 final class Day9Tests: XCTestCase {
 
-    func testPart1Example() {
+    var cypher: XMASCypher!
+
+    override func setUp() {
         let input = """
         35
         20
@@ -26,8 +28,11 @@ final class Day9Tests: XCTestCase {
         309
         576
         """.lines().compactMap(Int.init)
-        let cypher = XMASCypher(preamble: 5)
-        XCTAssertEqual(cypher.findFirstInvalid(from: input), 127)
+        cypher = XMASCypher(preamble: 5, input: input)
+    }
+
+    func testPart1Example() {
+        XCTAssertEqual(cypher.firstInvalid(), 127)
     }
 
     func testPart1() {

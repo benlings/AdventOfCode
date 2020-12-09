@@ -39,7 +39,13 @@ final class Day9Tests: XCTestCase {
         XCTAssertEqual(day9_1(), 22406676)
     }
 
+    func testPart2Example() {
+        let range = cypher.findRange(summingTo: cypher.firstInvalid()!)!
+        XCTAssertEqual(range, [15, 25, 47, 40])
+        XCTAssertEqual(XMASCypher.encryptionWeakness(range), 62)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day9_2(), 0)
+        XCTAssertEqual(day9_2(), 2942387)
     }
 }

@@ -15,17 +15,19 @@ struct XMASCypher {
     }
 
     func findRange(summingTo total: Int) -> Array<Int>.SubSequence? {
-        for start in input.startIndex..<(input.endIndex - 2) {
-            for end in (start + 2)..<input.endIndex {
-                let range = start..<end
-                let subArray = input[range]
-                let sum = subArray.sum()
-                if sum == total {
-                    return subArray
-                }
-                if sum > total {
-                    break
-                }
+        let minSize = 2
+        var start = input.startIndex, end = start + minSize
+        var sum = input[start..<end].sum()
+        while start <= input.endIndex - minSize && end < input.endIndex {
+            if sum == total {
+                return input[start..<end]
+            }
+            if sum > total {
+                sum -= input[start]
+                start += 1
+            } else {
+                sum += input[end]
+                end += 1
             }
         }
         return nil

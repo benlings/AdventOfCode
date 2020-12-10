@@ -50,3 +50,9 @@ public extension Sequence where Element: Numeric {
         reduce(1, *)
     }
 }
+
+public extension Sequence where Element: StringProtocol {
+    func ints() -> [Int] {
+        compactMap { Int($0) }
+    }
+}

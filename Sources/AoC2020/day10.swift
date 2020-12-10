@@ -24,5 +24,17 @@ public func day10_1() -> Int {
 }
 
 public func day10_2() -> Int {
-    0
+    let sortedNumbers = input.sorted()
+    let allNumbers = chain(chain([0], sortedNumbers), [sortedNumbers.last! + 3])
+    let diff = allNumbers.slidingWindows(ofCount: 2)
+            .map { $0.last! - $0.first! }
+    return diff.split { $0 != 1 }.map { $0.count }.map {
+        switch $0 {
+        case 1: return 1
+        case 2: return 2
+        case 3: return 4
+        case 4: return 7
+        default: preconditionFailure()
+        }
+    }.product()
 }

@@ -31,6 +31,10 @@ public extension Sequence {
         }
         return result
     }
+
+    func group<K>(by keyForValue: (Element) throws -> K) rethrows -> Dictionary<K, [Element]> {
+        try Dictionary(grouping: self, by: keyForValue)
+    }
 }
 
 extension Sequence where Element: Equatable {

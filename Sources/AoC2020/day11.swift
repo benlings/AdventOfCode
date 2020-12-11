@@ -96,9 +96,12 @@ extension WaitingArea : CustomStringConvertible {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day11")
 
 public func day11_1() -> Int {
-    0
+    var waitingArea = WaitingArea(input)
+    waitingArea.findSteadyState()
+    return waitingArea.occupied
 }
 
 public func day11_2() -> Int {

@@ -18,6 +18,34 @@ final class Day11Tests: XCTestCase {
         """
         var waitingArea = WaitingArea(input)
         XCTAssertEqual(waitingArea.description, input)
+        waitingArea.step()
+        XCTAssertEqual(waitingArea.description, """
+            #.##.##.##
+            #######.##
+            #.#.#..#..
+            ####.##.##
+            #.##.##.##
+            #.#####.##
+            ..#.#.....
+            ##########
+            #.######.#
+            #.#####.##
+            """)
+
+        waitingArea.findSteadyState()
+        XCTAssertEqual(waitingArea.description, """
+            #.#L.L#.##
+            #LLL#LL.L#
+            L.#.L..#..
+            #L##.##.L#
+            #.#L.LL.LL
+            #.#L#L#.##
+            ..L.L.....
+            #L#L##L#L#
+            #.LLLLLL.L
+            #.#L#L#.##
+            """)
+        XCTAssertEqual(waitingArea.occupied, 37)
     }
 
     func testPart1() {

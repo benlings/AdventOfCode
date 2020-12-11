@@ -30,10 +30,10 @@ public func day10_2() -> Int {
             .map { $0.last! - $0.first! }
     return diff.split { $0 != 1 }.map { $0.count }.map {
         switch $0 {
-        case 1: return 1
-        case 2: return 2
-        case 3: return 4
-        case 4: return 7
+        case 1: return 1 // 1
+        case 2: return 2 // 1 + case 1 (1x), 2 (1x)
+        case 3: return 4 // 1 + case 2 (2x), 2 + case 1 (1x), 3 (1x)
+        case 4: return 7 // 1 + case 3 (4x), 2 + case 2 (2x), 3 + case 1 (1x)
         default: preconditionFailure()
         }
     }.product()

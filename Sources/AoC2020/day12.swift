@@ -76,8 +76,17 @@ func parseInstructions(_ lines: [String]) -> [Action] {
     lines.compactMap(Action.init)
 }
 
+func distanceFollowingInstructions(_ input: String) -> Int {
+    let instructions = parseInstructions(input.lines())
+    var position = Position()
+    position.move(following: instructions)
+    return position.manhattanDistanceToOrigin()
+}
+
+fileprivate let input = Bundle.module.text(named: "day12")
+
 public func day12_1() -> Int {
-    0
+    distanceFollowingInstructions(input)
 }
 
 public func day12_2() -> Int {

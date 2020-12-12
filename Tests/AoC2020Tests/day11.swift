@@ -110,6 +110,6 @@ final class Day11Tests: XCTestCase {
     }
 
     func testPart2() {
-        XCTAssertEqual(day11_2(), 0)
+        XCTAssertEqual(day11_2(), 2190)
     }
 }

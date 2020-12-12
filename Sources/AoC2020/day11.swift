@@ -137,12 +137,16 @@ extension WaitingArea : CustomStringConvertible {
 
 fileprivate let input = Bundle.module.text(named: "day11")
 
-public func day11_1() -> Int {
+fileprivate func calculateOccupied(_ strategy: WaitingArea.Strategy) -> Int {
     var waitingArea = WaitingArea(input)
-    waitingArea.findSteadyState()
+    waitingArea.findSteadyState(strategy: strategy)
     return waitingArea.occupied
 }
 
+public func day11_1() -> Int {
+    calculateOccupied(.neighbour)
+}
+
 public func day11_2() -> Int {
-    0
+    calculateOccupied(.visible)
 }

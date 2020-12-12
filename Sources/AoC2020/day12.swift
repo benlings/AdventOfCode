@@ -36,10 +36,26 @@ extension Action {
     }
 }
 
+struct Offset {
+    var east: Int
+    var north: Int
+
+    mutating func rotate(angle: Int) {
+        let newEast =
+            east * Int(cos(Double.pi * Double(angle)/180.0)) -
+            north * Int(sin(Double.pi * Double(angle)/180.0))
+        let newNorth =
+            east * Int(sin(Double.pi * Double(angle)/180.0)) +
+            north * Int(cos(Double.pi * Double(angle)/180.0))
+        self = Offset(east: newEast, north: newNorth)
+    }
+}
+
 struct Position {
     var longitude: Int = 0 // east west
     var latitude: Int  = 0 // north south
     var heading: Int = 0 // anticlockwise to east
+    var waypoint = Offset(east: 10, north: 1)
 }
 
 extension Position {
@@ -58,6 +74,23 @@ extension Position {
             }
         }
     }
+
+    mutating func move(followingWaypoint actions: [Action]) {
+        for action in actions {
+            switch action {
+            case .north(let distance):
+                waypoint.north += distance
+            case .east(let distance):
+                waypoint.east += distance
+            case .left(let angle):
+                waypoint.rotate(angle: angle)
+            case .forward(let distance):
+                longitude += distance * waypoint.east
+                latitude += distance * waypoint.north
+            }
+        }
+    }
+
     func manhattanDistanceToOrigin() -> Int {
         abs(latitude) + abs(longitude)
     }
@@ -74,6 +107,13 @@ func distance(followingInstructions input: String) -> Int {
     return position.manhattanDistanceToOrigin()
 }
 
+func distance(followingWaypointInstructions input: String) -> Int {
+    let instructions = parseInstructions(input.lines())
+    var position = Position()
+    position.move(followingWaypoint: instructions)
+    return position.manhattanDistanceToOrigin()
+}
+
 fileprivate let input = Bundle.module.text(named: "day12")
 
 public func day12_1() -> Int {
@@ -81,5 +121,5 @@ public func day12_1() -> Int {
 }
 
 public func day12_2() -> Int {
-    0
+    distance(followingWaypointInstructions: input)
 }

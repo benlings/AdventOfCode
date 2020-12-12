@@ -19,7 +19,11 @@ final class Day12Tests: XCTestCase {
         XCTAssertEqual(day12_1(), 1603)
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(distance(followingWaypointInstructions: exampleInput), 286)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day12_2(), 0)
+        XCTAssertEqual(day12_2(), 52866)
     }
 }

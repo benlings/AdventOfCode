@@ -3,11 +3,8 @@ import AdventCore
 
 enum Action {
     case north(Int)
-    case south(Int)
     case east(Int)
-    case west(Int)
     case left(Int)
-    case right(Int)
     case forward(Int)
 }
 
@@ -22,15 +19,15 @@ extension Action {
         case "N":
             self = .north(n)
         case "S":
-            self = .south(n)
+            self = .north(-n)
         case "E":
             self = .east(n)
         case "W":
-            self = .west(n)
+            self = .east(-n)
         case "L":
             self = .left(n)
         case "R":
-            self = .right(n)
+            self = .left(-n)
         case "F":
             self = .forward(n)
         default:
@@ -51,16 +48,10 @@ extension Position {
             switch action {
             case .north(let distance):
                 latitude += distance
-            case .south(let distance):
-                latitude -= distance
             case .east(let distance):
                 longitude += distance
-            case .west(let distance):
-                longitude -= distance
             case .left(let angle):
                 heading += angle
-            case .right(let angle):
-                heading -= angle
             case .forward(let distance):
                 latitude += distance * Int(sin(Double.pi * Double(heading)/180.0))
                 longitude += distance * Int(cos(Double.pi * Double(heading)/180.0))

@@ -53,8 +53,8 @@ extension Position {
             case .left(let angle):
                 heading += angle
             case .forward(let distance):
-                latitude += distance * Int(sin(Double.pi * Double(heading)/180.0))
                 longitude += distance * Int(cos(Double.pi * Double(heading)/180.0))
+                latitude += distance * Int(sin(Double.pi * Double(heading)/180.0))
             }
         }
     }
@@ -67,7 +67,7 @@ func parseInstructions(_ lines: [String]) -> [Action] {
     lines.compactMap(Action.init)
 }
 
-func distanceFollowingInstructions(_ input: String) -> Int {
+func distance(followingInstructions input: String) -> Int {
     let instructions = parseInstructions(input.lines())
     var position = Position()
     position.move(following: instructions)
@@ -77,7 +77,7 @@ func distanceFollowingInstructions(_ input: String) -> Int {
 fileprivate let input = Bundle.module.text(named: "day12")
 
 public func day12_1() -> Int {
-    distanceFollowingInstructions(input)
+    distance(followingInstructions: input)
 }
 
 public func day12_2() -> Int {

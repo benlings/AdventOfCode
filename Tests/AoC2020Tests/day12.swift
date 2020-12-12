@@ -3,15 +3,16 @@ import XCTest
 
 final class Day12Tests: XCTestCase {
 
+    let exampleInput = """
+        F10
+        N3
+        F7
+        R90
+        F11
+    """
+
     func testPart1Example() {
-        let input = """
-            F10
-            N3
-            F7
-            R90
-            F11
-        """
-        XCTAssertEqual(distanceFollowingInstructions(input), 25)
+        XCTAssertEqual(distance(followingInstructions: exampleInput), 25)
     }
 
     func testPart1() {

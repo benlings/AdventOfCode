@@ -2,8 +2,7 @@ import Foundation
 import AdventCore
 
 enum Action {
-    case north(Int)
-    case east(Int)
+    case move(Offset)
     case left(Int)
     case forward(Int)
 }
@@ -17,13 +16,13 @@ extension Action {
         }
         switch c {
         case "N":
-            self = .north(n)
+            self = .move(Offset(north: n))
         case "S":
-            self = .north(-n)
+            self = .move(Offset(north: -n))
         case "E":
-            self = .east(n)
+            self = .move(Offset(east: n))
         case "W":
-            self = .east(-n)
+            self = .move(Offset(east: -n))
         case "L":
             self = .left(n)
         case "R":
@@ -37,8 +36,8 @@ extension Action {
 }
 
 struct Offset {
-    var east: Int
-    var north: Int
+    var east: Int = 0
+    var north: Int = 0
 
     mutating func rotate(angle: Int) {
         let newEast =
@@ -49,28 +48,49 @@ struct Offset {
             north * Int(cos(Double.pi * Double(angle)/180.0))
         self = Offset(east: newEast, north: newNorth)
     }
+
+    func manhattanDistance(to other: Offset) -> Int {
+        let difference = other - self
+        return abs(difference.east) + abs(difference.north)
+    }
 }
 
-struct Position {
-    var longitude: Int = 0 // east west
-    var latitude: Int  = 0 // north south
-    var heading: Int = 0 // anticlockwise to east
+extension Offset : AdditiveArithmetic {
+    static func - (lhs: Offset, rhs: Offset) -> Offset {
+        Offset(east: lhs.east - rhs.east, north: lhs.north - rhs.north)
+    }
+
+    static func + (lhs: Offset, rhs: Offset) -> Offset {
+        Offset(east: lhs.east + rhs.east, north: lhs.north + rhs.north)
+    }
+
+    static var zero: Offset {
+        Offset()
+    }
+}
+
+extension Offset {
+    static func * (lhs: Int, rhs: Offset) -> Offset {
+        Offset(east: lhs * rhs.east, north: lhs * rhs.north)
+    }
+}
+
+struct Ship {
+    var position: Offset = .zero
+    var heading: Offset = .init(east: 1)
     var waypoint = Offset(east: 10, north: 1)
 }
 
-extension Position {
+extension Ship {
     mutating func move(following actions: [Action]) {
         for action in actions {
             switch action {
-            case .north(let distance):
-                latitude += distance
-            case .east(let distance):
-                longitude += distance
+            case .move(let offset):
+                position += offset
             case .left(let angle):
-                heading += angle
+                heading.rotate(angle: angle)
             case .forward(let distance):
-                longitude += distance * Int(cos(Double.pi * Double(heading)/180.0))
-                latitude += distance * Int(sin(Double.pi * Double(heading)/180.0))
+                position += distance * heading
             }
         }
     }
@@ -78,21 +98,18 @@ extension Position {
     mutating func move(followingWaypoint actions: [Action]) {
         for action in actions {
             switch action {
-            case .north(let distance):
-                waypoint.north += distance
-            case .east(let distance):
-                waypoint.east += distance
+            case .move(let offset):
+                waypoint += offset
             case .left(let angle):
                 waypoint.rotate(angle: angle)
             case .forward(let distance):
-                longitude += distance * waypoint.east
-                latitude += distance * waypoint.north
+                position += distance * waypoint
             }
         }
     }
 
     func manhattanDistanceToOrigin() -> Int {
-        abs(latitude) + abs(longitude)
+        position.manhattanDistance(to: .zero)
     }
 }
 
@@ -102,16 +119,16 @@ func parseInstructions(_ lines: [String]) -> [Action] {
 
 func distance(followingInstructions input: String) -> Int {
     let instructions = parseInstructions(input.lines())
-    var position = Position()
-    position.move(following: instructions)
-    return position.manhattanDistanceToOrigin()
+    var ship = Ship()
+    ship.move(following: instructions)
+    return ship.manhattanDistanceToOrigin()
 }
 
 func distance(followingWaypointInstructions input: String) -> Int {
     let instructions = parseInstructions(input.lines())
-    var position = Position()
-    position.move(followingWaypoint: instructions)
-    return position.manhattanDistanceToOrigin()
+    var ship = Ship()
+    ship.move(followingWaypoint: instructions)
+    return ship.manhattanDistanceToOrigin()
 }
 
 fileprivate let input = Bundle.module.text(named: "day12")

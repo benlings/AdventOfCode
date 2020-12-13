@@ -3,12 +3,12 @@ import AdventCore
 
 struct BusTimetable {
     var earliestTimestamp: Int
-    var busIds: [Int]
+    var busIds: [Int?]
 
     func findBus() -> (busId: Int, time: Int) {
         var time = earliestTimestamp
         while true {
-            let busId = busIds.first { i in
+            let busId = busIds.compactMap { $0 }.first { i in
                 time % i == 0
             }
             if let busId = busId {
@@ -29,7 +29,7 @@ extension BusTimetable {
     init(_ description: String) {
         let lines = description.lines()
         earliestTimestamp = Int(lines.first!)!
-        busIds = lines.last!.components(separatedBy: ",").compactMap(Int.init)
+        busIds = lines.last!.components(separatedBy: ",").map(Int.init)
     }
 }
 

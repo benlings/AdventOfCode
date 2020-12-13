@@ -9,7 +9,7 @@ struct BusTimetable {
         var time = earliestTimestamp
         while true {
             let busId = busIds.compactMap { $0 }.first { i in
-                time % i == 0
+                time.isMultiple(of: i)
             }
             if let busId = busId {
                 return (busId, time)

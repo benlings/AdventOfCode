@@ -1,11 +1,16 @@
 import Foundation
 import AdventCore
 
-struct XMASCypher {
+public struct XMASCypher {
+    public init(preamble: Int, input: [Int]) {
+        self.preamble = preamble
+        self.input = input
+    }
+
     let preamble: Int
     let input: [Int]
 
-    func firstInvalid() -> Int? {
+    public func firstInvalid() -> Int? {
         let windows = input.slidingWindows(ofCount: preamble + 1)
         return windows.first { window in
             !window.dropLast()
@@ -14,7 +19,7 @@ struct XMASCypher {
         }?.last
     }
 
-    func findRange(summingTo total: Int) -> Array<Int>.SubSequence? {
+    public func findRange(summingTo total: Int) -> Array<Int>.SubSequence? {
         let minSize = 2
         var start = input.startIndex, end = start + minSize
         var sum = input[start..<end].sum()
@@ -33,7 +38,7 @@ struct XMASCypher {
         return nil
     }
 
-    static func encryptionWeakness<C>(_ range: C) -> Int where C : Collection, C.Element == Int {
+    public static func encryptionWeakness<C>(_ range: C) -> Int where C : Collection, C.Element == Int {
         range.min()! + range.max()!
     }
 }

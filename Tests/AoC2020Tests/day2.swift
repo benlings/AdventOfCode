@@ -1,5 +1,5 @@
 import XCTest
-@testable import AoC2020
+import AoC2020
 
 final class Day2Tests: XCTestCase {
     func testPart1() {

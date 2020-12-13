@@ -78,14 +78,14 @@ func parseInstructions(_ lines: [String]) -> [Action] {
     lines.compactMap(Action.init)
 }
 
-func distance(followingInstructions input: String) -> Int {
+public func distance(followingInstructions input: String) -> Int {
     let instructions = parseInstructions(input.lines())
     var ship = Ship()
     ship.move(following: instructions)
     return ship.manhattanDistanceToOrigin()
 }
 
-func distance(followingWaypointInstructions input: String) -> Int {
+public func distance(followingWaypointInstructions input: String) -> Int {
     let instructions = parseInstructions(input.lines())
     var ship = Ship()
     ship.move(followingWaypoint: instructions)

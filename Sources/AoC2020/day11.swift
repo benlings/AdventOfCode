@@ -69,7 +69,7 @@ public struct WaitingArea : Equatable {
 
     }
 
-    mutating func step(strategy: Strategy = .neighbour) {
+    public mutating func step(strategy: Strategy = .neighbour) {
         let oldLayout = self
         for y in columnIndices {
             for x in rowIndices {

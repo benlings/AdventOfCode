@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-struct BusTimetable {
+public struct BusTimetable {
     var earliestTimestamp: Int
     var busIds: [Int?]
 
@@ -18,14 +18,14 @@ struct BusTimetable {
         }
     }
 
-    func answer() -> Int {
+    public func answer() -> Int {
         let (busId, time) = findBus()
         return busId * (time - earliestTimestamp)
 
     }
 }
 
-extension BusTimetable {
+public extension BusTimetable {
     init(_ description: String) {
         let lines = description.lines()
         earliestTimestamp = Int(lines.first!)!

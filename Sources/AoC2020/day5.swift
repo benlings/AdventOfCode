@@ -4,8 +4,13 @@ import AdventCore
 public struct Seat : Equatable {
     var row: UInt
     var column: UInt
-    var id: UInt {
+    public var id: UInt {
         row * 8 + column
+    }
+
+    public init(row: UInt, column: UInt) {
+        self.row = row
+        self.column = column
     }
 }
 

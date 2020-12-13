@@ -11,11 +11,15 @@ extension Bag : ExpressibleByStringLiteral {
     }
 }
 
-typealias BagContents = Dictionary<Bag, Int>
+public typealias BagContents = Dictionary<Bag, Int>
 
 public struct LuggageRule : Equatable {
     var bag: Bag
     var contents = BagContents()
+    public init(bag: Bag, contents: BagContents) {
+        self.bag = bag
+        self.contents = contents
+    }
 }
 
 extension Scanner {
@@ -96,10 +100,10 @@ extension LuggageProcessor {
 
 fileprivate let day7_input = Bundle.module.text(named: "day7")
 
-func day7_1() -> Int {
+public func day7_1() -> Int {
     LuggageProcessor(rulesDescription: day7_input).countOfBags(containing: "shiny gold")
 }
 
-func day7_2() -> Int {
+public func day7_2() -> Int {
     LuggageProcessor(rulesDescription: day7_input).countOfBags(containedWithin: "shiny gold")
 }

@@ -1,8 +1,21 @@
 import Foundation
 import AdventCore
+import Algorithms
 
 extension CharacterSet {
     static let maskCharacters = CharacterSet(charactersIn: "X10")
+}
+
+extension UInt64 {
+    func bitPermutations(mask: UInt64) -> AnySequence<UInt64> {
+        if mask == 0 {
+            return AnySequence([self])
+        } else {
+            let setBit = 0b1 << mask.trailingZeroBitCount as UInt64
+            return AnySequence(chain((self | setBit).bitPermutations(mask: mask & ~setBit),
+                         (self & ~setBit).bitPermutations(mask: mask & ~setBit)))
+        }
+    }
 }
 
 enum Instruction {
@@ -39,7 +52,11 @@ enum Instruction {
             case .v1:
                 context.memory[location] = (newValue | context.maskSettingBits) & context.maskUnsettingBits
             case .v2:
-                break;
+                let maskedLocation = location | context.maskSettingBits
+                let floatingMask = context.maskUnsettingBits & ~context.maskSettingBits
+                for floatingLocation in maskedLocation.bitPermutations(mask: floatingMask) {
+                    context.memory[floatingLocation] = newValue
+                }
             }
         }
     }

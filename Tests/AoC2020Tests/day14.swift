@@ -18,6 +18,17 @@ final class Day14Tests: XCTestCase {
         XCTAssertEqual(day14_1(), 5055782549997)
     }
 
+    func testPart2Example() {
+        let input = """
+        mask = 000000000000000000000000000000X1001X
+        mem[42] = 100
+        mask = 00000000000000000000000000000000X0XX
+        mem[26] = 1
+        """
+        let instructions = MemInstructions(input)
+        XCTAssertEqual(instructions.execute(mode: .v2), 208)
+    }
+
     func testPart2() {
         XCTAssertEqual(day14_2(), 0)
     }

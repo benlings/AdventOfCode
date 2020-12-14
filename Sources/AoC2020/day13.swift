@@ -44,15 +44,12 @@ public struct BusTimetable {
 
     public func earliestTimestampMatchingOffsets() -> Int {
         let requiredBusIds = busIds.enumerated().compactMap { (offset, id) -> (Int, Int)? in
-            guard let busId = id else {
-                return nil
-            }
-            return (offset, busId)
+            id.map { (offset, $0) }
         }
         var time = 0
         while true {
             let matchingBusIds = requiredBusIds.filter { (offset, busId) in
-                return (time + offset).isMultiple(of: busId)
+                (time + offset).isMultiple(of: busId)
             }.map(\.1)
             if matchingBusIds.count == requiredBusIds.count {
                 return time

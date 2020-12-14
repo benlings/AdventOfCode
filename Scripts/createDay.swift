@@ -22,7 +22,7 @@ public func day\(day)_2() -> Int {
 
 let tests = """
 import XCTest
-@testable import AoC\(year)
+import AoC\(year)
 
 final class Day\(day)Tests: XCTestCase {
 

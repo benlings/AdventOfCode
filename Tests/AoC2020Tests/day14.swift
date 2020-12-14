@@ -15,7 +15,7 @@ final class Day14Tests: XCTestCase {
     }
 
     func testPart1() {
-        XCTAssertEqual(day14_1(), 0)
+        XCTAssertEqual(day14_1(), 5055782549997)
     }
 
     func testPart2() {

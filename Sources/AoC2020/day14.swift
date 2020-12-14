@@ -67,9 +67,10 @@ public struct MemContext {
     var memory: [UInt64: UInt64] = [:]
 }
 
+fileprivate let input = Bundle.module.text(named: "day14")
 
 public func day14_1() -> Int {
-    0
+    Int(MemInstructions(input).execute())
 }
 
 public func day14_2() -> Int {

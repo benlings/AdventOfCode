@@ -99,5 +99,5 @@ public func day14_1() -> Int {
 }
 
 public func day14_2() -> Int {
-    0
+    Int(MemInstructions(input).execute(mode: .v2))
 }

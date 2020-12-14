@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-func gcd(_ m: Int, _ n: Int) -> Int {
+func gcd<I>(_ m: I, _ n: I) -> I where I : BinaryInteger {
     let r = m % n
     if r != 0 {
         return gcd(n, r)
@@ -10,12 +10,14 @@ func gcd(_ m: Int, _ n: Int) -> Int {
     }
 }
 
-func lcm(_ m: Int, _ n: Int) -> Int {
+func lcm<I>(_ m: I, _ n: I) -> I where I : BinaryInteger {
     m / gcd(m, n) * n
 }
 
-func lcm(_ values: [Int]) -> Int {
-    values.reduce { lcm($0, $1) } ?? 0
+extension Array where Element : BinaryInteger {
+    func lcm() -> Element? {
+        reduce(AoC2020.lcm)
+    }
 }
 
 public struct BusTimetable {
@@ -55,11 +57,9 @@ public struct BusTimetable {
             if matchingBusIds.count == requiredBusIds.count {
                 return time
             }
-            time += lcm(matchingBusIds)
+            time += matchingBusIds.lcm() ?? 1
         }
     }
-
-
 }
 
 public extension BusTimetable {

@@ -23,18 +23,26 @@ public func day10_1() -> Int {
     differencesProduct(input)
 }
 
+/// Combinations of ways of rearranging adapters with difference of 1
+func combinations3(_ count: Int) -> Int {
+    assert(count > 0)
+    switch count {   // Arrangements of differences between consecutive adapters
+    case 1: return 1 // 1
+    case 2: return 2 // 1 <case 1>, 2
+    case 3: return 4 // 1 <case 2>, 2 <case 1>, 3
+    // 1 <case n-1>, 2 <case n-2>, 3 <case n-3>
+    default: return combinations3(count - 1) + combinations3(count - 2) + combinations3(count - 3)
+    }
+}
+
 public func day10_2() -> Int {
     let sortedNumbers = input.sorted()
     let allNumbers = chain(chain([0], sortedNumbers), [sortedNumbers.last! + 3])
     let diff = allNumbers.slidingWindows(ofCount: 2)
             .map { $0.last! - $0.first! }
-    return diff.split { $0 != 1 }.map { $0.count }.map {
-        switch $0 {
-        case 1: return 1 // 1
-        case 2: return 2 // 1 + case 1 (1x), 2 (1x)
-        case 3: return 4 // 1 + case 2 (2x), 2 + case 1 (1x), 3 (1x)
-        case 4: return 7 // 1 + case 3 (4x), 2 + case 2 (2x), 3 + case 1 (1x)
-        default: preconditionFailure()
-        }
-    }.product()
+    return diff
+        .split { $0 != 1 }
+        .map(\.count)
+        .map(combinations3)
+        .product()
 }

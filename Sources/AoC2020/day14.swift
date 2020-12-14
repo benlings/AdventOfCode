@@ -35,17 +35,24 @@ enum Instruction {
             context.maskSettingBits = setting
             context.maskUnsettingBits = unsetting
         case .mem(let location, let newValue):
-            context.memory[location] = (newValue | context.maskSettingBits) & context.maskUnsettingBits
+            switch context.mode {
+            case .v1:
+                context.memory[location] = (newValue | context.maskSettingBits) & context.maskUnsettingBits
+            case .v2:
+                break;
+            }
         }
     }
 }
 
 public struct MemInstructions {
 
+    public enum Mode { case v1, v2 }
+
     var instructions: [Instruction]
 
-    public func execute() -> UInt64 {
-        var context = MemContext()
+    public func execute(mode: Mode = .v1) -> UInt64 {
+        var context = MemContext(mode: mode)
         eval(&context)
         return context.memory.values.sum()
     }
@@ -62,6 +69,7 @@ public extension MemInstructions {
 }
 
 public struct MemContext {
+    var mode: MemInstructions.Mode
     var maskSettingBits: UInt64 = 0
     var maskUnsettingBits: UInt64 = 0
     var memory: [UInt64: UInt64] = [:]

@@ -36,5 +36,5 @@ public func day15_1() -> Int {
 }
 
 public func day15_2() -> Int {
-    0
+    MemoryGame(input).numberAt(30000000)
 }

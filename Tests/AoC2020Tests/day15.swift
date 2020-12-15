@@ -17,7 +17,17 @@ final class Day15Tests: XCTestCase {
         XCTAssertEqual(day15_1(), 1696)
     }
 
+    func testPart2Examples() {
+        XCTAssertEqual(MemoryGame("0,3,6").numberAt(30000000), 175594)
+        XCTAssertEqual(MemoryGame("1,3,2").numberAt(30000000), 2578)
+        XCTAssertEqual(MemoryGame("2,1,3").numberAt(30000000), 3544142)
+        XCTAssertEqual(MemoryGame("1,2,3").numberAt(30000000), 261214)
+        XCTAssertEqual(MemoryGame("2,3,1").numberAt(30000000), 6895259)
+        XCTAssertEqual(MemoryGame("3,2,1").numberAt(30000000), 18)
+        XCTAssertEqual(MemoryGame("3,1,2").numberAt(30000000), 362)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day15_2(), 0)
+        XCTAssertEqual(day15_2(), 37385)
     }
 }

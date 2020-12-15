@@ -29,8 +29,10 @@ public extension MemoryGame {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day15")
+
 public func day15_1() -> Int {
-    0
+    MemoryGame(input).numberAt(2020)
 }
 
 public func day15_2() -> Int {

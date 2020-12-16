@@ -2,19 +2,24 @@ import Foundation
 import AdventCore
 
 extension String {
-    func toIndexSet() -> IndexSet {
+    func commaSeparatedInts() -> [Int] {
         self.components(separatedBy: ",")
             .ints()
-            .reduce(IndexSet()) {
-                $0.union(IndexSet(integer: $1))
-            }
+    }
+}
+
+extension Sequence where Element == Int {
+    func toIndexSet() -> IndexSet {
+        self.reduce(IndexSet()) {
+            $0.union(IndexSet(integer: $1))
+        }
     }
 }
 
 public struct TicketTranslation {
     var rules: [String: IndexSet]
-    var yourTicket: IndexSet
-    var nearbyTickets: [IndexSet]
+    var yourTicket: [Int]
+    var nearbyTickets: [[Int]]
 
     var validValues: IndexSet {
         rules.values.reduce(IndexSet()) { $0.union($1) }
@@ -24,7 +29,7 @@ public struct TicketTranslation {
         let validValues = self.validValues
         var result = [Int]()
         for t in nearbyTickets {
-            result.append(contentsOf: t.subtracting(validValues))
+            result.append(contentsOf: t.toIndexSet().subtracting(validValues))
         }
         return result
     }
@@ -55,9 +60,9 @@ public extension TicketTranslation {
             return (fieldName, ranges)
         }.toDictionary()
         let yourTicketDescription = groups[1].lines()[1]
-        yourTicket = yourTicketDescription.toIndexSet()
+        yourTicket = yourTicketDescription.commaSeparatedInts()
         nearbyTickets = groups[2].lines().dropFirst().map {
-            $0.toIndexSet()
+            $0.commaSeparatedInts()
         }
     }
 }

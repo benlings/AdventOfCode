@@ -28,6 +28,10 @@ public struct TicketTranslation {
         }
         return result
     }
+
+    public func errorRate() -> Int {
+        invalidNearbyTickets().sum()
+    }
 }
 
 public extension TicketTranslation {
@@ -58,8 +62,10 @@ public extension TicketTranslation {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day16")
+
 public func day16_1() -> Int {
-    0
+    TicketTranslation(input).errorRate()
 }
 
 public func day16_2() -> Int {

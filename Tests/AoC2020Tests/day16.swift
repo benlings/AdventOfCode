@@ -20,10 +20,11 @@ final class Day16Tests: XCTestCase {
         """
         let t = TicketTranslation(input)
         XCTAssertEqual(t.invalidNearbyTickets(), [4, 55, 12])
+        XCTAssertEqual(t.errorRate(), 71)
     }
 
     func testPart1() {
-        XCTAssertEqual(day16_1(), 0)
+        XCTAssertEqual(day16_1(), 20013)
     }
 
     func testPart2() {

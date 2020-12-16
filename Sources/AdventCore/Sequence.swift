@@ -55,6 +55,12 @@ public extension Sequence where Element: Numeric {
     }
 }
 
+public extension Sequence {
+    func toDictionary<K, V>() -> Dictionary<K, V> where Element == (K, V) {
+        Dictionary(uniqueKeysWithValues: self)
+    }
+}
+
 public extension Sequence where Element: StringProtocol {
     func ints() -> [Int] {
         compactMap { Int($0) }

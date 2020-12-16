@@ -43,23 +43,31 @@ public struct TicketTranslation {
     }
 
     public func inferredFieldOrder() -> [String] {
-        let possible = (0..<rules.count)
-            .map { i in
-                validTickets().map { $0[i] }
-            }
-            .map { fieldValues in
-                rules.filter { (key, ruleValues) -> Bool in
-                    fieldValues.allSatisfy(ruleValues.contains)
-                }
-            }.enumerated().sorted(on: \.element.count)
-        var r = [(Int, String)]()
+        let validTickets = self.validTickets()
         var used = Set<String>()
-        for e in possible {
-            let field = Set(e.element.keys).subtracting(used).first!
-            r.append((e.offset, field))
-            used.insert(field)
-        }
-        return r.sorted(on: \.0).map(\.1)
+        return (0..<rules.count)
+            // Get values for each ticket
+            .map { fieldIndex in
+                validTickets.map { $0[fieldIndex] }
+            }
+            // Find rules that are satisfied for each field
+            .map { fieldValues in
+                rules.filter { (_, ruleValues) -> Bool in
+                    fieldValues.allSatisfy(ruleValues.contains)
+                }.keys
+            }
+            // Keep track of index for later
+            .enumerated()
+            // Sort by how many rules are satisfied for each field
+            .sorted(on: \.element.count)
+            // Go through each in turn, eliminating fields we've placed
+            .reduce(into: [(offset: Int, element: String)]()) { fields, e in
+                let field = Set(e.element).subtracting(used).first!
+                fields.append((e.offset, field))
+                used.insert(field)
+            }
+            // Put back into index order
+            .sorted(on: \.offset).map(\.element)
     }
 
     public func yourTicketFields() -> [String: Int] {

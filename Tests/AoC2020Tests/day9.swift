@@ -27,7 +27,7 @@ final class Day9Tests: XCTestCase {
         277
         309
         576
-        """.lines().compactMap(Int.init)
+        """.lines().ints()
         cypher = XMASCypher(preamble: 5, input: input)
     }
 

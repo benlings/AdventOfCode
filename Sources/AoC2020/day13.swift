@@ -63,7 +63,7 @@ public extension BusTimetable {
     init(_ description: String) {
         let lines = description.lines()
         earliestTimestamp = Int(lines.first!)!
-        busIds = lines.last!.components(separatedBy: ",").map(Int.init)
+        busIds = lines.last!.commaSeparated().map(Int.init)
     }
 }
 

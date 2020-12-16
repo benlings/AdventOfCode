@@ -25,7 +25,7 @@ public struct MemoryGame {
 
 public extension MemoryGame {
     init(_ input: String) {
-        startingNumbers = input.components(separatedBy: ",").compactMap(Int.init)
+        startingNumbers = input.commaSeparated().ints()
     }
 }
 

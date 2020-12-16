@@ -6,6 +6,10 @@ public extension String {
         return lines.map(String.init)
     }
 
+    func commaSeparated() -> [String] {
+        self.components(separatedBy: ",")
+    }
+
     func groups() -> [String] {
         self
             .trimmingCharacters(in: .newlines)

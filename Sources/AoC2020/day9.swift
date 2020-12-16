@@ -43,7 +43,7 @@ public struct XMASCypher {
     }
 }
 
-fileprivate let day9_input = Bundle.module.text(named: "day9").lines().compactMap(Int.init)
+fileprivate let day9_input = Bundle.module.text(named: "day9").lines().ints()
 
 public func day9_1() -> Int {
     XMASCypher(preamble: 25, input: day9_input).firstInvalid()!

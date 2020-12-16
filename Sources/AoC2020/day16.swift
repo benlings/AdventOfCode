@@ -3,8 +3,7 @@ import AdventCore
 
 extension String {
     func commaSeparatedInts() -> [Int] {
-        self.components(separatedBy: ",")
-            .ints()
+        self.commaSeparated().ints()
     }
 }
 

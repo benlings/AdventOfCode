@@ -34,7 +34,7 @@ public struct TicketTranslation {
     public func validTickets() -> [[Int]] {
         let validValues = self.validValues
         return nearbyTickets.filter {
-            $0.allSatisfy { validValues.contains($0) }
+            $0.allSatisfy(validValues.contains)
         }
     }
 
@@ -49,7 +49,7 @@ public struct TicketTranslation {
             }
             .map { fieldValues in
                 rules.filter { (key, ruleValues) -> Bool in
-                    fieldValues.allSatisfy { ruleValues.contains($0) }
+                    fieldValues.allSatisfy(ruleValues.contains)
                 }
             }.enumerated().sorted(on: \.element.count)
         var r = [(Int, String)]()

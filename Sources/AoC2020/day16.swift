@@ -43,15 +43,23 @@ public struct TicketTranslation {
     }
 
     public func inferredFieldOrder() -> [String] {
-        (0..<rules.count)
+        let possible = (0..<rules.count)
             .map { i in
                 validTickets().map { $0[i] }
             }
             .map { fieldValues in
-                rules.first { (key, ruleValues) -> Bool in
+                rules.filter { (key, ruleValues) -> Bool in
                     fieldValues.allSatisfy { ruleValues.contains($0) }
-                }!.key
-            }
+                }
+            }.enumerated().sorted(on: \.element.count)
+        var r = [(Int, String)]()
+        var used = Set<String>()
+        for e in possible {
+            let field = Set(e.element.keys).subtracting(used).first!
+            r.append((e.offset, field))
+            used.insert(field)
+        }
+        return r.sorted(on: \.0).map(\.1)
     }
 
     public func yourTicketFields() -> [String: Int] {
@@ -100,5 +108,5 @@ public func day16_1() -> Int {
 }
 
 public func day16_2() -> Int {
-    0
+    TicketTranslation(input).departureFieldProduct()
 }

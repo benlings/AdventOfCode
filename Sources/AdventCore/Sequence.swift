@@ -59,6 +59,12 @@ public extension Sequence {
     func toDictionary<K, V>() -> Dictionary<K, V> where Element == (K, V) {
         Dictionary(uniqueKeysWithValues: self)
     }
+
+    func sorted<T>(on selector: (Element) -> T) -> [Element] where T : Comparable {
+        sorted {
+            selector($0) < selector($1)
+        }
+    }
 }
 
 public extension Sequence where Element: StringProtocol {

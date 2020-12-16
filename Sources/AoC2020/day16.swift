@@ -27,15 +27,42 @@ public struct TicketTranslation {
 
     public func invalidNearbyTickets() -> [Int] {
         let validValues = self.validValues
-        var result = [Int]()
-        for t in nearbyTickets {
-            result.append(contentsOf: t.toIndexSet().subtracting(validValues))
+        return nearbyTickets.flatMap {
+            $0.toIndexSet().subtracting(validValues)
         }
-        return result
+    }
+
+    public func validTickets() -> [[Int]] {
+        let validValues = self.validValues
+        return nearbyTickets.filter {
+            $0.allSatisfy { validValues.contains($0) }
+        }
     }
 
     public func errorRate() -> Int {
         invalidNearbyTickets().sum()
+    }
+
+    public func inferredFieldOrder() -> [String] {
+        (0..<rules.count)
+            .map { i in
+                validTickets().map { $0[i] }
+            }
+            .map { fieldValues in
+                rules.first { (key, ruleValues) -> Bool in
+                    fieldValues.allSatisfy { ruleValues.contains($0) }
+                }!.key
+            }
+    }
+
+    public func yourTicketFields() -> [String: Int] {
+        zip(inferredFieldOrder(), yourTicket).toDictionary()
+    }
+
+    public func departureFieldProduct() -> Int {
+        yourTicketFields().filter { (k, v) in
+            k.starts(with: "departure")
+        }.map(\.value).product()
     }
 }
 

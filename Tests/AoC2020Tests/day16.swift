@@ -27,6 +27,24 @@ final class Day16Tests: XCTestCase {
         XCTAssertEqual(day16_1(), 20013)
     }
 
+    func testPart2Example() {
+        let input = """
+        class: 0-1 or 4-19
+        row: 0-5 or 8-19
+        seat: 0-13 or 16-19
+
+        your ticket:
+        11,12,13
+
+        nearby tickets:
+        3,9,18
+        15,1,5
+        5,14,9
+        """
+        let t = TicketTranslation(input)
+        XCTAssertEqual(t.inferredFieldOrder(), ["row", "class", "seat"])
+    }
+
     func testPart2() {
         XCTAssertEqual(day16_2(), 0)
     }

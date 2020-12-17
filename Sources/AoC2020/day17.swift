@@ -147,9 +147,12 @@ public extension Grid3D {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day17")
 
 public func day17_1() -> Int {
-    0
+    var grid = Grid3D(input)
+    grid.boot()
+    return grid.countActive()
 }
 
 public func day17_2() -> Int {

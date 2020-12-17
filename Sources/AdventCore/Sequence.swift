@@ -60,6 +60,10 @@ public extension Sequence {
         Dictionary(uniqueKeysWithValues: self)
     }
 
+    func toSet<E>() -> Set<E> where Element == E {
+        Set(self)
+    }
+
     func sorted<T>(on selector: (Element) -> T) -> [Element] where T : Comparable {
         sorted {
             selector($0) < selector($1)

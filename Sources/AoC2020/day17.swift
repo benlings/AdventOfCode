@@ -212,5 +212,7 @@ public func day17_1() -> Int {
 }
 
 public func day17_2() -> Int {
-    0
+    var grid = GridND(input, dimensions: 4)
+    grid.boot()
+    return grid.countActive()
 }

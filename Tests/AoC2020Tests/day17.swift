@@ -26,7 +26,17 @@ final class Day17Tests: XCTestCase {
         XCTAssertEqual(day17_1(), 215)
     }
 
+    func testPart2Example() {
+        var grid = GridND("""
+            .#.
+            ..#
+            ###
+        """, dimensions: 4)
+        grid.boot()
+        XCTAssertEqual(grid.countActive(), 848)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day17_2(), 0)
+        XCTAssertEqual(day17_2(), 1728)
     }
 }

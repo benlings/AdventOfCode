@@ -1,112 +1,160 @@
 import Foundation
 import AdventCore
 
-public struct Point3D : Hashable {
-    var x = 0
-    var y = 0
-    var z = 0
+public struct PointND : Hashable {
+    var coords: [Int]
 
-    static let zero = Point3D()
-
-    static func - (lhs: Point3D, rhs: Offset3D) -> Point3D {
-        Point3D(x: lhs.x - rhs.dx, y: lhs.y - rhs.dy, z: lhs.z - rhs.dz)
+    static func zero(_ dimensions: Int) -> PointND {
+        PointND(coords: .init(repeating: 0, count: dimensions))
     }
 
-    static func + (lhs: Point3D, rhs: Offset3D) -> Point3D {
-        Point3D(x: lhs.x + rhs.dx, y: lhs.y + rhs.dy, z: lhs.z + rhs.dz)
+    subscript(dimension: Int) -> Int {
+        get {
+            coords[dimension]
+        }
+        set {
+            coords[dimension] = newValue
+        }
+    }
+
+    static func - (lhs: PointND, rhs: OffsetND) -> PointND {
+        PointND(coords: zip(lhs.coords, rhs.d).map(-))
+    }
+
+    static func + (lhs: PointND, rhs: OffsetND) -> PointND {
+        PointND(coords: zip(lhs.coords, rhs.d).map(+))
     }
 }
 
-public struct Offset3D : Hashable {
-    var dx = 0
-    var dy = 0
-    var dz = 0
+public struct OffsetND : Hashable {
+    var d: [Int]
 
-    static let oneX = Offset3D(dx: 1, dy: 0, dz: 0)
-    static let oneY = Offset3D(dx: 0, dy: 1, dz: 0)
-    static let oneZ = Offset3D(dx: 0, dy: 0, dz: 1)
+    static func one(dim: Int, of dimensions: Int) -> OffsetND {
+        var offset = zero(dimensions)
+        offset.d[dim] = 1
+        return offset
+    }
 
-    static let neighbours: [Offset3D] = [
-        -.oneX - .oneY - .oneZ, -.oneX - .oneY + .zero, -.oneX - .oneY + .oneZ,
-        -.oneX - .zero - .oneZ, -.oneX - .zero + .zero, -.oneX - .zero + .oneZ,
-        -.oneX + .oneY - .oneZ, -.oneX + .oneY + .zero, -.oneX + .oneY + .oneZ,
-        +.zero - .oneY - .oneZ, +.zero - .oneY + .zero, +.zero - .oneY + .oneZ,
-        +.zero - .zero - .oneZ,                         +.zero - .zero + .oneZ,
-        +.zero + .oneY - .oneZ, +.zero + .oneY + .zero, +.zero + .oneY + .oneZ,
-        +.oneX - .oneY - .oneZ, +.oneX - .oneY + .zero, +.oneX - .oneY + .oneZ,
-        +.oneX - .zero - .oneZ, +.oneX - .zero + .zero, +.oneX - .zero + .oneZ,
-        +.oneX + .oneY - .oneZ, +.oneX + .oneY + .zero, +.oneX + .oneY + .oneZ,
-    ]
+    subscript(dimension: Int) -> Int {
+        get {
+            d[dimension]
+        }
+        set {
+            d[dimension] = newValue
+        }
+    }
 
-    static let zero = Offset3D()
-    static let one = Offset3D(dx: 1, dy: 1, dz: 1)
+    static func neighboursIncZero(_ dimensions: Int) -> [OffsetND] {
+        if dimensions == 1 {
+            return [
+                OffsetND(d: [-1]),
+                OffsetND(d: [0]),
+                OffsetND(d: [1]),
+            ]
+        } else {
+            return neighboursIncZero(dimensions - 1).flatMap { n in
+                [
+                    OffsetND(d: n.d + [-1]),
+                    OffsetND(d: n.d + [0]),
+                    OffsetND(d: n.d + [1]),
+                ]
+            }
+        }
+    }
 
-    static func - (lhs: Offset3D, rhs: Offset3D) -> Offset3D {
-        Offset3D(dx: lhs.dx - rhs.dx, dy: lhs.dy - rhs.dy, dz: lhs.dz - rhs.dz)
+    static func neighbours(_ dimensions: Int) -> [OffsetND] {
+        neighboursIncZero(dimensions).filter {
+            $0 != .zero(dimensions)
+        }
     }
-    static func + (lhs: Offset3D, rhs: Offset3D) -> Offset3D {
-        Offset3D(dx: lhs.dx + rhs.dx, dy: lhs.dy + rhs.dy, dz: lhs.dz + rhs.dz)
+
+    static func zero(_ dimensions: Int) -> OffsetND {
+        OffsetND(d: [Int](repeating: 0, count: dimensions))
     }
-    static func * (lhs: Int, rhs: Offset3D) -> Offset3D {
-        Offset3D(dx: lhs * rhs.dx, dy: lhs * rhs.dy, dz: lhs * rhs.dz)
+    static func one(_ dimensions: Int) -> OffsetND {
+        OffsetND(d: [Int](repeating: 1, count: dimensions))
     }
-    static prefix func - (rhs: Offset3D) -> Offset3D {
-        Offset3D(dx: -rhs.dx, dy: -rhs.dy, dz: -rhs.dz)
+
+    static func - (lhs: OffsetND, rhs: OffsetND) -> OffsetND {
+        OffsetND(d: zip(lhs.d, rhs.d).map(-))
     }
-    static prefix func + (rhs: Offset3D) -> Offset3D {
+    static func + (lhs: OffsetND, rhs: OffsetND) -> OffsetND {
+        OffsetND(d: zip(lhs.d, rhs.d).map(+))
+    }
+    static func * (lhs: Int, rhs: OffsetND) -> OffsetND {
+        OffsetND(d: rhs.d.map { lhs * $0 })
+    }
+    static prefix func - (rhs: OffsetND) -> OffsetND {
+        OffsetND(d: rhs.d.map { -$0 })
+    }
+    static prefix func + (rhs: OffsetND) -> OffsetND {
         rhs
     }
 
 }
 
-public struct Range3D : Hashable {
-    var origin: Point3D = .zero
-    var extent: Offset3D = .zero
+public struct RangeND : Hashable {
+    var origin: PointND
+    var extent: OffsetND
 
-    static let empty = Range3D()
-
-    public func inset(_ change: Offset3D) -> Range3D {
-        Range3D(origin: origin + change, extent: extent - 2 * change)
+    static func empty(_ dimensions: Int) -> RangeND {
+        RangeND(origin: .zero(dimensions), extent: .zero(dimensions))
     }
 
-    func forEach(_ action: (Point3D) -> Void) {
-        for x in origin.x...(origin.x + extent.dx) {
-            for y in origin.y...(origin.y + extent.dy) {
-                for z in origin.z...(origin.z + extent.dz) {
-                    action(Point3D(x: x, y: y, z: z))
+    public func inset(_ change: OffsetND) -> RangeND {
+        RangeND(origin: origin + change, extent: extent - 2 * change)
+    }
+
+    func forEach(_ action: (PointND) -> Void) {
+        if (origin.coords.count == 3) {
+            for x in origin[0]...(origin[0] + extent[0]) {
+                for y in origin[1]...(origin[1] + extent[1]) {
+                    for z in origin[2]...(origin[2] + extent[2]) {
+                        action(PointND(coords: [x, y, z]))
+                    }
+                }
+            }
+        } else {
+            // FIXME
+            for x in origin[0]...(origin[0] + extent[0]) {
+                for y in origin[1]...(origin[1] + extent[1]) {
+                    for z in origin[2]...(origin[2] + extent[2]) {
+                        for w in origin[3]...(origin[3] + extent[3]) {
+                            action(PointND(coords: [x, y, z, w]))
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-public struct Grid3D {
-    var active: Set<Point3D>
+public struct GridND {
+    var active: Set<PointND>
+    let dimensions: Int
 
-    var range: Range3D {
-        var r = Range3D.empty
-        r.origin.x = active.map(\.x).min() ?? 0
-        r.extent.dx = (active.map(\.x).max() ?? 0) - r.origin.x
-        r.origin.y = active.map(\.y).min() ?? 0
-        r.extent.dy = (active.map(\.y).max() ?? 0) - r.origin.y
-        r.origin.z = active.map(\.z).min() ?? 0
-        r.extent.dz = (active.map(\.z).max() ?? 0) - r.origin.z
+    var range: RangeND {
+        var r = RangeND.empty(dimensions)
+        for d in 0..<dimensions {
+            r.origin[d] = active.map { $0[d] }.min() ?? 0
+            r.extent[d] = (active.map { $0[d] }.max() ?? 0) - r.origin[d]
+        }
         return r
     }
 
-    func map(_ action: (Bool, Point3D) -> Bool) -> Grid3D {
-        let newRange = self.range.inset(-.one)
-        var newCells = Set<Point3D>()
+    func map(_ action: (Bool, PointND) -> Bool) -> GridND {
+        let newRange = self.range.inset(-.one(dimensions))
+        var newCells = Set<PointND>()
         newRange.forEach { point in
             if action(active.contains(point), point) {
                 newCells.insert(point)
             }
         }
-        return Grid3D(active: newCells)
+        return GridND(active: newCells, dimensions: dimensions)
     }
 
-    func countNeighbours(point: Point3D) -> Int {
-        Offset3D.neighbours.map {
+    func countNeighbours(point: PointND) -> Int {
+        OffsetND.neighbours(dimensions).map {
             self.active.contains(point + $0) ? 1 : 0
         }.sum()
     }
@@ -133,24 +181,32 @@ public struct Grid3D {
     }
 }
 
-public extension Grid3D {
-    init(_ description: String) {
-        active = description
-            .lines()
-            .enumerated()
-            .flatMap { (y, line) in
-                Array(line).enumerated().compactMap { (x, cell) -> Point3D? in
-                    cell == "#" ? Point3D(x: x, y: y, z: 0) : nil
-                }
-            }
-            .toSet()
+public extension GridND {
+    init(_ description: String, dimensions: Int = 3) {
+        self = .init(active: description
+                        .lines()
+                        .enumerated()
+                        .flatMap { (y, line) in
+                            Array(line).enumerated().compactMap { (x, cell) -> PointND? in
+                                if cell == "#" {
+                                    var coords = [Int](repeating: 0, count: dimensions)
+                                    coords[0] = x
+                                    coords[1] = y
+                                    return PointND(coords: coords)
+                                } else {
+                                    return nil
+                                }
+                            }
+                        }
+                        .toSet(),
+                     dimensions: dimensions)
     }
 }
 
 fileprivate let input = Bundle.module.text(named: "day17")
 
 public func day17_1() -> Int {
-    var grid = Grid3D(input)
+    var grid = GridND(input)
     grid.boot()
     return grid.countActive()
 }

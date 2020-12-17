@@ -3,7 +3,7 @@ import AoC2020
 
 final class Day17Tests: XCTestCase {
 
-    let example = Grid3D("""
+    let example = GridND("""
         .#.
         ..#
         ###

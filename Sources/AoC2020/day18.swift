@@ -25,9 +25,7 @@ extension Scanner {
     // factor = int | "(" expr ")"
 
     func scanExpr() -> Expr? {
-        guard var result = scanFactor() else {
-            return nil
-        }
+        guard var result = scanFactor() else { return nil }
         
         // Left associative - consume these in a loop
         while peekString("*") || peekString("+") {
@@ -59,32 +57,21 @@ extension Scanner {
     // factor = int | "(" expr ")"
 
     func scanExpr2() -> Expr? {
-        guard var result = scanTerm2() else {
-            return nil
-        }
-
+        guard var result = scanTerm2() else { return nil }
         // Left associative - consume in a loop
         while scanString("*") != nil {
-            if let rhs = scanTerm2() {
-                result = .operation(result, rhs, *)
-            } else {
-                return nil
-            }
+            guard let rhs = scanTerm2() else { return nil }
+            result = .operation(result, rhs, *)
         }
         return result
     }
 
     func scanTerm2() -> Expr? {
-        guard var result = scanFactor2() else {
-            return nil
-        }
+        guard var result = scanFactor2() else { return nil }
         // Left associative - consume in a loop
         while scanString("+") != nil {
-            if let rhs = scanFactor2() {
-                result = .operation(result, rhs, +)
-            } else {
-                return nil
-            }
+            guard let rhs = scanFactor2() else { return nil }
+            result = .operation(result, rhs, +)
         }
         return result
     }

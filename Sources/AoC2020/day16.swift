@@ -1,12 +1,6 @@
 import Foundation
 import AdventCore
 
-extension String {
-    func commaSeparatedInts() -> [Int] {
-        self.commaSeparated().ints()
-    }
-}
-
 public struct TicketTranslation {
     var rules: [String: IndexSet]
     var yourTicket: [Int]
@@ -94,9 +88,9 @@ public extension TicketTranslation {
             return (fieldName, ranges)
         }.toDictionary()
         let yourTicketDescription = groups[1].lines()[1]
-        yourTicket = yourTicketDescription.commaSeparatedInts()
+        yourTicket = yourTicketDescription.commaSeparated().ints()
         nearbyTickets = groups[2].lines().dropFirst().map {
-            $0.commaSeparatedInts()
+            $0.commaSeparated().ints()
         }
     }
 }

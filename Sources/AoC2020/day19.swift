@@ -9,6 +9,32 @@ public indirect enum MessageRule : Equatable {
 
 public struct MessageRules {
     public var rules: [Int : MessageRule]
+
+    public func match(_ text: String) -> Bool {
+        let scanner = Scanner(string: text)
+        return match(rule: rules[0]!, scanner: scanner) && scanner.isAtEnd
+    }
+
+    func match(rule: MessageRule, scanner: Scanner) -> Bool {
+        switch rule {
+        case .character(let c):
+            return scanner.scanCharacter().map { $0 == c } ?? false
+        case .consecutive(let nums):
+            return nums.allSatisfy {
+                match(rule: rules[$0]!, scanner: scanner)
+            }
+        case .alternative(let first, let second):
+            let i = scanner.currentIndex
+            if match(rule: first, scanner: scanner) {
+                return true
+            }
+            scanner.currentIndex = i
+            if match(rule: second, scanner: scanner) {
+                return true
+            }
+            return false
+        }
+    }
 }
 
 public extension MessageRules {

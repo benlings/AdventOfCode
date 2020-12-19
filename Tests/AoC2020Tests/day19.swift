@@ -46,8 +46,26 @@ final class Day19Tests: XCTestCase {
         XCTAssertEqual(rules.match("aaabbb"), false)
     }
 
+    func testPart1Example3() {
+        let input = """
+        0: 4 1 5
+        1: 2 3 | 3 2
+        2: 4 4 | 5 5
+        3: 4 5 | 5 4
+        4: "a"
+        5: "b"
+
+        ababbb
+        bababa
+        abbbab
+        aaabbb
+        aaaabbb
+        """
+        XCTAssertEqual(countValidMessages(input), 2)
+    }
+
     func testPart1() {
-        XCTAssertEqual(day19_1(), 0)
+        XCTAssertEqual(day19_1(), 120)
     }
 
     func testPart2() {

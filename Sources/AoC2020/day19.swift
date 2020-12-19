@@ -49,6 +49,14 @@ public extension MessageRules {
     }
 }
 
+public func countValidMessages(_ input: String) -> Int {
+    let groups = input.groups()
+    let rules = MessageRules(groups[0])
+    return groups[1]
+        .lines()
+        .count { rules.match($0) }
+}
+
 // rule = consecutive | alternative | character
 // consecutive = { int }
 // alternative = consecutive "|" consecutive
@@ -100,8 +108,10 @@ fileprivate extension Scanner {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day19")
+
 public func day19_1() -> Int {
-    0
+    countValidMessages(input)
 }
 
 public func day19_2() -> Int {

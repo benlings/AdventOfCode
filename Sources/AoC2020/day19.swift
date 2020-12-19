@@ -10,6 +10,23 @@ public indirect enum MessageRule : Equatable {
 public struct MessageRules {
     public var rules: [Int : MessageRule]
 
+    public func match2(_ text: String) -> Bool {
+        var mutated = self;
+        for c8 in 1...5 {
+            for c11 in 1...5 {
+                mutated.updateRule8(count: c8)
+                mutated.updateRule11(count: c11)
+                if mutated.match(text) {
+//                    if c8 != 1 && c11 != 1 {
+//                        print("\(text) matched with mutations 8: \(c8) & 11: \(c11)")
+//                    }
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     public func match(_ text: String) -> Bool {
         let scanner = Scanner(string: text)
         return match(rule: rules[0]!, scanner: scanner) && scanner.isAtEnd
@@ -35,6 +52,20 @@ public struct MessageRules {
             return false
         }
     }
+
+    public mutating func updateRule8(count: Int) {
+        // 8: 42 | 42 8
+        rules[8] = .consecutive(Array(repeating: 42, count: count))
+    }
+
+    public mutating func updateRule11(count: Int) {
+        // 11: 42 31 | 42 11 31
+        var a = [Int]()
+        for i in 0..<count {
+            a.insert(contentsOf: [42, 31], at: i)
+        }
+        rules[11] = .consecutive(a)
+    }
 }
 
 public extension MessageRules {
@@ -49,12 +80,12 @@ public extension MessageRules {
     }
 }
 
-public func countValidMessages(_ input: String) -> Int {
+public func countValidMessages(_ input: String, p2: Bool = false) -> Int {
     let groups = input.groups()
     let rules = MessageRules(groups[0])
     return groups[1]
         .lines()
-        .count { rules.match($0) }
+        .count { p2 ? rules.match2($0) : rules.match($0) }
 }
 
 // rule = consecutive | alternative | character
@@ -115,5 +146,5 @@ public func day19_1() -> Int {
 }
 
 public func day19_2() -> Int {
-    0
+    countValidMessages(input, p2: true)
 }

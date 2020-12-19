@@ -71,6 +71,14 @@ public extension Sequence {
     }
 }
 
+public extension Sequence where Element == Int {
+    func toIndexSet() -> IndexSet {
+        self.reduce(IndexSet()) {
+            $0.union(IndexSet(integer: $1))
+        }
+    }
+}
+
 public extension Sequence where Element: StringProtocol {
     func ints() -> [Int] {
         compactMap { Int($0) }

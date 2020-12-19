@@ -6,18 +6,6 @@ extension CharacterSet {
     static let maskCharacters = CharacterSet(charactersIn: "X10")
 }
 
-extension UInt64 {
-    func bitPermutations(mask: UInt64) -> AnySequence<UInt64> {
-        if mask == 0 {
-            return AnySequence([self])
-        } else {
-            let setBit = 0b1 << mask.trailingZeroBitCount as UInt64
-            return AnySequence(chain((self | setBit).bitPermutations(mask: mask & ~setBit),
-                         (self & ~setBit).bitPermutations(mask: mask & ~setBit)))
-        }
-    }
-}
-
 enum Instruction {
     case mask(setting: UInt64, unsetting: UInt64)
     case mem(location: UInt64, newValue: UInt64)

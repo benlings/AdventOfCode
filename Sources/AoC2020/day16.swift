@@ -7,14 +7,6 @@ extension String {
     }
 }
 
-extension Sequence where Element == Int {
-    func toIndexSet() -> IndexSet {
-        self.reduce(IndexSet()) {
-            $0.union(IndexSet(integer: $1))
-        }
-    }
-}
-
 public struct TicketTranslation {
     var rules: [String: IndexSet]
     var yourTicket: [Int]

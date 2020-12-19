@@ -1,25 +1,6 @@
 import Foundation
 import AdventCore
 
-func gcd<I>(_ m: I, _ n: I) -> I where I : BinaryInteger {
-    let r = m % n
-    if r != 0 {
-        return gcd(n, r)
-    } else {
-        return n
-    }
-}
-
-func lcm<I>(_ m: I, _ n: I) -> I where I : BinaryInteger {
-    m / gcd(m, n) * n
-}
-
-extension Array where Element : BinaryInteger {
-    func lcm() -> Element? {
-        reduce(AoC2020.lcm)
-    }
-}
-
 public struct BusTimetable {
     var earliestTimestamp: Int
     var busIds: [Int?]

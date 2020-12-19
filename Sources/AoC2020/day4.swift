@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-extension String {
+fileprivate extension String {
     func valid(years: ClosedRange<Int>) -> Bool {
         guard self.count == 4,
               let number = Int(self) else {

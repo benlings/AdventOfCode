@@ -13,7 +13,7 @@ public indirect enum Expr {
     }
 }
 
-extension Scanner {
+fileprivate extension Scanner {
 
     func peekString(_ s: String) -> Bool {
         let i = currentIndex

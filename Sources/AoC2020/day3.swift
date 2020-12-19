@@ -10,7 +10,7 @@ public func count(trees: [[Int]], right: Int, down: Int) -> Int {
     return count
 }
 
-public extension Array where Element == String {
+fileprivate extension Array where Element == String {
     func trees() -> [[Int]] {
         self.map { line in
             line.map { $0 == "#" ? 1 : 0 }

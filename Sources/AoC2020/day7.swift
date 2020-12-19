@@ -22,7 +22,7 @@ public struct LuggageRule : Equatable {
     }
 }
 
-extension Scanner {
+fileprivate extension Scanner {
     func scanLuggageBag() -> Bag? {
         guard let description1 = scanUpToCharacters(from: .whitespaces),
               let description2 = scanUpToCharacters(from: .whitespaces),

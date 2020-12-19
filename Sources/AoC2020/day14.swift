@@ -2,14 +2,13 @@ import Foundation
 import AdventCore
 import Algorithms
 
-extension CharacterSet {
+fileprivate extension CharacterSet {
     static let maskCharacters = CharacterSet(charactersIn: "X10")
 }
 
 enum Instruction {
     case mask(setting: UInt64, unsetting: UInt64)
     case mem(location: UInt64, newValue: UInt64)
-
 
     static func parse(_ input: String) -> Instruction? {
         let scanner = Scanner(string: input)

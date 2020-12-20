@@ -3,25 +3,32 @@ import AdventCore
 
 public typealias PixelRow = UInt16
 
+public enum TileEdge {
+    case top, right, bottom, left
+}
+
 public struct CameraTile {
     public var id: Int
-    public var pixels: [PixelRow]
+    var pixels: [PixelRow]
     public var size: Int {
         pixels.count
     }
 
-    public var topEdge: PixelRow {
-        pixels.first!
+    public subscript(edge: TileEdge, reversed: Bool = false) -> PixelRow {
+        get {
+            switch edge {
+            case .top: return row(0)
+            case .right: return column(0)
+            case .bottom: return row(size - 1)
+            case .left: return column(size - 1)
+            }
+        }
     }
-    public var bottomEdge: PixelRow {
-        pixels.last!
+
+    func row(_ index: Int) -> PixelRow {
+        pixels[index]
     }
-    public var leftEdge: PixelRow {
-        column(size - 1)
-    }
-    public var rightEdge: PixelRow {
-        column(0)
-    }
+
     func column(_ index: Int) -> PixelRow {
         PixelRow(pixels
             .map { $0[bit: index] ? "1" : "0" }

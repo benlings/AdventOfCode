@@ -21,10 +21,10 @@ final class Day20Tests: XCTestCase {
         let tile = CameraTile(input)
         XCTAssertEqual(tile.id, 2311)
         XCTAssertEqual(tile.size, 10)
-        XCTAssertEqual(tile.topEdge, PixelRow("0011010010", radix: 2))
-        XCTAssertEqual(tile.bottomEdge, PixelRow("0011100111", radix: 2))
-        XCTAssertEqual(tile.leftEdge, PixelRow("0111110010", radix: 2))
-        XCTAssertEqual(tile.rightEdge, PixelRow("0001011001", radix: 2))
+        XCTAssertEqual(tile[.top], PixelRow("0011010010", radix: 2))
+        XCTAssertEqual(tile[.bottom], PixelRow("0011100111", radix: 2))
+        XCTAssertEqual(tile[.left], PixelRow("0111110010", radix: 2))
+        XCTAssertEqual(tile[.right], PixelRow("0001011001", radix: 2))
     }
 
     func testPart1Example() {

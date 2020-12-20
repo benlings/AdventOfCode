@@ -3,6 +3,16 @@ import AdventCore
 
 public typealias PixelRow = UInt16
 
+extension PixelRow {
+    public func reversed(size: Int) -> PixelRow {
+        var r = 0 as PixelRow
+        for bit in 0..<size {
+            r[bit: size - bit - 1] = self[bit: bit]
+        }
+        return r
+    }
+}
+
 public enum TileEdge {
     case top, right, bottom, left
 }

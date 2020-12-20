@@ -27,6 +27,11 @@ final class Day20Tests: XCTestCase {
         XCTAssertEqual(tile[.right], PixelRow("0001011001", radix: 2))
     }
 
+    func testReverseEdge() {
+        let edge = PixelRow("0011010010", radix: 2)!
+        XCTAssertEqual(edge.reversed(size: 10), PixelRow("0100101100", radix: 2))
+    }
+
     func testPart1Example() {
 //        let input = Bundle.module.text(named: "day20example")
         

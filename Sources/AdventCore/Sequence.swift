@@ -64,6 +64,10 @@ public extension Sequence {
         Set(self)
     }
 
+    func toArray() -> [Element] {
+        Array(self)
+    }
+
     func sorted<T>(on selector: (Element) -> T) -> [Element] where T : Comparable {
         sorted {
             selector($0) < selector($1)
@@ -76,6 +80,12 @@ public extension Sequence where Element == Int {
         self.reduce(IndexSet()) {
             $0.union(IndexSet(integer: $1))
         }
+    }
+}
+
+public extension Sequence where Element: Sequence {
+    func flatten() -> [Element.Element] {
+        flatMap { $0 }
     }
 }
 

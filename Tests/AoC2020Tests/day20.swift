@@ -33,12 +33,12 @@ final class Day20Tests: XCTestCase {
     }
 
     func testPart1Example() {
-//        let input = Bundle.module.text(named: "day20example")
-        
+        let input = Bundle.module.text(named: "day20example")
+        XCTAssertEqual(cornerIdProduct(input), 20899048083289)
     }
 
     func testPart1() {
-        XCTAssertEqual(day20_1(), 0)
+        XCTAssertEqual(day20_1(), 8581320593371)
     }
 
     func testPart2() {

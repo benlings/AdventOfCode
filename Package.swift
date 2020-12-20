@@ -44,6 +44,7 @@ let package = Package(
             resources: [.process("Resources")]),
         .testTarget(
             name: "AoC2020Tests",
-            dependencies: ["AoC2020"]),
+            dependencies: ["AoC2020"],
+            resources: [.process("Resources")]),
     ]
 )

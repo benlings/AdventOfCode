@@ -13,7 +13,7 @@ extension PixelRow {
     }
 }
 
-public enum TileEdge {
+public enum TileEdge : CaseIterable {
     case top, right, bottom, left
 }
 
@@ -24,7 +24,7 @@ public struct CameraTile {
         pixels.count
     }
 
-    public subscript(edge: TileEdge, reversed: Bool = false) -> PixelRow {
+    public subscript(edge: TileEdge) -> PixelRow {
         get {
             switch edge {
             case .top: return row(0)
@@ -62,8 +62,38 @@ public extension CameraTile {
     }
 }
 
+func parseTiles(_ input: String) -> [CameraTile] {
+    input.groups().map(CameraTile.init)
+}
+
+func findCornerIds(tiles: [CameraTile]) -> [Int] {
+    var tilesByEdges = [PixelRow : [Int]]()
+    for t in tiles {
+        for e in TileEdge.allCases {
+            for reversed in [false, true] {
+                var row = t[e]
+                if (reversed) {
+                    row = row.reversed(size: t.size)
+                }
+                tilesByEdges[row, default: []].append(t.id)
+            }
+        }
+    }
+    let imageEdges = tilesByEdges.filter { (key, value) -> Bool in
+        value.count == 1
+    }
+    return Dictionary(grouping: imageEdges.keys, by: { imageEdges[$0]![0] }).filter { $0.value.count == 4 }.keys.toArray()
+}
+
+public func cornerIdProduct(_ input: String) -> Int {
+    findCornerIds(tiles: parseTiles(input)).product()
+}
+
+// Edges are only shared between 2 tiles
+fileprivate let input = Bundle.module.text(named: "day20")
+
 public func day20_1() -> Int {
-    0
+    cornerIdProduct(input)
 }
 
 public func day20_2() -> Int {

@@ -72,7 +72,7 @@ public struct TiledImage {
         var flipped: Bool
     }
 
-    func findCornerIds() -> [Int] {
+    var tilesByEdges: [EdgeId : [TileOrientation]] {
         var tilesByEdges = [EdgeId : [TileOrientation]]()
         for tile in sourceTiles {
             for edge in TileEdge.allCases {
@@ -85,7 +85,11 @@ public struct TiledImage {
                 }
             }
         }
-        let imageEdges = tilesByEdges.filter { (key, value) -> Bool in
+        return tilesByEdges
+    }
+
+    func findCornerIds() -> [Int] {
+        let imageEdges = self.tilesByEdges.filter { (key, value) -> Bool in
             value.count == 1
         }
         return Dictionary(grouping: imageEdges.keys, by: { imageEdges[$0]![0].tileId }).filter { $0.value.count == 4 }.keys.toArray()

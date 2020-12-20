@@ -34,7 +34,7 @@ final class Day20Tests: XCTestCase {
 
     func testPart1Example() {
         let input = Bundle.module.text(named: "day20example")
-        XCTAssertEqual(cornerIdProduct(input), 20899048083289)
+        XCTAssertEqual(TiledImage(input).cornerIdProduct(), 20899048083289)
     }
 
     func testPart1() {

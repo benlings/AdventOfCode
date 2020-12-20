@@ -18,7 +18,7 @@ extension EdgeId {
     }
 }
 
-public enum TileEdge : CaseIterable {
+public enum TileEdge : Hashable, CaseIterable {
     case top, right, bottom, left
 }
 
@@ -63,38 +63,50 @@ public extension CameraTile {
     }
 }
 
-func parseTiles(_ input: String) -> [CameraTile] {
-    input.groups().map(CameraTile.init)
-}
+public struct TiledImage {
+    var sourceTiles: [CameraTile]
 
-func findCornerIds(tiles: [CameraTile]) -> [Int] {
-    var tilesByEdges = [EdgeId : [Int]]()
-    for t in tiles {
-        for e in TileEdge.allCases {
-            for reversed in [false, true] {
-                var row = t[e]
-                if (reversed) {
-                    row = row.reversed(size: t.size)
+    struct TileOrientation: Hashable {
+        var tileId: Int
+        var topEdge: TileEdge
+        var flipped: Bool
+    }
+
+    func findCornerIds() -> [Int] {
+        var tilesByEdges = [EdgeId : [TileOrientation]]()
+        for tile in sourceTiles {
+            for edge in TileEdge.allCases {
+                for reversed in [false, true] {
+                    var edgeId = tile[edge]
+                    if (reversed) {
+                        edgeId = edgeId.reversed(size: tile.size)
+                    }
+                    tilesByEdges[edgeId, default: []].append(TileOrientation(tileId: tile.id, topEdge: edge, flipped: reversed))
                 }
-                tilesByEdges[row, default: []].append(t.id)
             }
         }
+        let imageEdges = tilesByEdges.filter { (key, value) -> Bool in
+            value.count == 1
+        }
+        return Dictionary(grouping: imageEdges.keys, by: { imageEdges[$0]![0].tileId }).filter { $0.value.count == 4 }.keys.toArray()
     }
-    let imageEdges = tilesByEdges.filter { (key, value) -> Bool in
-        value.count == 1
+
+    public func cornerIdProduct() -> Int {
+        findCornerIds().product()
     }
-    return Dictionary(grouping: imageEdges.keys, by: { imageEdges[$0]![0] }).filter { $0.value.count == 4 }.keys.toArray()
 }
 
-public func cornerIdProduct(_ input: String) -> Int {
-    findCornerIds(tiles: parseTiles(input)).product()
+public extension TiledImage {
+    init(_ input: String) {
+        sourceTiles = input.groups().map(CameraTile.init)
+    }
 }
 
 // Edges are only shared between 2 tiles
 fileprivate let input = Bundle.module.text(named: "day20")
 
 public func day20_1() -> Int {
-    cornerIdProduct(input)
+    TiledImage(input).cornerIdProduct()
 }
 
 public func day20_2() -> Int {

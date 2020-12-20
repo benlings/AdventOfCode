@@ -21,15 +21,15 @@ final class Day20Tests: XCTestCase {
         let tile = CameraTile(input)
         XCTAssertEqual(tile.id, 2311)
         XCTAssertEqual(tile.size, 10)
-        XCTAssertEqual(tile[.top], PixelRow("0011010010", radix: 2))
-        XCTAssertEqual(tile[.bottom], PixelRow("0011100111", radix: 2))
-        XCTAssertEqual(tile[.left], PixelRow("0111110010", radix: 2))
-        XCTAssertEqual(tile[.right], PixelRow("0001011001", radix: 2))
+        XCTAssertEqual(tile[.top], EdgeId("0011010010", radix: 2))
+        XCTAssertEqual(tile[.bottom], EdgeId("0011100111", radix: 2))
+        XCTAssertEqual(tile[.left], EdgeId("0111110010", radix: 2))
+        XCTAssertEqual(tile[.right], EdgeId("0001011001", radix: 2))
     }
 
     func testReverseEdge() {
-        let edge = PixelRow("0011010010", radix: 2)!
-        XCTAssertEqual(edge.reversed(size: 10), PixelRow("0100101100", radix: 2))
+        let edge = EdgeId("0011010010", radix: 2)!
+        XCTAssertEqual(edge.reversed(size: 10), EdgeId("0100101100", radix: 2))
     }
 
     func testPart1Example() {

@@ -1,11 +1,16 @@
 import Foundation
 import AdventCore
 
-public typealias PixelRow = UInt16
+public typealias EdgeId = UInt16
 
-extension PixelRow {
-    public func reversed(size: Int) -> PixelRow {
-        var r = 0 as PixelRow
+extension EdgeId {
+
+    init<S>(bits: S) where S : Sequence, S.Element == Bool {
+        self = Self.init(bits.map { $0 ? "1" : "0" }.joined(), radix: 2)!
+    }
+
+    public func reversed(size: Int) -> EdgeId {
+        var r = 0 as EdgeId
         for bit in 0..<size {
             r[bit: size - bit - 1] = self[bit: bit]
         }
@@ -19,30 +24,28 @@ public enum TileEdge : CaseIterable {
 
 public struct CameraTile {
     public var id: Int
-    var pixels: [PixelRow]
+    var pixels: [[Bool]]
     public var size: Int {
         pixels.count
     }
 
-    public subscript(edge: TileEdge) -> PixelRow {
+    public subscript(edge: TileEdge) -> EdgeId {
         get {
             switch edge {
             case .top: return row(0)
-            case .right: return column(0)
+            case .right: return column(size - 1)
             case .bottom: return row(size - 1)
-            case .left: return column(size - 1)
+            case .left: return column(0)
             }
         }
     }
 
-    func row(_ index: Int) -> PixelRow {
-        pixels[index]
+    func row(_ index: Int) -> EdgeId {
+        EdgeId(bits: pixels[index])
     }
 
-    func column(_ index: Int) -> PixelRow {
-        PixelRow(pixels
-            .map { $0[bit: index] ? "1" : "0" }
-            .joined(), radix: 2)!
+    func column(_ index: Int) -> EdgeId {
+        EdgeId(bits: pixels.map { $0[index] })
     }
 }
 
@@ -52,13 +55,11 @@ public extension CameraTile {
         let idScanner = Scanner(string: lines.first!)
         _ = idScanner.scanString("Tile")!
         id = idScanner.scanInt()!
-        let pixelRows = lines.dropFirst()
-        pixels = pixelRows.map { row in
-            let binary = row
-                .replacingOccurrences(of: "#", with: "1")
-                .replacingOccurrences(of: ".", with: "0")
-            return PixelRow(binary, radix: 2)!
-        }
+        pixels = lines
+            .dropFirst()
+            .map { row in
+                row.map { $0 == "#" }
+            }
     }
 }
 
@@ -67,7 +68,7 @@ func parseTiles(_ input: String) -> [CameraTile] {
 }
 
 func findCornerIds(tiles: [CameraTile]) -> [Int] {
-    var tilesByEdges = [PixelRow : [Int]]()
+    var tilesByEdges = [EdgeId : [Int]]()
     for t in tiles {
         for e in TileEdge.allCases {
             for reversed in [false, true] {

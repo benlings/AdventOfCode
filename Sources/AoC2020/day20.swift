@@ -37,14 +37,14 @@ public struct CameraTile {
         pixels.count
     }
 
-    // Edges are least significant bit on clockwise-most corner
+    // Edges are least significant bit on right-most/bottom-most ends
     public subscript(edge: TileEdge) -> EdgeId {
         get {
             switch edge {
             case .top: return row(0)
             case .right: return column(size - 1)
-            case .bottom: return row(size - 1).reversed(size: size)
-            case .left: return column(0).reversed(size: size)
+            case .bottom: return row(size - 1)
+            case .left: return column(0)
             }
         }
     }

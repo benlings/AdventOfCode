@@ -262,14 +262,17 @@ public struct TiledImage {
     public func tileArrangement() -> [[CameraTile]] {
         let tilesById = sourceTiles.map { ($0.id, $0) }.toDictionary()
         let tilesByEdge = self.tilesByEdges
-        // Find tile with no tiles to left or top
-        // use this as origin, so that return array has this in [0][0]
-        let originTile = findCornerIds()
-            .map { tilesById[$0]! }
-            .first {
-                tilesByEdge[$0[.left]]!.count == 1 &&
-                    tilesByEdge[$0[.top]]!.count == 1
-            }!
+        // Find tile to use as origin. Needs to be oriented so that top and left edges are empty
+        // return array has this in [0][0]
+        var originTile = findCornerIds()
+                    .map { tilesById[$0]! }
+                    .first {
+                        tilesByEdge[$0[.top]]!.count == 1
+                    }!
+        // Orient tile - if it doesn't have a tile to the right, we need to flip it
+        if tilesByEdge[originTile[.right]]!.filter({ $0.tile.id != originTile.id }).isEmpty {
+            originTile.pixels.flipHorizontal()
+        }
         func nextTile(from tile: CameraTile, inDirection edge: TileEdge) -> CameraTile? {
             let nextEdgeId = tile[edge]
             guard let orientedTile = tilesByEdge[nextEdgeId]?.first(where: { $0.tile.id != tile.id }) else {

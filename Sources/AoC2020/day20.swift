@@ -94,6 +94,9 @@ public struct CameraImage {
         get {
             pixels[y][x]
         }
+        set {
+            pixels[y][x] = newValue
+        }
     }
 
     func find(occurrencesOf image: CameraImage) -> [(x: Int, y: Int)] {
@@ -115,6 +118,20 @@ public struct CameraImage {
             }
         }
         return true
+    }
+
+    mutating func subtract(image: CameraImage, at xOffset: Int, y yOffset: Int) {
+        for x in 0..<image.width {
+            for y in 0..<image.height {
+                if image[x, y] {
+                    self[xOffset + x, yOffset + y] = false
+                }
+            }
+        }
+    }
+
+    func countSetPixels() -> Int {
+        pixels.map { $0.map { $0 ? 1 : 0 }.sum() }.sum()
     }
 
 }
@@ -311,6 +328,15 @@ public struct TiledImage {
         }
         return (image, [])
     }
+
+    public func waterRoughness() -> Int {
+        let seaMonsters = findSeaMonsters()
+        var image = seaMonsters.0
+        for (x, y) in seaMonsters.1 {
+            image.subtract(image: CameraImage.seaMonster, at: x, y: y)
+        }
+        return image.countSetPixels()
+    }
 }
 
 public extension TiledImage {
@@ -327,5 +353,5 @@ public func day20_1() -> Int {
 }
 
 public func day20_2() -> Int {
-    TiledImage(input).tileArrangement()[0][0].id
+    TiledImage(input).waterRoughness()
 }

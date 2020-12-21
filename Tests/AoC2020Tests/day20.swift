@@ -75,6 +75,7 @@ final class Day20Tests: XCTestCase {
             .#..#..#..#..#..#...
             """)
         XCTAssertEqual(exampleImage.findSeaMonsters().1.count, 2)
+        XCTAssertEqual(exampleImage.waterRoughness(), 273)
     }
 
     func testPart2() {

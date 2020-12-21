@@ -32,13 +32,18 @@ final class Day20Tests: XCTestCase {
         XCTAssertEqual(edge.reversed(size: 10), EdgeId("0100101100", radix: 2))
     }
 
+    let exampleImage = TiledImage(Bundle.module.text(named: "day20example"))
+
     func testPart1Example() {
-        let input = Bundle.module.text(named: "day20example")
-        XCTAssertEqual(TiledImage(input).cornerIdProduct(), 20899048083289)
+        XCTAssertEqual(exampleImage.cornerIdProduct(), 20899048083289)
     }
 
     func testPart1() {
         XCTAssertEqual(day20_1(), 8581320593371)
+    }
+
+    func testPart2Example() {
+        XCTAssertEqual(exampleImage.tileArrangement()[0][0].id, 0)
     }
 
     func testPart2() {

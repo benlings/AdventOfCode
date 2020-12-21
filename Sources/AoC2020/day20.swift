@@ -79,11 +79,24 @@ public extension CameraTile {
     }
 }
 
-func rotateClockwise<T>(matrix: inout [[T]]) {
-    let old = matrix
-    for i in matrix.indices {
-        for j in matrix[i].indices {
-            matrix[i][j] = old[matrix.count - 1 - j][i];
+fileprivate extension Array where Element == [Bool] {
+
+    mutating func rotateClockwise() {
+        let old = self
+        for i in self.indices {
+            for j in self[i].indices {
+                self[i][j] = old[self.count - 1 - j][i];
+            }
+        }
+    }
+
+    mutating func flipVertical() {
+        self.reverse()
+    }
+
+    mutating func flipHorizontal() {
+        for i in indices {
+            self[i].reverse()
         }
     }
 }
@@ -105,13 +118,12 @@ public struct TiledImage {
             return edgeId
         }
 
-        func rotatedTile(identifiedEdgeInPosition edge: TileEdge) -> CameraTile {
+        func rotatedTile(movingIdentifiedEdgeTo edge: TileEdge) -> CameraTile {
             let rotationCount = (4 + edge.rawValue - identifiedEdge.rawValue) % 4
             var newPixels = self.tile.pixels
             for _ in 0..<rotationCount {
-                rotateClockwise(matrix: &newPixels)
+                newPixels.rotateClockwise()
             }
-            // todo handle flipped
             return CameraTile(id: tile.id, pixels:newPixels)
         }
     }
@@ -139,37 +151,49 @@ public struct TiledImage {
         return Dictionary(grouping: imageEdges.keys, by: { imageEdges[$0]!.tile.id }).filter { $0.value.count == 4 }.keys.toArray()
     }
 
-    func tileArrangement() -> [[CameraTile]] {
-        var tilesById = sourceTiles.map { ($0.id, $0) }.toDictionary()
+    public func tileArrangement() -> [[CameraTile]] {
+        let tilesById = sourceTiles.map { ($0.id, $0) }.toDictionary()
         let tilesByEdge = self.tilesByEdges
-        // Pick corner - define it as the origin - with no rotation and not inverted
-        let originTile = tilesById[findCornerIds().first!]!
-        // Remove from remaining tiles
-        tilesById.removeValue(forKey: originTile.id)
-        // Find orientation - it will only have adjacent tiles on 2 edges
-        // we need to iterate in these 2 directions to find the rest of the tils
-        let innerEdges = TileEdge.allCases.filter { edge in
-            tilesByEdge[originTile[edge]]!.filter { $0.tile.id != originTile.id }.isEmpty == false
-        }
+        // Find tile with no tiles to left or top
+        // use this as origin, so that return array has this in [0][0]
+        let originTile = findCornerIds()
+            .map { tilesById[$0]! }
+            .first {
+                tilesByEdge[$0[.left]]!.count == 1 &&
+                    tilesByEdge[$0[.top]]!.count == 1
+            }!
         func nextTile(from tile: CameraTile, inDirection edge: TileEdge) -> CameraTile? {
             let nextEdgeId = tile[edge]
             guard let orientedTile = tilesByEdge[nextEdgeId]?.first(where: { $0.tile.id != tile.id }) else {
                 return nil
             }
-            let nextTile = orientedTile.rotatedTile(identifiedEdgeInPosition: edge.opposite)
+            var nextTile = orientedTile.rotatedTile(movingIdentifiedEdgeTo: edge.opposite)
+            // Flip tile if the edges don't line up when rotated
+            if nextTile[edge.opposite] != nextEdgeId {
+                switch (edge) {
+                case .bottom, .top:
+                    nextTile.pixels.flipHorizontal()
+                case .left, .right:
+                    nextTile.pixels.flipVertical()
+                }
+            }
             return nextTile
         }
-        var r = [[OrientedTile]]()
-        var currentTile = originTile
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-        currentTile = nextTile(from: currentTile, inDirection: innerEdges[1])!
-
-        return [[originTile]]
+        var rows = [[CameraTile]]()
+        var currentRowTile = originTile as CameraTile?
+        while true {
+            guard let rowTile = currentRowTile else { break }
+            var row = [CameraTile]()
+            var currentTile = rowTile as CameraTile?
+            while true {
+                guard let tile = currentTile else { break }
+                row.append(tile)
+                currentTile = nextTile(from: tile, inDirection: .right)
+            }
+            rows.append(row)
+            currentRowTile = nextTile(from: rowTile, inDirection: .bottom)
+        }
+        return rows
     }
 
     public func cornerIdProduct() -> Int {

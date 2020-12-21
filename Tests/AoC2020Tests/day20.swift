@@ -22,8 +22,8 @@ final class Day20Tests: XCTestCase {
         XCTAssertEqual(tile.id, 2311)
         XCTAssertEqual(tile.size, 10)
         XCTAssertEqual(tile[.top], EdgeId("0011010010", radix: 2))
-        XCTAssertEqual(tile[.bottom], EdgeId("0011100111", radix: 2))
-        XCTAssertEqual(tile[.left], EdgeId("0111110010", radix: 2))
+        XCTAssertEqual(tile[.bottom], EdgeId("1110011100", radix: 2))
+        XCTAssertEqual(tile[.left], EdgeId("0100111110", radix: 2))
         XCTAssertEqual(tile[.right], EdgeId("0001011001", radix: 2))
     }
 

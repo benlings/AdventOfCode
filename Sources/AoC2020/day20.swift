@@ -79,6 +79,88 @@ public extension CameraTile {
     }
 }
 
+public struct CameraImage {
+    var pixels: [[Bool]]
+
+    var width: Int {
+        pixels[0].count
+    }
+
+    var height: Int {
+        pixels.count
+    }
+
+    subscript(x: Int, y: Int) -> Bool {
+        get {
+            pixels[y][x]
+        }
+    }
+
+    func find(occurrencesOf image: CameraImage) -> [(x: Int, y: Int)] {
+        (0...(width - image.width)).flatMap { x in
+            (0...(height - image.height)).map { y in
+                (x: x, y: y)
+            }
+        }.filter { coord in
+            matches(image: image, at: coord.x, y: coord.y)
+        }
+    }
+
+    func matches(image: CameraImage, at xOffset: Int, y yOffset: Int) -> Bool {
+        for x in 0..<image.width {
+            for y in 0..<image.height {
+                if image[x, y] && !self[xOffset + x, yOffset + y] {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+}
+
+extension CameraImage : CustomStringConvertible {
+    public var description: String {
+        pixels.map { $0.map { $0 ? "#" : "." }.joined() }.joined(separator: "\n")
+    }
+}
+
+public extension CameraImage {
+    init(_ description: String) {
+        pixels = description.lines()
+            .map { row in
+                row.map { $0 == "#" }
+            }
+    }
+
+    static let seaMonster = CameraImage("""
+                                  #.
+                #    ##    ##    ###
+                 #  #  #  #  #  #...
+                """)
+}
+
+extension CameraImage {
+    init(tiles: [[CameraTile]]) {
+        pixels = [[Bool]]()
+        var insetTiles = tiles
+        for y in insetTiles.indices {
+            for x in insetTiles[y].indices {
+                insetTiles[y][x].pixels.removeEdges()
+            }
+        }
+        for row in insetTiles {
+            var tileRows = [[Bool]](repeating: [Bool](), count: row[0].pixels.count)
+            for i in row[0].pixels.indices {
+                for tile in row {
+                    tileRows[i].append(contentsOf: tile.pixels[i])
+                }
+            }
+            pixels.append(contentsOf: tileRows)
+        }
+    }
+}
+
 fileprivate extension Array where Element == [Bool] {
 
     mutating func rotateClockwise() {
@@ -97,6 +179,15 @@ fileprivate extension Array where Element == [Bool] {
     mutating func flipHorizontal() {
         for i in indices {
             self[i].reverse()
+        }
+    }
+
+    mutating func removeEdges() {
+        self.removeFirst()
+        self.removeLast()
+        for i in indices {
+            self[i].removeFirst()
+            self[i].removeLast()
         }
     }
 }
@@ -196,8 +287,29 @@ public struct TiledImage {
         return rows
     }
 
+    public func mergeTiles() -> CameraImage {
+        let tiles = tileArrangement()
+        return CameraImage(tiles: tiles)
+    }
+
     public func cornerIdProduct() -> Int {
         findCornerIds().product()
+    }
+
+    public func findSeaMonsters() -> (CameraImage, [(x: Int, y: Int)]) {
+        var image = mergeTiles()
+        let monster = CameraImage.seaMonster
+        for _ in 0..<2 {
+            for _ in 0..<4 {
+                let offsets = image.find(occurrencesOf: monster)
+                if offsets.count > 0 {
+                    return (image, offsets)
+                }
+                image.pixels.rotateClockwise()
+            }
+            image.pixels.flipVertical()
+        }
+        return (image, [])
     }
 }
 

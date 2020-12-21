@@ -64,6 +64,10 @@ public extension Sequence {
         Set(self)
     }
 
+    func unionAll<E>() -> Set<E> where Element == Set<E> {
+        reduce(Set()) { $0.union($1) }
+    }
+
     func toArray() -> [Element] {
         Array(self)
     }

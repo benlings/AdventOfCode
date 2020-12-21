@@ -46,6 +46,13 @@ public struct FoodList {
         }
         return ingredients
     }
+
+    public func countSafeIngredients() -> Int {
+        let safe = knownSafeIngredients()
+        return foods.map { food in
+            food.ingredients.intersection(safe).count
+        }.sum()
+    }
 }
 
 public extension FoodList {
@@ -54,8 +61,10 @@ public extension FoodList {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day21")
+
 public func day21_1() -> Int {
-    0
+    FoodList(input).countSafeIngredients()
 }
 
 public func day21_2() -> Int {

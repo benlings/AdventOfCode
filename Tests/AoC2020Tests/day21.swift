@@ -12,10 +12,11 @@ final class Day21Tests: XCTestCase {
         """
         let foods = FoodList(input)
         XCTAssertEqual(foods.knownSafeIngredients(), ["kfcds", "nhms", "sbzzf", "trh"])
+        XCTAssertEqual(foods.countSafeIngredients(), 5)
     }
 
     func testPart1() {
-        XCTAssertEqual(day21_1(), 0)
+        XCTAssertEqual(day21_1(), 2517)
     }
 
     func testPart2() {

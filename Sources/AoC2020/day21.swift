@@ -53,6 +53,35 @@ public struct FoodList {
             food.ingredients.intersection(safe).count
         }.sum()
     }
+
+    struct Ingredient : Hashable {
+        var name: String
+        var alergen: String
+    }
+
+    func dangerousIngredients() -> Set<Ingredient> {
+        var possible = allAlergens
+            .map { (alergen: $0, ingredients: ingredientsMayContain(alergen: $0)) }
+        var dangerous = Set<Ingredient>()
+        while !possible.isEmpty {
+            // There is only one possibility with 1 ingredient
+            let known = possible.first { $0.ingredients.count == 1 }!
+            let knownIngredient = known.ingredients.first!
+            // Add it to the list
+            dangerous.insert(.init(name: knownIngredient, alergen: known.alergen))
+            // Remove ingredient from remaining possibile options
+            for i in possible.indices {
+                possible[i].ingredients.subtract([knownIngredient])
+            }
+            // Remove elements that no longer have options
+            possible.removeAll { $0.ingredients.isEmpty }
+        }
+        return dangerous
+    }
+
+    public func canonicalDangerousIngredients() -> String {
+        dangerousIngredients().sorted(on: \.alergen).map(\.name).joined(separator: ",")
+    }
 }
 
 public extension FoodList {
@@ -67,6 +96,6 @@ public func day21_1() -> Int {
     FoodList(input).countSafeIngredients()
 }
 
-public func day21_2() -> Int {
-    0
+public func day21_2() -> String {
+    FoodList(input).canonicalDangerousIngredients()
 }

@@ -23,17 +23,21 @@ public struct CombatGame : Hashable {
         }
     }
 
-    public mutating func playRecursive() {
+    public mutating func playRecursive(previousGames: inout Set<CombatGame>) {
         while !finished {
+            var winningPlayer = previousGames.contains(self) ? 1 : nil
+            previousGames.insert(self)
             let c1 = player1.removeFirst()
             let c2 = player2.removeFirst()
-            var winningPlayer: Int
-            if player1.count >= c1 && player2.count >= c2 {
-                var recursiveGame = CombatGame(player1: player1[0..<c1].toArray(), player2: player2[0..<c2].toArray())
-                recursiveGame.playRecursive()
-                winningPlayer = recursiveGame.player1.count > recursiveGame.player2.count ? 1 : 2
-            } else {
-                winningPlayer = c1 > c2 ? 1 : 2
+            if winningPlayer == nil {
+                if player1.count >= c1 && player2.count >= c2 {
+                    var recursiveGame = CombatGame(player1: player1[0..<c1].toArray(), player2: player2[0..<c2].toArray())
+                    var previousGames1 = Set<CombatGame>()
+                    recursiveGame.playRecursive(previousGames: &previousGames1)
+                    winningPlayer = recursiveGame.player1.count > recursiveGame.player2.count ? 1 : 2
+                } else {
+                    winningPlayer = c1 > c2 ? 1 : 2
+                }
             }
             if winningPlayer == 1 {
                 player1.append(c1)
@@ -53,7 +57,8 @@ public struct CombatGame : Hashable {
     public static func winningScore(input: String, recursive: Bool = false) -> Int {
         var game = Self(input)
         if recursive {
-            game.playRecursive()
+            var previousGames = Set<CombatGame>()
+            game.playRecursive(previousGames: &previousGames)
         } else {
             game.play()
         }
@@ -76,5 +81,5 @@ public func day22_1() -> Int {
 }
 
 public func day22_2() -> Int {
-    0
+    CombatGame.winningScore(input: input, recursive: true)
 }

@@ -52,9 +52,12 @@ public struct CombatGame : Hashable {
         }
     }
 
+    var winningDeck: [Score] {
+        player1.count > 0 ? player1 : player2
+    }
+
     public var winningScore: Int {
-        let winner = player1.count > player2.count ? player1 : player2
-        return zip(winner.reversed(), 1...).map { Int($0.0) * $0.1 }.sum()
+        return zip(winningDeck.reversed(), 1...).map { Int($0.0) * $0.1 }.sum()
     }
 
     public static func winningScore(input: String, recursive: Bool = false) -> Int {

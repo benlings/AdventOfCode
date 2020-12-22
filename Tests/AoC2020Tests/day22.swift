@@ -3,8 +3,7 @@ import AoC2020
 
 final class Day22Tests: XCTestCase {
 
-    func testPart1Example() {
-        let input = """
+    let exampleInput = """
         Player 1:
         9
         2
@@ -19,11 +18,17 @@ final class Day22Tests: XCTestCase {
         7
         10
         """
-        XCTAssertEqual(CombatGame.winningScore(input: input), 306)
+
+    func testPart1Example() {
+        XCTAssertEqual(CombatGame.winningScore(input: exampleInput), 306)
     }
 
     func testPart1() {
         XCTAssertEqual(day22_1(), 33559)
+    }
+
+    func testPart2Example() {
+        XCTAssertEqual(CombatGame.winningScore(input: exampleInput, recursive: true), 291)
     }
 
     func testPart2() {

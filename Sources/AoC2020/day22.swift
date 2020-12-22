@@ -26,30 +26,30 @@ public struct CombatGame : Hashable {
         }
     }
 
-    public mutating func playRecursive() {
+    @discardableResult
+    public mutating func playRecursive() -> Int {
         var previousGames = Set<CombatGame>()
         while !finished {
-            var winningPlayer = previousGames.contains(self) ? 1 : nil
+            if previousGames.contains(self) {
+                return 1
+            }
             previousGames.insert(self)
             let c1 = player1.removeFirst()
             let c2 = player2.removeFirst()
-            if winningPlayer == nil {
-                if player1.count >= c1 && player2.count >= c2 {
-                    var recursiveGame = CombatGame(player1: player1.prefix(Int(c1)).toArray(), player2: player2.prefix(Int(c2)).toArray())
-                    recursiveGame.playRecursive()
-                    winningPlayer = recursiveGame.player1.count > recursiveGame.player2.count ? 1 : 2
-                } else {
-                    winningPlayer = c1 > c2 ? 1 : 2
-                }
+            let winningPlayer: Int
+            if player1.count >= c1 && player2.count >= c2 {
+                var recursiveGame = CombatGame(player1: player1.prefix(Int(c1)).toArray(), player2: player2.prefix(Int(c2)).toArray())
+                winningPlayer = recursiveGame.playRecursive()
+            } else {
+                winningPlayer = c1 > c2 ? 1 : 2
             }
             if winningPlayer == 1 {
-                player1.append(c1)
-                player1.append(c2)
+                player1.append(contentsOf: [c1, c2])
             } else {
-                player2.append(c2)
-                player2.append(c1)
+                player2.append(contentsOf: [c2, c1])
             }
         }
+        return player1.count > player2.count ? 1 : 2
     }
 
     var winningDeck: [Score] {

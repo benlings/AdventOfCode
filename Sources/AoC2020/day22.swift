@@ -2,8 +2,11 @@ import Foundation
 import AdventCore
 
 public struct CombatGame : Hashable {
-    var player1: [Int]
-    var player2: [Int]
+
+    typealias Score = Int8
+
+    var player1: [Score]
+    var player2: [Score]
 
     var finished: Bool {
         player1.count == 0 || player2.count == 0
@@ -32,7 +35,7 @@ public struct CombatGame : Hashable {
             let c2 = player2.removeFirst()
             if winningPlayer == nil {
                 if player1.count >= c1 && player2.count >= c2 {
-                    var recursiveGame = CombatGame(player1: player1[0..<c1].toArray(), player2: player2[0..<c2].toArray())
+                    var recursiveGame = CombatGame(player1: player1.prefix(Int(c1)).toArray(), player2: player2.prefix(Int(c2)).toArray())
                     recursiveGame.playRecursive()
                     winningPlayer = recursiveGame.player1.count > recursiveGame.player2.count ? 1 : 2
                 } else {
@@ -51,7 +54,7 @@ public struct CombatGame : Hashable {
 
     public var winningScore: Int {
         let winner = player1.count > player2.count ? player1 : player2
-        return zip(winner.reversed(), 1...).map { $0.0 * $0.1 }.sum()
+        return zip(winner.reversed(), 1...).map { Int($0.0) * $0.1 }.sum()
     }
 
     public static func winningScore(input: String, recursive: Bool = false) -> Int {

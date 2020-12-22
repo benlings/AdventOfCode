@@ -217,15 +217,6 @@ public struct TiledImage {
         var identifiedEdge: TileEdge
         var flipped: Bool
 
-        func edgeId(fromDirection fromEdge: TileEdge, inDirection edge: TileEdge) -> EdgeId {
-            let resolvedDirection = identifiedEdge.edge(inDirection: edge, reversed: flipped)
-            var edgeId = tile[resolvedDirection]
-            if (flipped) {
-                edgeId = edgeId.reversed(size: tile.size)
-            }
-            return edgeId
-        }
-
         func rotatedTile(movingIdentifiedEdgeTo edge: TileEdge) -> CameraTile {
             let rotationCount = (4 + edge.rawValue - identifiedEdge.rawValue) % 4
             var newPixels = self.tile.pixels

@@ -17,7 +17,7 @@ public func differencesProduct(_ numbers: [Int]) -> Int {
     return d[1]! * d[3]!
 }
 
-fileprivate let input = Bundle.module.text(named: "day10").lines().ints()
+fileprivate let input: [Int] = Bundle.module.text(named: "day10").lines().ints()
 
 public func day10_1() -> Int {
     differencesProduct(input)

@@ -6,7 +6,7 @@ final class Day9Tests: XCTestCase {
     var cypher: XMASCypher!
 
     override func setUp() {
-        let input = """
+        let input: [Int] = """
         35
         20
         15

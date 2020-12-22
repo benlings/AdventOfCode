@@ -94,7 +94,7 @@ public extension Sequence where Element: Sequence {
 }
 
 public extension Sequence where Element: StringProtocol {
-    func ints() -> [Int] {
-        compactMap { Int($0) }
+    func ints<T>() -> [T] where T : FixedWidthInteger {
+        compactMap { T($0) }
     }
 }

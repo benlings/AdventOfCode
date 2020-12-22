@@ -4,7 +4,7 @@ import AoC2020
 final class Day10Tests: XCTestCase {
 
     func testPart1Example() {
-        let input = """
+        let input: [Int] = """
         16
         10
         15

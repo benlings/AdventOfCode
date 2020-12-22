@@ -23,7 +23,8 @@ public struct CombatGame : Hashable {
         }
     }
 
-    public mutating func playRecursive(previousGames: inout Set<CombatGame>) {
+    public mutating func playRecursive() {
+        var previousGames = Set<CombatGame>()
         while !finished {
             var winningPlayer = previousGames.contains(self) ? 1 : nil
             previousGames.insert(self)
@@ -32,8 +33,7 @@ public struct CombatGame : Hashable {
             if winningPlayer == nil {
                 if player1.count >= c1 && player2.count >= c2 {
                     var recursiveGame = CombatGame(player1: player1[0..<c1].toArray(), player2: player2[0..<c2].toArray())
-                    var previousGames1 = Set<CombatGame>()
-                    recursiveGame.playRecursive(previousGames: &previousGames1)
+                    recursiveGame.playRecursive()
                     winningPlayer = recursiveGame.player1.count > recursiveGame.player2.count ? 1 : 2
                 } else {
                     winningPlayer = c1 > c2 ? 1 : 2
@@ -57,8 +57,7 @@ public struct CombatGame : Hashable {
     public static func winningScore(input: String, recursive: Bool = false) -> Int {
         var game = Self(input)
         if recursive {
-            var previousGames = Set<CombatGame>()
-            game.playRecursive(previousGames: &previousGames)
+            game.playRecursive()
         } else {
             game.play()
         }

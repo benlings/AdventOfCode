@@ -39,8 +39,7 @@ final class Day22Tests: XCTestCase {
         14
         """
         var game = CombatGame(input)
-        var previousGames = Set<CombatGame>()
-        game.playRecursive(previousGames: &previousGames)
+        game.playRecursive()
         XCTAssert(true)
     }
 

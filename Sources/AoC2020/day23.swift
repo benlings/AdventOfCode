@@ -49,7 +49,7 @@ public struct CupGame {
         return copy.map(String.init).joined()
     }
 
-    public static func playGame(input: String) -> String {
+    public static func playGame1(input: String) -> String {
         var game = CupGame(input)
         game.play(moves: 100)
         return game.cupOrder
@@ -66,7 +66,7 @@ public extension CupGame {
 fileprivate let input = "327465189"
 
 public func day23_1() -> String {
-    CupGame.playGame(input: input)
+    CupGame.playGame1(input: input)
 }
 
 public func day23_2() -> Int {

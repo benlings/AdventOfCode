@@ -133,22 +133,19 @@ public struct CupGame {
     }
 
     public static func playGame2(input: String) -> Int {
-        var game = CupGame(input)
-        game.extendTo(totalCups: 1000000)
+        var game = CupGame(input, extendedCount: 1000000)
         game.play(moves: 10000000)
         return game.starredCups().product()
-    }
-
-    public mutating func extendTo(totalCups: Int) {
-        cups.current.prev?.append(contentsOf: (count + 1)...totalCups)
-        count = totalCups
     }
 
 }
 
 public extension CupGame {
-    init(_ description: String) {
+    init(_ description: String, extendedCount: Int? = nil) {
         var cups: [Int] = description.map(String.init).ints()
+        if let extendedCount = extendedCount {
+            cups.append(contentsOf: (cups.count + 1)...extendedCount)
+        }
         self.count = cups.count
         self.cups = CircularList(single: cups.removeFirst())
         self.cups.current.append(contentsOf: cups)

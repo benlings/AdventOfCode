@@ -3,14 +3,89 @@ import AdventCore
 import Algorithms
 import SE0270_RangeSet
 
+
+
+class CircularList<Element : Hashable> {
+
+    class Node {
+        let value: Element
+        unowned let list: CircularList
+        var next: Node!
+        weak var prev: Node?
+        internal init(_ value: Element, _ list: CircularList) {
+            self.value = value
+            self.list = list
+            list.nodeLookup[value] = self
+        }
+
+        func append(_ node: Node) {
+            next.prev = node
+            node.next = next
+            node.prev = self
+            next = node
+        }
+
+        func append<S : BidirectionalCollection>(contentsOf elements: S) where S.Element == Element {
+            for e in elements.reversed() {
+                append(Node(e, list))
+            }
+        }
+
+        func append<S : BidirectionalCollection>(nodes: S) where S.Element == Node {
+            for n in nodes.reversed() {
+                append(n)
+            }
+        }
+
+        func removeAfter(count: Int) -> [Node] {
+            var result = [Node]()
+            var e = self
+            for _ in 0..<count {
+                let nextNode: Node = e.next
+                assert(nextNode !== self)
+                result.append(nextNode)
+                e = nextNode
+            }
+            next = e.next
+            e.next.prev = self
+            return result
+        }
+
+        func prefix(_ count: Int) -> [Element] {
+            var result = [Element]()
+            var e = self
+            for _ in 0..<count {
+                let nextNode: Node = e.next
+                assert(nextNode !== self)
+                result.append(nextNode.value)
+                e = nextNode
+            }
+            return result
+        }
+
+    }
+
+    var current: Node!
+    var nodeLookup: [Element : Node] = [:]
+
+    init(single: Element) {
+        current = Node(single, self)
+        current.next = current
+        current.prev = current
+    }
+
+}
+
 public struct CupGame {
 
-    // 'currentCup' is the first cup in the array
-    var cups: [Int]
-    var currentIndex: Int = 0
+    var cups: CircularList<Int>
+    var count: Int
 
     public mutating func play(moves: Int) {
-        for _ in 0..<moves {
+        for i in 0..<moves {
+            if (i % 100000 == 0) {
+                print("Iteration \(i)")
+            }
             playMove()
         }
     }
@@ -22,52 +97,37 @@ public struct CupGame {
      * The crab selects a new current cup: the cup which is immediately clockwise of the current cup.
      */
     mutating func playMove() {
-        let currentCup = cups[currentIndex]
-        var pickedUpRangeSet = RangeSet<Int>()
-        var pickedUp = [Int]()
-        for i in (currentIndex + 1)...(currentIndex + 3) {
-            pickedUpRangeSet.insert(i % cups.count, within: cups)
-            pickedUp.append(cups[i % cups.count])
-        }
+        let currentCup = cups.current.value
+        let pickedUp = cups.current.removeAfter(count: 3)
         var destinationCup = decrement(cup: currentCup)
-        while pickedUp.contains(destinationCup) {
+        let values = pickedUp.map(\.value)
+        while values.contains(destinationCup) {
             destinationCup = decrement(cup: destinationCup)
         }
-        if pickedUpRangeSet.ranges.count == 1 {
-            let destinationIndex = cups.firstIndex(of: destinationCup)!
-            cups.moveSubranges(pickedUpRangeSet, to: destinationIndex + 1)
-        } else {
-            cups.removeSubranges(pickedUpRangeSet)
-            let destinationIndex = cups.firstIndex(of: destinationCup)!
-            cups.insert(contentsOf: pickedUp, at: destinationIndex + 1)
-        }
-        currentIndex = cups.firstIndex(of: currentCup)!
-        currentIndex = (currentIndex + 1) % cups.count
+        let destinationNode = cups.nodeLookup[destinationCup]!
+        destinationNode.append(nodes: pickedUp)
+        cups.current = cups.current.next
     }
 
     func decrement(cup: Int) -> Int {
         var result = cup - 1
         if result < 1 {
-            result += cups.count
+            result += count
         }
         return result
     }
 
-    var cupsStartingFromOne: [Int] {
-        let i = cups.firstIndex(of: 1)!
-        var copy = cups
-        copy.rotate(toStartAt: i)
-        return copy
+    func cupsStartingFromOne(count: Int) -> [Int] {
+        let starting = cups.nodeLookup[1]!
+        return starting.prefix(count)
     }
 
     public var cupOrder: String {
-        var copy = cupsStartingFromOne
-        copy.removeFirst()
-        return copy.map(String.init).joined()
+        return cupsStartingFromOne(count: count - 1).map(String.init).joined()
     }
 
     public func starredCups() -> [Int] {
-        Array(cupsStartingFromOne[1...2])
+        Array(cupsStartingFromOne(count: 2))
     }
 
     public static func playGame1(input: String) -> String {
@@ -84,14 +144,18 @@ public struct CupGame {
     }
 
     public mutating func extendTo(totalCups: Int) {
-        cups.append(contentsOf: (cups.count + 1)...totalCups)
+        cups.current.prev?.append(contentsOf: (count + 1)...totalCups)
+        count = totalCups
     }
 
 }
 
 public extension CupGame {
     init(_ description: String) {
-        cups = description.map(String.init).ints()
+        var cups: [Int] = description.map(String.init).ints()
+        self.count = cups.count
+        self.cups = CircularList(single: cups.removeFirst())
+        self.cups.current.append(contentsOf: cups)
     }
 }
 

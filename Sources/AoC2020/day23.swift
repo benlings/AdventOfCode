@@ -7,7 +7,6 @@ class CircularList<Element : Hashable> {
         let value: Element
         unowned let list: CircularList
         var next: Node!
-        weak var prev: Node?
         internal init(_ value: Element, _ list: CircularList) {
             self.value = value
             self.list = list
@@ -15,9 +14,7 @@ class CircularList<Element : Hashable> {
         }
 
         func append(_ node: Node) {
-            next.prev = node
             node.next = next
-            node.prev = self
             next = node
         }
 
@@ -43,7 +40,6 @@ class CircularList<Element : Hashable> {
                 e = nextNode
             }
             next = e.next
-            e.next.prev = self
             return result
         }
 
@@ -67,7 +63,6 @@ class CircularList<Element : Hashable> {
     init(single: Element) {
         current = Node(single, self)
         current.next = current
-        current.prev = current
     }
 
 }

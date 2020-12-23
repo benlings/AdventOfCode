@@ -64,6 +64,10 @@ public struct CupGame {
         return game.cupOrder
     }
 
+    public mutating func extendTo(totalCups: Int) {
+        cups.append(contentsOf: (cups.count + 1)...totalCups)
+    }
+
 }
 
 public extension CupGame {

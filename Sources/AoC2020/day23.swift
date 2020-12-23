@@ -1,11 +1,13 @@
 import Foundation
 import AdventCore
 import Algorithms
+import SE0270_RangeSet
 
 public struct CupGame {
 
     // 'currentCup' is the first cup in the array
     var cups: [Int]
+    var currentIndex: Int = 0
 
     public mutating func play(moves: Int) {
         for _ in 0..<moves {
@@ -20,17 +22,27 @@ public struct CupGame {
      * The crab selects a new current cup: the cup which is immediately clockwise of the current cup.
      */
     mutating func playMove() {
-        let currentCup = cups[0]
-        let pickedUpRange = 1...3
-        let pickedUp = cups[pickedUpRange]
+        let currentCup = cups[currentIndex]
+        var pickedUpRangeSet = RangeSet<Int>()
+        var pickedUp = [Int]()
+        for i in (currentIndex + 1)...(currentIndex + 3) {
+            pickedUpRangeSet.insert(i % cups.count, within: cups)
+            pickedUp.append(cups[i % cups.count])
+        }
         var destinationCup = decrement(cup: currentCup)
         while pickedUp.contains(destinationCup) {
             destinationCup = decrement(cup: destinationCup)
         }
-        cups.removeSubrange(1...3)
-        let destinationIndex = cups.firstIndex(of: destinationCup)!
-        cups.insert(contentsOf: pickedUp, at: destinationIndex + 1)
-        cups.rotate(toStartAt: 1)
+        if pickedUpRangeSet.ranges.count == 1 {
+            let destinationIndex = cups.firstIndex(of: destinationCup)!
+            cups.moveSubranges(pickedUpRangeSet, to: destinationIndex + 1)
+        } else {
+            cups.removeSubranges(pickedUpRangeSet)
+            let destinationIndex = cups.firstIndex(of: destinationCup)!
+            cups.insert(contentsOf: pickedUp, at: destinationIndex + 1)
+        }
+        currentIndex = cups.firstIndex(of: currentCup)!
+        currentIndex = (currentIndex + 1) % cups.count
     }
 
     func decrement(cup: Int) -> Int {
@@ -64,6 +76,13 @@ public struct CupGame {
         return game.cupOrder
     }
 
+    public static func playGame2(input: String) -> Int {
+        var game = CupGame(input)
+        game.extendTo(totalCups: 1000000)
+        game.play(moves: 10000000)
+        return game.starredCups().product()
+    }
+
     public mutating func extendTo(totalCups: Int) {
         cups.append(contentsOf: (cups.count + 1)...totalCups)
     }
@@ -83,5 +102,5 @@ public func day23_1() -> String {
 }
 
 public func day23_2() -> Int {
-    0
+    CupGame.playGame2(input: input)
 }

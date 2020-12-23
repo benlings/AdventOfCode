@@ -21,6 +21,10 @@ final class Day23Tests: XCTestCase {
         XCTAssertEqual(game.starredCups(), [2, 5])
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(CupGame.playGame2(input: "389125467"), 149245887792)
+    }
+
     func testPart2() {
         XCTAssertEqual(day23_2(), 0)
     }

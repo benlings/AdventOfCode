@@ -41,12 +41,21 @@ public struct CupGame {
         return result
     }
 
-    public var cupOrder: String {
+    var cupsStartingFromOne: [Int] {
         let i = cups.firstIndex(of: 1)!
         var copy = cups
         copy.rotate(toStartAt: i)
+        return copy
+    }
+
+    public var cupOrder: String {
+        var copy = cupsStartingFromOne
         copy.removeFirst()
         return copy.map(String.init).joined()
+    }
+
+    public func starredCups() -> [Int] {
+        Array(cupsStartingFromOne[1...2])
     }
 
     public static func playGame1(input: String) -> String {

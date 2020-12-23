@@ -36,7 +36,7 @@ public struct CupGame {
     func decrement(cup: Int) -> Int {
         var result = cup - 1
         if result < 1 {
-            result += 9
+            result += cups.count
         }
         return result
     }

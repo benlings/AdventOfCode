@@ -76,11 +76,6 @@ public struct TiledFloor {
     }
 }
 
-fileprivate extension CharacterSet {
-    static let northSouth = CharacterSet(charactersIn: "ns")
-    static let eastWest = CharacterSet(charactersIn: "ew")
-}
-
 fileprivate extension Scanner {
     func scanHexDirection() -> HexDirection? {
         if let c1 = scanCharacter() {

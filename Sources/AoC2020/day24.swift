@@ -56,23 +56,21 @@ public struct TiledFloor {
     }
 
     public func run(days: Int) -> Int {
-        var blackTiles = followInstructions()
-        for _ in 0..<days {
-            var neighbours = [HexOffset : Int]()
-            for offset in blackTiles {
-                for n in offset.neighbours {
-                    neighbours[n, default: 0] += 1
-                }
-            }
-            var newTiles = Set<HexOffset>()
-            for (offset, n) in neighbours {
-                if blackTiles.contains(offset) ? (n == 1 || n == 2) : n == 2 {
-                    newTiles.insert(offset)
-                }
-            }
-            blackTiles = newTiles
-        }
-        return blackTiles.count
+        aliveCount(iterations: days)
+    }
+}
+
+extension TiledFloor : GameOfLife {
+    typealias Coordinate = HexOffset
+
+    var initialWorld: World { followInstructions() }
+
+    func neighbours(coordinate: HexOffset) -> [HexOffset] {
+        coordinate.neighbours
+    }
+
+    func alive(wasAlive alive: Bool, neighbours count: Int) -> Bool {
+       alive ? count == 1 || count == 2 : count == 2
     }
 }
 

@@ -3,8 +3,7 @@ import AoC2020
 
 final class Day24Tests: XCTestCase {
 
-    func testPart1Example() {
-        let input = """
+    let example = TiledFloor("""
         sesenwnenenewseeswwswswwnenewsewsw
         neeenesenwnwwswnenewnwwsewnenwseswesw
         seswneswswsenwwnwse
@@ -25,16 +24,23 @@ final class Day24Tests: XCTestCase {
         eneswnwswnwsenenwnwnwwseeswneewsenese
         neswnwewnwnwseenwseesewsenwsweewe
         wseweeenwnesenwwwswnew
-        """
-        let floor = TiledFloor(input)
-        XCTAssertEqual(floor.countBlack(), 10)
+        """)
+
+    func testPart1Example() {
+        XCTAssertEqual(example.countBlack(), 10)
     }
 
     func testPart1() {
         XCTAssertEqual(day24_1(), 332)
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(example.run(days: 1), 15)
+        XCTAssertEqual(example.run(days: 10), 37)
+        XCTAssertEqual(example.run(days: 100), 2208)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day24_2(), 0)
+        XCTAssertEqual(day24_2(), 3900)
     }
 }

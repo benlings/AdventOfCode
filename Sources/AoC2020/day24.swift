@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-public enum HexDirection {
+public enum HexDirection : CaseIterable {
     case e, se, sw, w, nw, ne
 
     var offset: HexOffset {
@@ -27,6 +27,12 @@ public struct HexOffset : Hashable {
     static func from(directions: [HexDirection]) -> HexOffset {
         directions.reduce(HexOffset(), { $0 + $1.offset })
     }
+
+    var neighbours: [HexOffset] {
+        HexDirection.allCases.map {
+            self + $0.offset
+        }
+    }
 }
 
 public struct TiledFloor {
@@ -47,6 +53,26 @@ public struct TiledFloor {
 
     public func countBlack() -> Int {
         followInstructions().count
+    }
+
+    public func run(days: Int) -> Int {
+        var blackTiles = followInstructions()
+        for _ in 0..<days {
+            var neighbours = [HexOffset : Int]()
+            for offset in blackTiles {
+                for n in offset.neighbours {
+                    neighbours[n, default: 0] += 1
+                }
+            }
+            var newTiles = Set<HexOffset>()
+            for (offset, n) in neighbours {
+                if blackTiles.contains(offset) ? (n == 1 || n == 2) : n == 2 {
+                    newTiles.insert(offset)
+                }
+            }
+            blackTiles = newTiles
+        }
+        return blackTiles.count
     }
 }
 
@@ -102,5 +128,5 @@ public func day24_1() -> Int {
 }
 
 public func day24_2() -> Int {
-    0
+    TiledFloor(input).run(days: 100)
 }

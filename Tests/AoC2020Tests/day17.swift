@@ -9,17 +9,8 @@ final class Day17Tests: XCTestCase {
         ###
     """)
 
-    func testPart1Example1() {
-        var grid = example
-        XCTAssertEqual(grid.countActive(), 5)
-        grid.step()
-        XCTAssertEqual(grid.countActive(), 11)
-    }
-
-    func testPart1Example2() {
-        var grid = example
-        grid.boot()
-        XCTAssertEqual(grid.countActive(), 112)
+    func testPart1Example() {
+        XCTAssertEqual(example.boot(), 112)
     }
 
     func testPart1() {
@@ -27,13 +18,12 @@ final class Day17Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        var grid = GridND("""
+        let grid = GridND("""
             .#.
             ..#
             ###
         """, dimensions: 4)
-        grid.boot()
-        XCTAssertEqual(grid.countActive(), 848)
+        XCTAssertEqual(grid.boot(), 848)
     }
 
     func testPart2() {

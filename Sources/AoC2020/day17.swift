@@ -45,30 +45,24 @@ public struct GridND {
     var active: Set<PointND>
     let dimensions: Int
 
-    public mutating func step() {
-        var neighbours = [PointND : Int]()
-        for point in active {
-            for n in OffsetND.neighbours(dimensions) {
-                neighbours[point + n, default: 0] += 1
-            }
-        }
-        var newActive = Set<PointND>()
-        for (point, count) in neighbours {
-            if active.contains(point) ? count == 2 || count == 3 : count == 3 {
-                newActive.insert(point)
-            }
-        }
-        active = newActive
+    public func boot() -> Int {
+        aliveCount(iterations: 6)
+    }
+}
+
+extension GridND : GameOfLife {
+    typealias Coordinate = PointND
+
+    var initialWorld: World {
+        active
     }
 
-    public mutating func boot() {
-        for _ in 0..<6 {
-            step()
-        }
+    func neighbours(coordinate: Coordinate) -> [Coordinate] {
+        OffsetND.neighbours(dimensions).map { coordinate + $0 }
     }
 
-    public func countActive() -> Int {
-        active.count
+    func alive(wasAlive alive: Bool, neighbours count: Int) -> Bool {
+        alive ? count == 2 || count == 3 : count == 3
     }
 }
 
@@ -97,13 +91,9 @@ public extension GridND {
 fileprivate let input = Bundle.module.text(named: "day17")
 
 public func day17_1() -> Int {
-    var grid = GridND(input)
-    grid.boot()
-    return grid.countActive()
+    return GridND(input).boot()
 }
 
 public func day17_2() -> Int {
-    var grid = GridND(input, dimensions: 4)
-    grid.boot()
-    return grid.countActive()
+    return GridND(input, dimensions: 4).boot()
 }

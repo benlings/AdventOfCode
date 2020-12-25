@@ -60,7 +60,7 @@ public struct CameraTile {
 
 extension CameraTile : CustomStringConvertible {
     public var description: String {
-        let p = pixels.map { $0.map { $0 ? "#" : "." }.joined() }.joined(separator: "\n")
+        let p = pixels.map { $0.map { $0 ? "#" : "." }.joined() }.lines()
         return "Tile \(id):\n\(p)"
     }
 }
@@ -138,7 +138,7 @@ public struct CameraImage {
 
 extension CameraImage : CustomStringConvertible {
     public var description: String {
-        pixels.map { $0.map { $0 ? "#" : "." }.joined() }.joined(separator: "\n")
+        pixels.map { $0.map { $0 ? "#" : "." }.joined() }.lines()
     }
 }
 

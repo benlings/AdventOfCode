@@ -16,7 +16,7 @@ final class Day11Tests: XCTestCase {
         L.LLLLLL.L
         L.LLLLL.LL
         """
-        var waitingArea = WaitingArea(input)
+        var waitingArea = WaitingArea(input)!
         XCTAssertEqual(waitingArea.description, input)
         waitingArea.step()
         XCTAssertEqual(waitingArea.description, """
@@ -65,7 +65,7 @@ final class Day11Tests: XCTestCase {
         L.LLLLLL.L
         L.LLLLL.LL
         """
-        var waitingArea = WaitingArea(input)
+        var waitingArea = WaitingArea(input)!
         waitingArea.step(strategy: .visible)
         XCTAssertEqual(waitingArea.description, """
             #.##.##.##

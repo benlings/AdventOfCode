@@ -36,6 +36,7 @@ public struct WaitingArea : Equatable {
     }
 
     func seatedNeighbours(x: Int, y: Int) -> Int {
+        // TODO convert to position + offset
         (self[x - 1, y - 1] == .occupied ? 1 : 0) +
             (self[x - 1, y] == .occupied ? 1 : 0) +
             (self[x - 1, y + 1] == .occupied ? 1 : 0) +
@@ -117,28 +118,26 @@ public struct WaitingArea : Equatable {
 
 }
 
-public extension WaitingArea {
-    init(_ description: String) {
+extension WaitingArea : LosslessStringConvertible {
+    public init?(_ description: String) {
         seats = description
             .lines()
             .map {
                 $0.compactMap(Seat.init(rawValue:))
             }
     }
-}
 
-extension WaitingArea : CustomStringConvertible {
     public var description: String {
         seats.map { row in
             String(row.map(\.rawValue))
-        }.joined(separator: "\n")
+        }.lines()
     }
 }
 
 fileprivate let input = Bundle.module.text(named: "day11")
 
 fileprivate func calculateOccupied(_ strategy: WaitingArea.Strategy) -> Int {
-    var waitingArea = WaitingArea(input)
+    var waitingArea = WaitingArea(input)!
     waitingArea.findSteadyState(strategy: strategy)
     return waitingArea.occupied
 }

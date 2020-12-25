@@ -14,3 +14,13 @@ public extension Array {
         }
     }
 }
+
+public extension Array where Element == String {
+    func lines() -> String {
+        joined(separator: "\n")
+    }
+
+    func commaSeparated() -> String {
+        joined(separator: ",")
+    }
+}

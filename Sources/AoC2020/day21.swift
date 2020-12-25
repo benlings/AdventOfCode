@@ -80,7 +80,7 @@ public struct FoodList {
     }
 
     public func canonicalDangerousIngredients() -> String {
-        dangerousIngredients().sorted(on: \.alergen).map(\.name).joined(separator: ",")
+        dangerousIngredients().sorted(on: \.alergen).map(\.name).commaSeparated()
     }
 }
 

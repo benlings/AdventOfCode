@@ -1,14 +1,30 @@
 import Foundation
 import AdventCore
 
-public struct DeliveryRoute {
-    var moves: [Offset]
+enum Movement : String {
+    case north = "^"
+    case south = "v"
+    case east = ">"
+    case west = "<"
 
-    static func follow<T : Sequence>(route: T) -> [Offset : Int] where T.Element == Offset {
+    var offset: Offset {
+        switch self {
+        case .north: return Offset(north: 1)
+        case .south: return Offset(north: -1)
+        case .east: return Offset(east: 1)
+        case .west: return Offset(east: -1)
+        }
+    }
+}
+
+public struct DeliveryRoute {
+    var moves: [Movement]
+
+    static func follow<T : Sequence>(route: T) -> [Offset : Int] where T.Element == Movement {
         var position = Offset.zero
         var houses = [position : 1]
         for move in route {
-            position += move
+            position += move.offset
             houses[position, default: 0] += 1
         }
         return houses
@@ -27,15 +43,7 @@ public struct DeliveryRoute {
 
 public extension DeliveryRoute {
     init(_ description: String) {
-        moves = description.compactMap {
-            switch $0 {
-            case "^": return Offset(north: 1)
-            case ">": return Offset(east: 1)
-            case "v": return Offset(north: -1)
-            case "<": return Offset(east: -1)
-            default: return nil
-            }
-        }
+        moves = description.compactMap { Movement(rawValue: String($0)) }
     }
 }
 

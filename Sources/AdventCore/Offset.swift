@@ -39,6 +39,9 @@ extension Offset : AdditiveArithmetic {
     }
 }
 
+extension Offset : Hashable {
+}
+
 extension Offset {
     public static func * (lhs: Int, rhs: Offset) -> Offset {
         Offset(east: lhs * rhs.east, north: lhs * rhs.north)

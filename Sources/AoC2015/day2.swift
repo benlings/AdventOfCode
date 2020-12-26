@@ -5,11 +5,11 @@ import Algorithms
 public struct Present {
     let dimensions: [Int]
 
-    var wrappingArea: Int {
+    public var wrappingArea: Int {
         dimensions.permutations(ofCount: 2).map { $0.product() }.sum() + dimensions.sorted().prefix(2).product()
     }
 
-    var ribbonLength: Int {
+    public var ribbonLength: Int {
         2 * dimensions.sorted().prefix(2).sum() + dimensions.product()
     }
 }

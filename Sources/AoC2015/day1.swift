@@ -4,6 +4,10 @@ import AdventCore
 public struct Elevator {
     let instructions: String
 
+    public init(instructions: String) {
+        self.instructions = instructions
+    }
+
     public var finalFloor: Int {
         instructions.count(of: "(") - instructions.count(of: ")")
     }

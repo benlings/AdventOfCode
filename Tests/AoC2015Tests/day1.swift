@@ -1,5 +1,5 @@
 import XCTest
-@testable import AoC2015
+import AoC2015
 
 final class Day1Tests: XCTestCase {
 

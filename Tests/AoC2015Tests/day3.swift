@@ -13,7 +13,13 @@ final class Day3Tests: XCTestCase {
         XCTAssertEqual(day3_1(), 2565)
     }
 
+    func testPart2Examples() {
+        XCTAssertEqual(DeliveryRoute("^v").countHouses2, 3)
+        XCTAssertEqual(DeliveryRoute("^>v<").countHouses2, 3)
+        XCTAssertEqual(DeliveryRoute("^v^v^v^v^v").countHouses2, 11)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day3_2(), 0)
+        XCTAssertEqual(day3_2(), 2639)
     }
 }

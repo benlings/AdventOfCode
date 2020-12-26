@@ -4,7 +4,7 @@ import AdventCore
 public struct DeliveryRoute {
     var moves: [Offset]
 
-    static func follow(route: [Offset]) -> [Offset : Int] {
+    static func follow<T : Sequence>(route: T) -> [Offset : Int] where T.Element == Offset {
         var position = Offset.zero
         var houses = [position : 1]
         for move in route {
@@ -16,6 +16,12 @@ public struct DeliveryRoute {
 
     public var countHouses: Int {
         Self.follow(route: moves).count
+    }
+
+    public var countHouses2: Int {
+        let santa = Self.follow(route: moves.striding(by: 2))
+        let robot = Self.follow(route: moves.dropFirst().striding(by: 2))
+        return santa.merging(robot, uniquingKeysWith: +).count
     }
 }
 
@@ -40,5 +46,5 @@ public func day3_1() -> Int {
 }
 
 public func day3_2() -> Int {
-    0
+    DeliveryRoute(input).countHouses2
 }

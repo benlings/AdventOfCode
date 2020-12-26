@@ -4,14 +4,18 @@ import AdventCore
 public struct DeliveryRoute {
     var moves: [Offset]
 
-    public var countHouses: Int {
+    static func follow(route: [Offset]) -> [Offset : Int] {
         var position = Offset.zero
         var houses = [position : 1]
-        for move in moves {
+        for move in route {
             position += move
             houses[position, default: 0] += 1
         }
-        return houses.count
+        return houses
+    }
+
+    public var countHouses: Int {
+        Self.follow(route: moves).count
     }
 }
 

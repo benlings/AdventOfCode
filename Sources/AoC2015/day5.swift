@@ -10,8 +10,7 @@ import AdventCore
  */
 
 public func isNicePart1(_ string: String) -> Bool {
-    let vowels = CharacterSet(charactersIn: "aeiou")
-    let contains3Vowels = string.unicodeScalars.count(where: vowels.contains) >= 3
+    let contains3Vowels = string.range(of: "([aeiou].*){3}", options: .regularExpression) != nil
     let containsRepeatedLetter = string.range(of: "([a-z])(\\1)", options: .regularExpression) != nil
     let containsMagicString = string.range(of: "(ab|cd|pq|xy)", options: .regularExpression) != nil
     return contains3Vowels && containsRepeatedLetter && !containsMagicString

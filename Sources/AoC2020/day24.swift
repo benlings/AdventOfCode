@@ -42,11 +42,7 @@ public struct TiledFloor {
         var blackTiles = Set<HexOffset>()
         for i in instructions {
             let offset = HexOffset.from(directions: i)
-            if blackTiles.contains(offset) {
-                blackTiles.remove(offset)
-            } else {
-                blackTiles.insert(offset)
-            }
+            blackTiles.toggle(offset)
         }
         return blackTiles
     }

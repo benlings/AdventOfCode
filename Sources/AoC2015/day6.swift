@@ -12,6 +12,14 @@ public struct LightGrid {
         return lights
     }
 
+    public func totalBrightness() -> Int {
+        var lights = [Offset : Int]()
+        for instruction in instructions {
+            instruction.evaluate(lights: &lights)
+        }
+        return lights.values.sum()
+    }
+
 }
 
 public extension LightGrid {
@@ -31,6 +39,24 @@ public extension LightGrid {
                 lights.toggle(offset)
             }
         }
+
+        func evaluate(offset: Offset, lights: inout [Offset : Int]) {
+            switch self {
+            case .turnOn:
+                lights[offset, default: 0] += 1
+            case .turnOff:
+                if var brightness = lights[offset] {
+                    brightness -= 1
+                    if brightness < 0 {
+                        lights.removeValue(forKey: offset)
+                    } else {
+                        lights[offset] = brightness
+                    }
+                }
+            case .toggle:
+                lights[offset, default: 0] += 2
+            }
+        }
     }
 
     struct Instruction {
@@ -38,6 +64,10 @@ public extension LightGrid {
         var range: OffsetRange
 
         func evaluate(lights: inout Set<Offset>) {
+            range.forEach { operation.evaluate(offset: $0, lights: &lights) }
+        }
+
+        func evaluate(lights: inout [Offset : Int]) {
             range.forEach { operation.evaluate(offset: $0, lights: &lights) }
         }
     }
@@ -107,5 +137,5 @@ public func day6_1() -> Int {
 }
 
 public func day6_2() -> Int {
-    0
+    LightGrid(input).totalBrightness()
 }

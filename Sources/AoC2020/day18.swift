@@ -15,12 +15,6 @@ public indirect enum Expr {
 
 fileprivate extension Scanner {
 
-    func peekString(_ s: String) -> Bool {
-        let i = currentIndex
-        defer { currentIndex = i }
-        return scanString(s) != nil
-    }
-
     // expr   = factor { ("*"|"+") factor }
     // factor = int | "(" expr ")"
 

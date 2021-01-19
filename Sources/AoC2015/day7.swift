@@ -7,25 +7,37 @@ public struct Circuit {
 
     enum WireInput {
         case signal(Signal)
-        case and(WireId, WireId)
-        case or(WireId, WireId)
-        case lshift(WireId, Int)
-        case rshift(WireId, Int)
-        case not(WireId)
+        case id(WireId)
     }
 
-    typealias WireConfiguration = [WireId : WireInput]
+    enum Connection {
+        case and(WireInput, WireInput)
+        case or(WireInput, WireInput)
+        case lshift(WireInput, Int)
+        case rshift(WireInput, Int)
+        case not(WireInput)
+        case passthrough(WireInput)
+    }
+
+    typealias WireConfiguration = [WireId : Connection]
 
     var configuration: WireConfiguration
 
+    func signal(input: WireInput) -> Signal {
+        switch input {
+        case .signal(let s): return s
+        case .id(let id): return signal(id: id)
+        }
+    }
+
     public func signal(id: WireId) -> Signal {
         switch configuration[id] {
-        case .signal(let s): return s
-        case .and(let lhs, let rhs): return signal(id: lhs) & signal(id: rhs)
-        case .or(let lhs, let rhs): return signal(id: lhs) | signal(id: rhs)
-        case .lshift(let lhs, let rhs): return signal(id: lhs) << rhs
-        case .rshift(let lhs, let rhs): return signal(id: lhs) >> rhs
-        case .not(let arg): return ~signal(id: arg)
+        case .and(let lhs, let rhs): return signal(input: lhs) & signal(input: rhs)
+        case .or(let lhs, let rhs): return signal(input: lhs) | signal(input: rhs)
+        case .lshift(let lhs, let rhs): return signal(input: lhs) << rhs
+        case .rshift(let lhs, let rhs): return signal(input: lhs) >> rhs
+        case .not(let arg): return ~signal(input: arg)
+        case .passthrough(let arg): return signal(input: arg)
         default:
             preconditionFailure()
         }
@@ -33,13 +45,13 @@ public struct Circuit {
 }
 
 extension Scanner {
-    func scanWireConfig() -> (Circuit.WireId, Circuit.WireInput)? {
-        guard let input = scanWireInput(),
+    func scanWireConfig() -> (Circuit.WireId, Circuit.Connection)? {
+        guard let connection = scanWireConnection(),
               let _ = scanString("->"),
               let id = scanWireId() else {
             return nil
         }
-        return (id, input)
+        return (id, connection)
     }
 
     func scanWireId() -> Circuit.WireId? {
@@ -51,16 +63,26 @@ extension Scanner {
            let s = UInt16(exactly: i) {
             return .signal(s)
         }
-        if scanString("NOT") != nil,
-           let id = scanWireId() {
-            return .not(id)
+        if let id = scanWireId() {
+            return .id(id)
         }
-        if let lhs = scanWireId() {
+        return nil
+    }
+
+    func scanWireConnection() -> Circuit.Connection? {
+        if scanString("NOT") != nil,
+           let input = scanWireInput() {
+            return .not(input)
+        }
+        if let lhs = scanWireInput() {
+            if peekString("->") {
+                return .passthrough(lhs)
+            }
             switch scanUpToCharacters(from: .whitespaces) {
             case "AND":
-                return scanWireId().map { .and(lhs, $0) }
+                return scanWireInput().map { .and(lhs, $0) }
             case "OR":
-                return scanWireId().map { .or(lhs, $0) }
+                return scanWireInput().map { .or(lhs, $0) }
             case "LSHIFT":
                 return scanInt().map { .lshift(lhs, $0) }
             case "RSHIFT":
@@ -71,23 +93,23 @@ extension Scanner {
         }
         return nil
     }
-
-
 }
 
 public extension Circuit {
     init(_ description: String) {
         configuration = description
             .lines()
-            .compactMap {
-                Scanner(string: $0).scanWireConfig()
+            .map {
+                Scanner(string: $0).scanWireConfig()!
             }
             .toDictionary()
     }
 }
 
-public func day7_1() -> Int {
-    0
+fileprivate let input = Bundle.module.text(named: "day7")
+
+public func day7_1() -> UInt16 {
+    Circuit(input).signal(id: "a")
 }
 
 public func day7_2() -> Int {

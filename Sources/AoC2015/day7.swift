@@ -46,8 +46,12 @@ public struct Circuit {
             preconditionFailure()
         }
         let s = signal(connection: connection)
-        configuration[id] = .passthrough(.signal(s))
+        override(id: id, value: s)
         return s
+    }
+
+    public mutating func override(id: WireId, value: Signal) {
+        configuration[id] = .passthrough(.signal(value))
     }
 }
 
@@ -120,6 +124,10 @@ public func day7_1() -> UInt16 {
     return circuit.signal(id: "a")
 }
 
-public func day7_2() -> Int {
-    0
+public func day7_2() -> UInt16 {
+    var circuit1 = Circuit(input)
+    var circuit2 = circuit1
+    let result1 = circuit1.signal(id: "a")
+    circuit2.override(id: "b", value: result1)
+    return circuit2.signal(id: "a")
 }

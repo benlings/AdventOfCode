@@ -26,7 +26,7 @@ public struct Circuit {
     mutating func signal(input: WireInput) -> Signal {
         switch input {
         case .signal(let s): return s
-        case .id(let id): return signal(id: id)
+        case .id(let id): return self[id]
         }
     }
 
@@ -41,17 +41,18 @@ public struct Circuit {
         }
     }
 
-    public mutating func signal(id: WireId) -> Signal {
-        guard let connection = configuration[id] else {
-            preconditionFailure()
+    public subscript(id: WireId) -> Signal {
+        mutating get {
+            guard let connection = configuration[id] else {
+                preconditionFailure()
+            }
+            let s = signal(connection: connection)
+            self[id] = s
+            return s
         }
-        let s = signal(connection: connection)
-        override(id: id, value: s)
-        return s
-    }
-
-    public mutating func override(id: WireId, value: Signal) {
-        configuration[id] = .passthrough(.signal(value))
+        set {
+            configuration[id] = .passthrough(.signal(newValue))
+        }
     }
 }
 
@@ -121,13 +122,12 @@ fileprivate let input = Bundle.module.text(named: "day7")
 
 public func day7_1() -> UInt16 {
     var circuit = Circuit(input)
-    return circuit.signal(id: "a")
+    return circuit["a"]
 }
 
 public func day7_2() -> UInt16 {
     var circuit1 = Circuit(input)
     var circuit2 = circuit1
-    let result1 = circuit1.signal(id: "a")
-    circuit2.override(id: "b", value: result1)
-    return circuit2.signal(id: "a")
+    circuit2["b"] = circuit1["a"]
+    return circuit2["a"]
 }

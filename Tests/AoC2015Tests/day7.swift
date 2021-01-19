@@ -15,14 +15,14 @@ final class Day7Tests: XCTestCase {
         NOT y -> i
         """
         var circuit = Circuit(input)
-        XCTAssertEqual(circuit.signal(id: "d"), 72)
-        XCTAssertEqual(circuit.signal(id: "e"), 507)
-        XCTAssertEqual(circuit.signal(id: "f"), 492)
-        XCTAssertEqual(circuit.signal(id: "g"), 114)
-        XCTAssertEqual(circuit.signal(id: "h"), 65412)
-        XCTAssertEqual(circuit.signal(id: "i"), 65079)
-        XCTAssertEqual(circuit.signal(id: "x"), 123)
-        XCTAssertEqual(circuit.signal(id: "y"), 456)
+        XCTAssertEqual(circuit["d"], 72)
+        XCTAssertEqual(circuit["e"], 507)
+        XCTAssertEqual(circuit["f"], 492)
+        XCTAssertEqual(circuit["g"], 114)
+        XCTAssertEqual(circuit["h"], 65412)
+        XCTAssertEqual(circuit["i"], 65079)
+        XCTAssertEqual(circuit["x"], 123)
+        XCTAssertEqual(circuit["y"], 456)
     }
 
     func testPart1() {

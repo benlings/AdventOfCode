@@ -30,17 +30,22 @@ public struct Circuit {
         }
     }
 
-    public func signal(id: WireId) -> Signal {
-        switch configuration[id] {
+    func signal(connection: Connection) -> Signal {
+        switch connection {
         case .and(let lhs, let rhs): return signal(input: lhs) & signal(input: rhs)
         case .or(let lhs, let rhs): return signal(input: lhs) | signal(input: rhs)
         case .lshift(let lhs, let rhs): return signal(input: lhs) << rhs
         case .rshift(let lhs, let rhs): return signal(input: lhs) >> rhs
         case .not(let arg): return ~signal(input: arg)
         case .passthrough(let arg): return signal(input: arg)
-        default:
+        }
+    }
+
+    public func signal(id: WireId) -> Signal {
+        guard let connection = configuration[id] else {
             preconditionFailure()
         }
+        return signal(connection: connection)
     }
 }
 

@@ -23,14 +23,14 @@ public struct Circuit {
 
     var configuration: WireConfiguration
 
-    func signal(input: WireInput) -> Signal {
+    mutating func signal(input: WireInput) -> Signal {
         switch input {
         case .signal(let s): return s
         case .id(let id): return signal(id: id)
         }
     }
 
-    func signal(connection: Connection) -> Signal {
+    mutating func signal(connection: Connection) -> Signal {
         switch connection {
         case .and(let lhs, let rhs): return signal(input: lhs) & signal(input: rhs)
         case .or(let lhs, let rhs): return signal(input: lhs) | signal(input: rhs)
@@ -41,11 +41,13 @@ public struct Circuit {
         }
     }
 
-    public func signal(id: WireId) -> Signal {
+    public mutating func signal(id: WireId) -> Signal {
         guard let connection = configuration[id] else {
             preconditionFailure()
         }
-        return signal(connection: connection)
+        let s = signal(connection: connection)
+        configuration[id] = .passthrough(.signal(s))
+        return s
     }
 }
 
@@ -114,7 +116,8 @@ public extension Circuit {
 fileprivate let input = Bundle.module.text(named: "day7")
 
 public func day7_1() -> UInt16 {
-    Circuit(input).signal(id: "a")
+    var circuit = Circuit(input)
+    return circuit.signal(id: "a")
 }
 
 public func day7_2() -> Int {

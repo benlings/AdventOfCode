@@ -14,7 +14,7 @@ final class Day7Tests: XCTestCase {
         NOT x -> h
         NOT y -> i
         """
-        let circuit = Circuit(input)
+        var circuit = Circuit(input)
         XCTAssertEqual(circuit.signal(id: "d"), 72)
         XCTAssertEqual(circuit.signal(id: "e"), 507)
         XCTAssertEqual(circuit.signal(id: "f"), 492)
@@ -26,7 +26,7 @@ final class Day7Tests: XCTestCase {
     }
 
     func testPart1() {
-        XCTAssertEqual(day7_1(), 0)
+        XCTAssertEqual(day7_1(), 956)
     }
 
     func testPart2() {

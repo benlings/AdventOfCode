@@ -15,4 +15,8 @@ public extension String {
             .trimmingCharacters(in: .newlines)
             .components(separatedBy: "\n\n")
     }
+
+    func count(of other: String) -> Int {
+        self.components(separatedBy: other).count - 1
+    }
 }

@@ -7,7 +7,7 @@ public struct Matchsticks {
 
     public func excessCharacters() -> Int {
         lines.map { (line: String) in
-            2 + 3 * line.count(of: #"\x"#) + line.count(of: #"\""#)
+            2 + line.repl + 3 * line.count(of: #"\x"#) + line.count(of: #"\""#)
         }.sum()
     }
 
@@ -19,8 +19,10 @@ public extension Matchsticks {
     }
 }
 
+fileprivate let input = Bundle.module.text(named: "day8")
+
 public func day8_1() -> Int {
-    0
+    Matchsticks(input).excessCharacters()
 }
 
 public func day8_2() -> Int {

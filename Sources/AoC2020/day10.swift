@@ -6,7 +6,7 @@ public func differences(_ numbers: [Int]) -> [Int : Int] {
     let sortedNumbers = numbers.sorted()
     let allNumbers = chain(chain([0], sortedNumbers), [sortedNumbers.last! + 3])
     return allNumbers
-        .slidingWindows(ofCount: 2)
+        .windows(ofCount: 2)
         .map { $0.last! - $0.first! }
         .group(by: { $0 })
         .mapValues { $0.count }
@@ -38,7 +38,7 @@ func combinations3(_ count: Int) -> Int {
 public func day10_2() -> Int {
     let sortedNumbers = input.sorted()
     let allNumbers = chain(chain([0], sortedNumbers), [sortedNumbers.last! + 3])
-    let diff = allNumbers.slidingWindows(ofCount: 2)
+    let diff = allNumbers.windows(ofCount: 2)
             .map { $0.last! - $0.first! }
     return diff
         .split { $0 != 1 }

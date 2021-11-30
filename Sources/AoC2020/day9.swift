@@ -11,7 +11,7 @@ public struct XMASCypher {
     let input: [Int]
 
     public func firstInvalid() -> Int? {
-        let windows = input.slidingWindows(ofCount: preamble + 1)
+        let windows = input.windows(ofCount: preamble + 1)
         return windows.first { window in
             !window.dropLast()
                 .combinations(ofCount: 2)

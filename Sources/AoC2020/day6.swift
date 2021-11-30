@@ -3,7 +3,7 @@ import AdventCore
 import Algorithms
 
 public func countAnyoneAnswers(groupAnswers: String) -> Int {
-    groupAnswers.components(separatedBy: .whitespacesAndNewlines).joined().uniqued().count
+    groupAnswers.components(separatedBy: .whitespacesAndNewlines).joined().uniqued().count { _ in true }
 }
 
 public func countEveryoneAnswers(groupAnswers: String) -> Int {

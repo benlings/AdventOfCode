@@ -69,7 +69,7 @@ public struct FoodList {
             let knownIngredient = known.ingredients.first!
             // Add it to the list
             dangerous.insert(.init(name: knownIngredient, alergen: known.alergen))
-            // Remove ingredient from remaining possibile options
+            // Remove ingredient from remaining possible options
             for i in possible.indices {
                 possible[i].ingredients.subtract([knownIngredient])
             }

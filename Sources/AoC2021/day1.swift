@@ -2,9 +2,7 @@ import Foundation
 import AdventCore
 
 public func countIncreasedDepth(_ depths: [Int]) -> Int {
-    depths.adjacentPairs().reduce(0) { partialResult, depths in
-        partialResult + (depths.1 > depths.0 ? 1 : 0)
-    }
+    depths.adjacentPairs().count { $1 > $0 }
 }
 
 public func countIncreasedDepthWindowed(_ depths: [Int]) -> Int {

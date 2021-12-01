@@ -55,7 +55,6 @@ let package = Package(
             resources: [.process("Resources")]),
         .testTarget(
             name: "AoC2021Tests",
-            dependencies: ["AoC2021"],
-            resources: [.process("Resources")]),
+            dependencies: ["AoC2021"]),
     ]
 )

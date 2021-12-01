@@ -11,6 +11,8 @@ let source = """
 import Foundation
 import AdventCore
 
+fileprivate let day\(day)_input = Bundle.module.text(named: "day\(day)").lines()
+
 public func day\(day)_1() -> Int {
     0
 }

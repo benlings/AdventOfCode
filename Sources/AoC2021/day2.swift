@@ -29,6 +29,7 @@ extension Action {
 
 struct Submarine {
     var position: Offset = .zero
+    var aim: Offset = .zero
 }
 
 extension Submarine {
@@ -43,6 +44,17 @@ extension Submarine {
         }
     }
 
+    mutating func move(followingAim actions: [Action]) {
+        for action in actions {
+            switch action {
+            case .forward(let x):
+                position += Offset(north: x) + x * aim
+            case .down(let y):
+                aim += Offset(east: y)
+            }
+        }
+    }
+
     func distanceProduct() -> Int {
         position.distanceProduct()
     }
@@ -52,19 +64,26 @@ func parseInstructions(_ lines: [String]) -> [Action] {
     lines.compactMap(Action.init)
 }
 
-public func distanceProduct(followingInstructions input: [String]) -> Int {
+public func distanceProduct(followingPositionInstructions input: [String]) -> Int {
     let instructions = parseInstructions(input)
     var submarine = Submarine()
     submarine.move(following: instructions)
     return submarine.distanceProduct()
 }
 
+public func distanceProduct(followingAimInstructions input: [String]) -> Int {
+    let instructions = parseInstructions(input)
+    var submarine = Submarine()
+    submarine.move(followingAim: instructions)
+    return submarine.distanceProduct()
+}
+
 fileprivate let day2_input = Bundle.module.text(named: "day2").lines()
 
 public func day2_1() -> Int {
-    distanceProduct(followingInstructions: day2_input)
+    distanceProduct(followingPositionInstructions: day2_input)
 }
 
 public func day2_2() -> Int {
-    0
+    distanceProduct(followingAimInstructions: day2_input)
 }

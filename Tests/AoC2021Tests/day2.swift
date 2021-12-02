@@ -13,14 +13,18 @@ final class Day2Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(distanceProduct(followingInstructions: example.lines()), 150)
+        XCTAssertEqual(distanceProduct(followingPositionInstructions: example.lines()), 150)
     }
 
     func testPart1() {
         XCTAssertEqual(day2_1(), 1507611)
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(distanceProduct(followingAimInstructions: example.lines()), 900)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day2_2(), 0)
+        XCTAssertEqual(day2_2(), 1880593125)
     }
 }

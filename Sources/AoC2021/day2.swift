@@ -2,7 +2,8 @@ import Foundation
 import AdventCore
 
 enum Action {
-    case move(Offset)
+    case down(Int)
+    case forward(Int)
 }
 
 extension Action {
@@ -14,11 +15,11 @@ extension Action {
         }
         switch c {
         case "forward":
-            self = .move(Offset(north: n))
+            self = .forward(n)
         case "down":
-            self = .move(Offset(east: n))
+            self = .down(n)
         case "up":
-            self = .move(Offset(east: -n))
+            self = .down(-n)
         default:
             return nil
         }
@@ -34,8 +35,10 @@ extension Submarine {
     mutating func move(following actions: [Action]) {
         for action in actions {
             switch action {
-            case .move(let offset):
-                position += offset
+            case .forward(let x):
+                position += Offset(north: x)
+            case .down(let y):
+                position += Offset(east: y)
             }
         }
     }

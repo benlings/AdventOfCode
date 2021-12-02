@@ -23,6 +23,10 @@ public struct Offset {
         let difference = other - self
         return abs(difference.east) + abs(difference.north)
     }
+
+    public func distanceProduct() -> Int {
+        return north * east
+    }
 }
 
 extension Offset : Comparable {

@@ -28,7 +28,7 @@ extension GameOfLife {
                 neighbourCounts[neighbour, default: 0] += 1
             }
         }
-        var newWorld = Set<Coordinate>()
+        var newWorld = World()
         for (point, count) in neighbourCounts {
             if alive(wasAlive: world.contains(point), neighbours: count) {
                 newWorld.insert(point)

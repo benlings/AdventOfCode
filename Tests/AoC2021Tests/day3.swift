@@ -36,7 +36,15 @@ final class Day3Tests: XCTestCase {
         XCTAssertEqual(day3_1(), 3687446)
     }
 
+    func testPart2Example()
+    {
+        let report = SubmarineDiagnostic(exampleInput)
+        XCTAssertEqual(report.co2ScrubberRating(), [0,1,0,1,0])
+        XCTAssertEqual(report.oxygenGeneratorRating(), [1,0,1,1,1])
+        XCTAssertEqual(report.lifeSupportRating(), 230)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day3_2(), 0)
+        XCTAssertEqual(day3_2(), 4406844)
     }
 }

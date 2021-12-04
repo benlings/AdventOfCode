@@ -41,7 +41,13 @@ final class Day4Tests: XCTestCase {
         XCTAssertEqual(day4_1(), 51776)
     }
 
+    func testPart2Example() {
+        var game = BingoGame(exampleInput)
+        let score = game.findLosingGame()
+        XCTAssertEqual(score, 1924)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day4_2(), 0)
+        XCTAssertEqual(day4_2(), 16830)
     }
 }

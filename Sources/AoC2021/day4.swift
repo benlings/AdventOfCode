@@ -35,6 +35,23 @@ public struct BingoGame
         return nil
     }
 
+    public mutating func findLosingGame() -> Int? {
+        var gameIndices = Set(boards.indices)
+        for n in pickedNumbers {
+            for b in boards.indices {
+                boards[b].mark(number: n)
+                if boards[b].isWin {
+                    gameIndices.remove(b)
+                    if gameIndices.count == 0 {
+                        return boards[b].unmarkedNumbers.sum() * n
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+
 }
 
 extension Board {
@@ -61,5 +78,6 @@ public func day4_1() -> Int {
 }
 
 public func day4_2() -> Int {
-    0
+    var game = BingoGame(day4_input)
+    return game.findLosingGame()!
 }

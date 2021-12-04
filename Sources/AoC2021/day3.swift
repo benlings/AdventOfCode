@@ -34,33 +34,26 @@ extension Bit {
     }
 }
 
-extension Array where Element == [Bit] {
-
-    func totals() -> [Int] {
-        columnIndices.map { i in
-            total(at: i)
-        }
-    }
-    func total(at index: Element.Index) -> Int {
-        column(index).count(of: .on)
-    }
-}
-
 public struct SubmarineDiagnostic {
     var bits: [[Bit]]
 
-    func totals() -> [Int] {
-        bits.totals()
+    func filterColumns(where filter: (_ ones: Int, _ zeroes: Int) -> Bool) -> [Bit] {
+        let count = bits.count
+        return bits.columns().map { column -> Bit in
+            let ones = column.count(of: .on)
+            let zeroes = count - ones
+            return Bit(filter(ones, zeroes))
+        }
     }
 
     public func gammaRate() -> Int {
-        let count = bits.count
-        return totals().map { Bit($0 >= count - $0) }.toInt()
+        // More ones than zeroes
+        filterColumns(where: >=).toInt()
     }
 
     public func epsilonRate() -> Int {
-        let count = bits.count
-        return totals().map { Bit($0 < count - $0) }.toInt()
+        // Fewer ones than zeroes
+        filterColumns(where: <).toInt()
     }
 
     public func powerConsumption() -> Int {
@@ -70,10 +63,10 @@ public struct SubmarineDiagnostic {
     func filterNumbers(where filter: (_ ones: Int, _ zeroes: Int) -> Bool) -> [[Bit]] {
         var i = 0
         var remaining = bits
-        while i < bits.first!.count && remaining.count > 1 {
-            let ones = remaining.total(at: i)
-            let zeros = remaining.count - ones
-            let keep = Bit(filter(ones, zeros))
+        while i < bits.columnCount && remaining.count > 1 {
+            let ones = remaining.column(i).count(of: .on)
+            let zeroes = remaining.count - ones
+            let keep = Bit(filter(ones, zeroes))
             remaining.removeAll { $0[i] != keep }
             i += 1
         }

@@ -26,4 +26,8 @@ extension Collection where Element: Collection {
         self.first!.indices
     }
 
+    public var columnCount: Int {
+        self.first!.count
+    }
+
 }

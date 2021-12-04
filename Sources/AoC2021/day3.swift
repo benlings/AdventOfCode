@@ -55,12 +55,12 @@ public struct SubmarineDiagnostic {
 
     public func gammaRate() -> Int {
         let count = bits.count
-        return totals().map { Bit($0 > count / 2) }.toInt()
+        return totals().map { Bit($0 >= count - $0) }.toInt()
     }
 
     public func epsilonRate() -> Int {
         let count = bits.count
-        return totals().map { Bit($0 <= count / 2) }.toInt()
+        return totals().map { Bit($0 < count - $0) }.toInt()
     }
 
     public func powerConsumption() -> Int {

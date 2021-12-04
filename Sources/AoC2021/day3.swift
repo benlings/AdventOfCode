@@ -7,18 +7,6 @@ public func toInt(binary: [Int]) -> Int {
 
 extension Array where Element == [Int] {
 
-    public func column(_ index: Element.Index) -> [Int] {
-        self.map { $0[index] }
-    }
-
-    func columns() -> [[Int]] {
-        columnIndices.map { column($0) }
-    }
-
-    var columnIndices: Range<Element.Index> {
-        self.first!.indices
-    }
-
     func totals() -> [Int] {
         columnIndices.map { i in
             total(at: i)

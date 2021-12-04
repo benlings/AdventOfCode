@@ -6,14 +6,22 @@ public func toInt(binary: [Int]) -> Int {
 }
 
 extension Array where Element == [Int] {
+
+    public func column(_ index: Element.Index) -> [Int] {
+        self.map { $0[index] }
+    }
+
+    var columnIndices: Range<Element.Index> {
+        self.first!.indices
+    }
+
     func totals() -> [Int] {
-        let indices = self.first!.indices
-        return indices.map { i in
+        columnIndices.map { i in
             total(at: i)
         }
     }
     func total(at index: Element.Index) -> Int {
-        self.map { $0[index] }.sum()
+        column(index).sum()
     }
 }
 

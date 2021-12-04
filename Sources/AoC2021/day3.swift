@@ -1,11 +1,40 @@
 import Foundation
 import AdventCore
 
-public func toInt(binary: [Int]) -> Int {
-    binary.reduce(0) { $0 * 2 + $1 }
+public extension Array where Element == Bit {
+    func toInt() -> Int {
+        reduce(0) { $0 * 2 + $1.toInt() }
+    }
 }
 
-extension Array where Element == [Int] {
+public enum Bit {
+    case on
+    case off
+}
+
+extension Bit {
+
+    init(_ bool: Bool) {
+        self = bool ? .on : .off
+    }
+
+    init?(_ character: Character) {
+        switch character {
+        case "1": self = .on
+        case "0": self = .off
+        default: return nil
+        }
+    }
+
+    func toInt() -> Int {
+        switch self {
+        case .on: return 1
+        case .off: return 0
+        }
+    }
+}
+
+extension Array where Element == [Bit] {
 
     func totals() -> [Int] {
         columnIndices.map { i in
@@ -13,64 +42,64 @@ extension Array where Element == [Int] {
         }
     }
     func total(at index: Element.Index) -> Int {
-        column(index).sum()
+        column(index).count(of: .on)
     }
 }
 
 public struct SubmarineDiagnostic {
-    var numbers: [[Int]]
+    var bits: [[Bit]]
 
     func totals() -> [Int] {
-        numbers.totals()
+        bits.totals()
     }
 
-    public func gammaRate() -> [Int] {
-        let count = numbers.count
-        return totals().map { $0 > count / 2 ? 1 : 0 }
+    public func gammaRate() -> Int {
+        let count = bits.count
+        return totals().map { Bit($0 > count / 2) }.toInt()
     }
 
-    public func epsilonRate() -> [Int] {
-        let count = numbers.count
-        return totals().map { $0 <= count / 2 ? 1 : 0 }
+    public func epsilonRate() -> Int {
+        let count = bits.count
+        return totals().map { Bit($0 <= count / 2) }.toInt()
     }
 
     public func powerConsumption() -> Int {
-        toInt(binary: gammaRate()) * toInt(binary: epsilonRate())
+        gammaRate() * epsilonRate()
     }
 
-    func filterNumbers(where filter: (_ ones: Int, _ zeroes: Int) -> Bool) -> [[Int]] {
+    func filterNumbers(where filter: (_ ones: Int, _ zeroes: Int) -> Bool) -> [[Bit]] {
         var i = 0
-        var remaining = numbers
-        while i < numbers.first!.count && remaining.count > 1 {
-            let t = remaining.total(at: i)
-            let c = remaining.count
-            let keep = filter(t, c - t) ? 1 : 0
+        var remaining = bits
+        while i < bits.first!.count && remaining.count > 1 {
+            let ones = remaining.total(at: i)
+            let zeros = remaining.count - ones
+            let keep = Bit(filter(ones, zeros))
             remaining.removeAll { $0[i] != keep }
             i += 1
         }
         return remaining
     }
 
-    public func oxygenGeneratorRating() -> [Int] {
+    public func oxygenGeneratorRating() -> Int {
         let remaining = filterNumbers(where: >=)
         assert(remaining.count == 1)
-        return remaining.first!
+        return remaining.first!.toInt()
     }
 
-    public func co2ScrubberRating() -> [Int] {
+    public func co2ScrubberRating() -> Int {
         let remaining = filterNumbers(where: <)
         assert(remaining.count == 1)
-        return remaining.first!
+        return remaining.first!.toInt()
     }
 
     public func lifeSupportRating() -> Int {
-        toInt(binary: oxygenGeneratorRating()) * toInt(binary: co2ScrubberRating())
+        oxygenGeneratorRating() * co2ScrubberRating()
     }
 }
 
 public extension SubmarineDiagnostic {
     init(_ report: String) {
-        self.numbers = report.lines().map { $0.toArray().compactMap { $0.wholeNumberValue } }
+        self.bits = report.lines().map { $0.compactMap(Bit.init) }
     }
 }
 

@@ -20,15 +20,15 @@ final class Day3Tests: XCTestCase {
 
     func testBinaryToInt()
     {
-        XCTAssertEqual(toInt(binary: [1,0,1,1,0]), 22)
-        XCTAssertEqual(toInt(binary: [0,1,0,0,1]), 9)
+        XCTAssertEqual([Bit.on, .off, .on, .on, .off].toInt(), 22)
+        XCTAssertEqual([Bit.off, .on, .off, .off, .on].toInt(), 9)
     }
 
     func testPart1Example()
     {
         let report = SubmarineDiagnostic(exampleInput)
-        XCTAssertEqual(report.gammaRate(), [1,0,1,1,0])
-        XCTAssertEqual(report.epsilonRate(), [0,1,0,0,1])
+        XCTAssertEqual(report.gammaRate(), Int("10110", radix: 2))
+        XCTAssertEqual(report.epsilonRate(), Int("01001", radix: 2))
         XCTAssertEqual(report.powerConsumption(), 198)
     }
 
@@ -39,8 +39,8 @@ final class Day3Tests: XCTestCase {
     func testPart2Example()
     {
         let report = SubmarineDiagnostic(exampleInput)
-        XCTAssertEqual(report.co2ScrubberRating(), [0,1,0,1,0])
-        XCTAssertEqual(report.oxygenGeneratorRating(), [1,0,1,1,1])
+        XCTAssertEqual(report.co2ScrubberRating(), Int("01010", radix: 2))
+        XCTAssertEqual(report.oxygenGeneratorRating(), Int("10111", radix: 2))
         XCTAssertEqual(report.lifeSupportRating(), 230)
     }
 

@@ -29,12 +29,16 @@ final class Day4Tests: XCTestCase {
         let game = BingoGame(exampleInput)
         XCTAssertEqual(game.pickedNumbers, [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1])
         XCTAssertEqual(game.boards.count, 3)
-        XCTAssertEqual(game.boards[0].numbers[0], [22,13,17,11,0])
-        XCTAssertEqual(game.boards[0].numbers.column(4), [0,24,7,5,19])
+    }
+
+    func testPart1Example() {
+        var game = BingoGame(exampleInput)
+        let score = game.findWiningGame()
+        XCTAssertEqual(score, 4512)
     }
 
     func testPart1() {
-        XCTAssertEqual(day4_1(), 0)
+        XCTAssertEqual(day4_1(), 51776)
     }
 
     func testPart2() {

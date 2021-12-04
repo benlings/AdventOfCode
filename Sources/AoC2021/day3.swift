@@ -11,6 +11,10 @@ extension Array where Element == [Int] {
         self.map { $0[index] }
     }
 
+    func columns() -> [[Int]] {
+        columnIndices.map { column($0) }
+    }
+
     var columnIndices: Range<Element.Index> {
         self.first!.indices
     }

@@ -4,19 +4,44 @@ import AdventCore
 public struct Board
 {
     var unmarkedNumbers: Set<Int>
-    public var numbers: [[Int]]
+    var lines: [Set<Int>]
+
+    mutating func mark(number: Int) {
+        unmarkedNumbers.remove(number)
+        for i in lines.indices {
+            lines[i].remove(number)
+        }
+    }
+
+    var isWin: Bool {
+        lines.contains { $0.isEmpty }
+    }
 }
 
 public struct BingoGame
 {
     public var pickedNumbers: [Int]
     public var boards: [Board]
+
+    public mutating func findWiningGame() -> Int? {
+        for n in pickedNumbers {
+            for b in boards.indices {
+                boards[b].mark(number: n)
+                if boards[b].isWin {
+                    return boards[b].unmarkedNumbers.sum() * n
+                }
+            }
+        }
+        return nil
+    }
+
 }
 
 extension Board {
     init(_ description: String) {
-        self.numbers = description.lines().map { $0.split(separator: " ").ints() }
-        self.unmarkedNumbers = self.numbers.flatten().toSet()
+        let numbers: [[Int]] = description.lines().map { $0.split(separator: " ").ints() }
+        self.unmarkedNumbers = numbers.flatten().toSet()
+        self.lines = numbers.map { $0.toSet() } + numbers.columns().map { $0.toSet() }
     }
 }
 
@@ -31,7 +56,8 @@ public extension BingoGame {
 fileprivate let day4_input = Bundle.module.text(named: "day4")
 
 public func day4_1() -> Int {
-    0
+    var game = BingoGame(day4_input)
+    return game.findWiningGame()!
 }
 
 public func day4_2() -> Int {

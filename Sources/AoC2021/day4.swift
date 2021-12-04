@@ -3,11 +3,13 @@ import AdventCore
 
 public struct Board
 {
-    var unmarkedNumbers: Set<Int>
+    var unmarkedNumbers: Set<Int> {
+        lines.unionAll()
+    }
+
     var lines: [Set<Int>]
 
     mutating func mark(number: Int) {
-        unmarkedNumbers.remove(number)
         for i in lines.indices {
             lines[i].remove(number)
         }
@@ -57,7 +59,6 @@ public struct BingoGame
 extension Board {
     init(_ description: String) {
         let numbers: [[Int]] = description.lines().map { $0.split(separator: " ").ints() }
-        self.unmarkedNumbers = numbers.flatten().toSet()
         self.lines = numbers.map { $0.toSet() } + numbers.columns().map { $0.toSet() }
     }
 }

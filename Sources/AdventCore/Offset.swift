@@ -1,8 +1,8 @@
 import Foundation
 
 public struct Offset {
-    var east: Int = 0
-    var north: Int = 0
+    public var east: Int = 0
+    public var north: Int = 0
 
     public init(east: Int = 0, north: Int = 0) {
         self.east = east

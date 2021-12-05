@@ -7,24 +7,47 @@ struct Line {
     var start: Offset
     var end: Offset
 
-    var isHorizontal: Bool {
-        start.north == end.north
+    enum Orientation {
+        case horizontal
+        case vertical
+        case diagonal
     }
 
-    var isVertical: Bool {
-        start.east == end.east
+    var length: Int {
+        switch orientation {
+        case .horizontal:
+            return abs(direction.east)
+        case .vertical, .diagonal:
+            return abs(direction.north)
+        }
+    }
+
+    var direction: Offset {
+        end - start
+    }
+
+    var unitDirection: Offset {
+        (end - start) / length
+    }
+
+    var orientation: Orientation {
+        let difference = direction
+        switch (difference.east, difference.north) {
+        case (_, 0): return .horizontal
+        case (0, _): return .vertical
+        case let (e, n) where abs(e) == abs(n): return .diagonal
+        default: fatalError("Unsupported orientation")
+        }
     }
 
     var points: [Offset] {
-        func range(_ start: Int, _ end: Int) -> StrideThrough<Int> {
-            stride(from: start, through: end, by: end > start ? 1 : -1)
+        var point = start
+        let offset = unitDirection
+        let iterator: AnyIterator<Offset> = AnyIterator {
+            defer { point += offset }
+            return point == end ? nil : point
         }
-        if isHorizontal {
-            return range(start.east, end.east).map { Offset(east: $0, north: start.north) }
-        } else if isVertical {
-            return range(start.north, end.north).map { Offset(east: start.east, north: $0) }
-        }
-        assert(false)
+        return Array(iterator) + [end]
     }
 }
 
@@ -76,8 +99,12 @@ public struct VentField {
         locations.values.count { $0 > 1 }
     }
 
-    public static func countOverlappingLines(_ input: [String]) -> Int {
-        let lines = input.compactMap(Line.init).filter { $0.isVertical || $0.isHorizontal }
+    public static func countOverlappingLines(_ input: [String], includeDiagonal: Bool = false) -> Int {
+        var orientations: Set<Line.Orientation> = [.horizontal, .vertical]
+        if includeDiagonal {
+            orientations.update(with: .diagonal)
+        }
+        let lines = input.compactMap(Line.init).filter { orientations.contains($0.orientation) }
         var field = VentField()
         field.record(lines: lines)
         return field.overlappingCount()
@@ -87,9 +114,9 @@ public struct VentField {
 fileprivate let day5_input = Bundle.module.text(named: "day5").lines()
 
 public func day5_1() -> Int {
-    VentField.countOverlappingLines(day5_input)
+    VentField.countOverlappingLines(day5_input, includeDiagonal: false)
 }
 
 public func day5_2() -> Int {
-    0
+    VentField.countOverlappingLines(day5_input, includeDiagonal: true)
 }

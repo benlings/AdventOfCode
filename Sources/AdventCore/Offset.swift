@@ -56,6 +56,10 @@ extension Offset {
     public static func * (lhs: Int, rhs: Offset) -> Offset {
         Offset(east: lhs * rhs.east, north: lhs * rhs.north)
     }
+
+    public static func / (lhs: Offset, rhs: Int) -> Offset {
+        Offset(east: lhs.east / rhs, north: lhs.north / rhs)
+    }
 }
 
 public struct OffsetRange {

@@ -24,7 +24,11 @@ final class Day5Tests: XCTestCase {
         XCTAssertEqual(day5_1(), 8622)
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(VentField.countOverlappingLines(exampleInput, includeDiagonal: true), 12)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day5_2(), 0)
+        XCTAssertEqual(day5_2(), 22037)
     }
 }

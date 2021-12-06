@@ -66,7 +66,7 @@ extension Board {
 public extension BingoGame {
     init(_ description: String) {
         let groups = description.groups()
-        self.pickedNumbers = groups.first!.split(separator: ",").ints()
+        self.pickedNumbers = groups.first!.commaSeparated().ints()
         self.boards = groups.dropFirst().map(Board.init)
     }
 }

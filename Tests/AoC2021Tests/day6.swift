@@ -14,7 +14,12 @@ final class Day6Tests: XCTestCase {
         XCTAssertEqual(day6_1(), 353274)
     }
 
+    func testPart2Example() {
+        let count = School.simulate(ages: exampleInput.commaSeparated().ints(), days: 256)
+        XCTAssertEqual(count, 26984457539)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day6_2(), 0)
+        XCTAssertEqual(day6_2(), 1609314870967)
     }
 }

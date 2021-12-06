@@ -32,5 +32,5 @@ public func day6_1() -> Int {
 }
 
 public func day6_2() -> Int {
-    0
+    School.simulate(ages: day6_input, days: 256)
 }

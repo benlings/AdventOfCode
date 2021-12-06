@@ -1,40 +1,26 @@
 import Foundation
 import AdventCore
-
-struct LanternFish {
-    var timer: Int = 8
-
-    mutating func tick() -> LanternFish? {
-        if timer == 0 {
-            timer = 6
-            return LanternFish()
-        } else {
-            timer -= 1
-            return nil
-        }
-    }
-}
+import Collections
 
 public struct School {
-    var fish: [LanternFish]
+    var fish: Deque<Int>
 
     mutating func tick() {
-        var spawned = [LanternFish]()
-        for i in fish.indices {
-            let new = fish[i].tick()
-            if let new = new {
-                spawned.append(new)
-            }
-        }
-        fish += spawned
+        let current = fish.popFirst()!
+        fish[6] += current
+        fish.append(current)
     }
 
     public static func simulate(ages: [Int], days: Int) -> Int {
-        var school = School(fish: ages.map(LanternFish.init))
+        var fish = Deque(repeating: 0, count: 9)
+        for age in ages {
+            fish[age] += 1
+        }
+        var school = School(fish: fish)
         for _ in 0..<days {
             school.tick()
         }
-        return school.fish.count
+        return school.fish.sum()
     }
 }
 

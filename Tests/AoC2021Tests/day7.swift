@@ -13,7 +13,11 @@ final class Day7Tests: XCTestCase {
         XCTAssertEqual(day7_1(), 331067)
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(CrabSwarm(exampleInput).findMinFuelCostArithmetic(), 168)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day7_2(), 0)
+        XCTAssertEqual(day7_2(), 92881128)
     }
 }

@@ -4,12 +4,12 @@ import AdventCore
 public struct CrabSwarm {
     var positions: [Int]
 
-    func fuelCost(_ pos: Int, _ cost: (Int) -> Int) -> Int {
-        positions.map { cost(abs($0 - pos)) }.sum()
+    func fuelCost(_ pos: Int, _ cost: @escaping (Int) -> Int) -> Int {
+        positions.lazy.map { cost(abs($0 - pos)) }.sum()
     }
 
-    public func findMinFuelCost(_ cost: (Int) -> Int) -> Int {
-        positions.range()!.map { fuelCost($0, cost) }.min()!
+    public func findMinFuelCost(_ cost: @escaping (Int) -> Int) -> Int {
+        positions.range()!.lazy.map { fuelCost($0, cost) }.min()!
     }
 
     public func findMinFuelCostLinear() -> Int {

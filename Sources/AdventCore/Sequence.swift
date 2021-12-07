@@ -43,6 +43,13 @@ extension Sequence where Element: Equatable {
     }
 }
 
+public extension Sequence where Element: Comparable {
+    func range() -> ClosedRange<Element>? {
+        guard let (min, max) = self.minAndMax() else { return nil }
+        return (min...max)
+    }
+}
+
 public extension Sequence where Element: AdditiveArithmetic {
     func sum() -> Element {
         reduce(Element.zero, +)

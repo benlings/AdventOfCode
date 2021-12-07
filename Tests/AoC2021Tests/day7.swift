@@ -6,7 +6,7 @@ final class Day7Tests: XCTestCase {
     let exampleInput = "16,1,2,0,4,2,7,1,2,14"
 
     func testPart1Example() {
-        XCTAssertEqual(CrabSwarm(exampleInput).findMinFuelCost(), 37)
+        XCTAssertEqual(CrabSwarm(exampleInput).findMinFuelCostLinear(), 37)
     }
 
     func testPart1() {

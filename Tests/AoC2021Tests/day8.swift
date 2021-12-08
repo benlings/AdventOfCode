@@ -16,6 +16,8 @@ final class Day8Tests: XCTestCase {
     gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
     """.lines()
 
+    let input = "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
+
     func testPart1Example() {
         XCTAssertEqual(DisplaySignals.count1478(input: exampleInput), 26)
     }
@@ -24,7 +26,26 @@ final class Day8Tests: XCTestCase {
         XCTAssertEqual(day8_1(), 390)
     }
 
+    func testDecodeDigits() {
+        let signals = DisplaySignals(input)
+        let decoded = signals.decodeDigits()
+        XCTAssertEqual(decoded[SignalPattern("acedgfb")], 8)
+        XCTAssertEqual(decoded[SignalPattern("cdfbe")], 5)
+        XCTAssertEqual(decoded[SignalPattern("gcdfa")], 2)
+        XCTAssertEqual(decoded[SignalPattern("fbcad")], 3)
+        XCTAssertEqual(decoded[SignalPattern("dab")], 7)
+        XCTAssertEqual(decoded[SignalPattern("cefabd")], 9)
+        XCTAssertEqual(decoded[SignalPattern("cdfgeb")], 6)
+        XCTAssertEqual(decoded[SignalPattern("eafb")], 4)
+        XCTAssertEqual(decoded[SignalPattern("cagedb")], 0)
+        XCTAssertEqual(decoded[SignalPattern("ab")], 1)
+    }
+
+    func testPart2Example() {
+        XCTAssertEqual(DisplaySignals.sumOutputs(input: exampleInput), 61229)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day8_2(), 0)
+        XCTAssertEqual(day8_2(), 1011785)
     }
 }

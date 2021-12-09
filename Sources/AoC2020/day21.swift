@@ -71,7 +71,7 @@ public struct FoodList {
             dangerous.insert(.init(name: knownIngredient, alergen: known.alergen))
             // Remove ingredient from remaining possible options
             for i in possible.indices {
-                possible[i].ingredients.subtract([knownIngredient])
+                possible[i].ingredients.remove(knownIngredient)
             }
             // Remove elements that no longer have options
             possible.removeAll { $0.ingredients.isEmpty }

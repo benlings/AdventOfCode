@@ -19,7 +19,11 @@ final class Day9Tests: XCTestCase {
         XCTAssertEqual(day9_1(), 506)
     }
 
+    func testPart2Example() {
+        XCTAssertEqual(HeightMap.largestBasinsProduct(input: exampleInput), 1134)
+    }
+
     func testPart2() {
-        XCTAssertEqual(day9_2(), 0)
+        XCTAssertEqual(day9_2(), 931200)
     }
 }

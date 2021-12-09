@@ -1,6 +1,12 @@
 import Foundation
 import AdventCore
 
+extension Offset {
+    static func orthoNeighbours() -> [Offset] {
+        return [Self(east: -1), Self(north: -1), Self(east: 1), Self(north: 1)]
+    }
+}
+
 public struct HeightMap {
     var heights: [[Int]]
 
@@ -12,41 +18,42 @@ public struct HeightMap {
         heights.columnIndices
     }
 
-    subscript(x: Int, y: Int) -> Int {
+    subscript(position: Offset) -> Int {
         get {
-            if rowIndices.contains(x),
-               columnIndices.contains(y) {
-                return heights[x][y]
+            if rowIndices.contains(position.east),
+               columnIndices.contains(position.north) {
+                return heights[position.east][position.north]
             } else {
                 return 10
             }
         }
     }
 
-    func isMinimum(x: Int, y: Int) -> Bool {
-        let height = self[x, y]
-        return
-            (self[x - 1, y] > height) &&
-            (self[x, y - 1] > height) &&
-            (self[x, y + 1] > height) &&
-            (self[x + 1, y] > height)
+    func isMinimum(position: Offset) -> Bool {
+        let height = self[position]
+        return Offset.orthoNeighbours().allSatisfy { height < self[$0 + position] }
     }
 
-    func lowPointHeights() -> [Int] {
-        var heights = [Int]()
+    func lowPoints() -> [Offset] {
+        var positions = [Offset]()
         for x in rowIndices {
             for y in columnIndices {
-                if isMinimum(x: x, y: y) {
-                    heights.append(self[x, y])
+                let pos = Offset(east: x, north: y)
+                if isMinimum(position: pos) {
+                    positions.append(pos)
                 }
             }
         }
-        return heights
+        return positions
+    }
+
+    func risk(position: Offset) -> Int {
+        self[position] + 1
     }
 
     public static func sumRiskLevels(input: String) -> Int {
         let heightMap = HeightMap(input)
-        return heightMap.lowPointHeights().map { $0 + 1 }.sum()
+        return heightMap.lowPoints().map { heightMap.risk(position: $0) }.sum()
     }
 
 }

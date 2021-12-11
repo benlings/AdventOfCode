@@ -2,12 +2,6 @@ import Foundation
 import AdventCore
 import DequeModule
 
-extension Offset {
-    static func orthoNeighbours() -> [Offset] {
-        return [Self(east: -1), Self(north: -1), Self(east: 1), Self(north: 1)]
-    }
-}
-
 public struct HeightMap {
     var heights: [[Int]]
 
@@ -32,7 +26,7 @@ public struct HeightMap {
 
     func isMinimum(position: Offset) -> Bool {
         let height = self[position]
-        return Offset.orthoNeighbours().allSatisfy { height < self[$0 + position] }
+        return position.orthoNeighbours().allSatisfy { height < self[$0] }
     }
 
     func lowPoints() -> [Offset] {
@@ -65,8 +59,7 @@ public struct HeightMap {
         while let search = toSearch.popFirst() {
             var newPoints = Set<Offset>()
             let height = self[search]
-            for offset in Offset.orthoNeighbours() {
-                let neighbour = search + offset
+            for neighbour in search.orthoNeighbours() {
                 if !points.contains(neighbour) {
                     let neighbourHeight = self[neighbour]
                     if height < neighbourHeight && neighbourHeight < 9 {

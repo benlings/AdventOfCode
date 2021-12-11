@@ -27,6 +27,27 @@ public struct Offset {
     public func distanceProduct() -> Int {
         return north * east
     }
+
+    public func neighbours() -> [Offset] {
+        Self.neighbours().map { self + $0 }
+    }
+
+    public func orthoNeighbours() -> [Offset] {
+        Self.orthoNeighbours().map { self + $0 }
+    }
+}
+
+extension Offset {
+    static func orthoNeighbours() -> [Offset] {
+        return [Self(east: -1), Self(north: -1), Self(east: 1), Self(north: 1)]
+    }
+    static func neighbours() -> [Offset] {
+        return [
+            Self(east: -1, north: -1), Self(north: -1), Self(east: 1, north: -1),
+            Self(east: -1, north: 0),                   Self(east: 1, north: 0),
+            Self(east: -1, north: 1), Self(north: 1), Self(east: 1, north: 1),
+        ]
+    }
 }
 
 extension Offset : Comparable {

@@ -1,8 +1,6 @@
 import Foundation
 import AdventCore
 
-typealias Grid = [Offset : Int]
-
 struct Line {
     var start: Offset
     var end: Offset
@@ -85,7 +83,7 @@ fileprivate extension Scanner {
 
 public struct VentField {
 
-    var locations = Grid()
+    var locations = [Offset : Int]()
 
     mutating func record(lines: [Line]) {
         for line in lines {

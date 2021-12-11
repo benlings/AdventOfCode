@@ -7,23 +7,15 @@ public extension Array where Element == Bit {
     }
 }
 
-public enum Bit {
-    case on
-    case off
+public enum Bit : Character {
+    case on = "1"
+    case off = "0"
 }
 
 extension Bit {
 
     init(_ bool: Bool) {
         self = bool ? .on : .off
-    }
-
-    init?(_ character: Character) {
-        switch character {
-        case "1": self = .on
-        case "0": self = .off
-        default: return nil
-        }
     }
 
     func toInt() -> Int {
@@ -35,13 +27,12 @@ extension Bit {
 }
 
 public struct SubmarineDiagnostic {
-    var bits: [[Bit]]
+    var bits: Grid<Bit>
 
     func filterColumns(where filter: (_ ones: Int, _ zeroes: Int) -> Bool) -> [Bit] {
-        let count = bits.count
         return bits.columns().map { column -> Bit in
             let ones = column.count(of: .on)
-            let zeroes = count - ones
+            let zeroes = column.count - ones
             return Bit(filter(ones, zeroes))
         }
     }
@@ -61,14 +52,14 @@ public struct SubmarineDiagnostic {
     }
 
     func filterNumbers(where filter: (_ ones: Int, _ zeroes: Int) -> Bool) -> [[Bit]] {
-        var i = 0
-        var remaining = bits
-        while i < bits.columnCount && remaining.count > 1 {
-            let ones = remaining.column(i).count(of: .on)
-            let zeroes = remaining.count - ones
+        var remaining = bits.rows()
+        for i in bits.columnIndices {
+            guard remaining.count > 1 else { break }
+            let column = remaining.column(i)
+            let ones = column.count(of: .on)
+            let zeroes = column.count - ones
             let keep = Bit(filter(ones, zeroes))
             remaining.removeAll { $0[i] != keep }
-            i += 1
         }
         return remaining
     }
@@ -92,7 +83,7 @@ public struct SubmarineDiagnostic {
 
 public extension SubmarineDiagnostic {
     init(_ report: String) {
-        self.bits = report.lines().map { $0.compactMap(Bit.init) }
+        self.bits = Grid(lines: report.lines())
     }
 }
 

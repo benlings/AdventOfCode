@@ -10,6 +10,12 @@ public extension Collection {
 
 }
 
+public extension Collection where Element: Comparable {
+    func median() -> Element? {
+        count % 2 == 1 ? sorted()[count / 2] : nil
+    }
+}
+
 extension Collection where Element: Collection {
 
     public typealias InnerElement = Element.Element

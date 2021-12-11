@@ -5,6 +5,7 @@ public struct EnergyLevels {
 
     var levels: [[Int]]
     public var flashes: Int = 0
+    public var stepCount: Int = 0
 
     var rowIndices: Range<Int> {
         levels.indices
@@ -56,10 +57,28 @@ public struct EnergyLevels {
                 }
             }
         }
+        stepCount += 1
+    }
+
+    var isSynchronised: Bool {
+        for x in rowIndices {
+            for y in columnIndices {
+                if self[Offset(east: x, north: y)] != 0 {
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     public mutating func iterate(steps: Int) {
         for _ in 0..<steps {
+            step()
+        }
+    }
+
+    public mutating func iterateUntilSynchronsed() {
+        while !isSynchronised {
             step()
         }
     }
@@ -88,5 +107,7 @@ public func day11_1() -> Int {
 }
 
 public func day11_2() -> Int {
-    0
+    var levels = EnergyLevels(day11_input)
+    levels.iterateUntilSynchronsed()
+    return levels.stepCount
 }

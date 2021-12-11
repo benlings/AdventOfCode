@@ -53,10 +53,12 @@ final class Day11Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        var levels = EnergyLevels(exampleInput)
+        levels.iterateUntilSynchronsed()
+        XCTAssertEqual(levels.stepCount, 195)
     }
 
     func testPart2() {
-        XCTAssertEqual(day11_2(), 0)
+        XCTAssertEqual(day11_2(), 247)
     }
 }

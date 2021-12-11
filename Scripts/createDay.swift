@@ -22,21 +22,32 @@ public func day\(day)_2() -> Int {
 }
 """
 
-let tests = """
+let tests = #"""
 import XCTest
-import AoC\(year)
+import AoC\#(year)
 
-final class Day\(day)Tests: XCTestCase {
+final class Day\#(day)Tests: XCTestCase {
+
+    let exampleInput = """
+    """
+
+    func testPart1Example() {
+        XCTAssertEqual(0, 0)
+    }
 
     func testPart1() {
-        XCTAssertEqual(day\(day)_1(), 0)
+        XCTAssertEqual(day\#(day)_1(), 0)
+    }
+
+    func testPart2Example() {
+        XCTAssertEqual(0, 0)
     }
 
     func testPart2() {
-        XCTAssertEqual(day\(day)_2(), 0)
+        XCTAssertEqual(day\#(day)_2(), 0)
     }
 }
-"""
+"""#
 
 let sourceURL = URL(fileURLWithPath: "Sources/AoC\(year)/day\(day).swift")
 let testURL = URL(fileURLWithPath: "Tests/AoC\(year)Tests/day\(day).swift")

@@ -83,6 +83,10 @@ public extension Sequence {
         reduce(Set()) { $0.union($1) }
     }
 
+    func unionAll() -> IndexSet where Element == IndexSet {
+        reduce(IndexSet()) { $0.union($1) }
+    }
+
     func toArray() -> [Element] {
         Array(self)
     }

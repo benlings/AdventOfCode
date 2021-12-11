@@ -7,7 +7,7 @@ public struct TicketTranslation {
     var nearbyTickets: [[Int]]
 
     var validValues: IndexSet {
-        rules.values.reduce(IndexSet()) { $0.union($1) }
+        rules.values.unionAll()
     }
 
     public func invalidNearbyTickets() -> [Int] {

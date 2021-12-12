@@ -63,11 +63,19 @@ final class Day12Tests: XCTestCase {
         XCTAssertEqual(day12_1(), 3421)
     }
 
-    func testPart2Example() {
-        XCTAssertEqual(0, 0)
+    func testPart2Example1() {
+        XCTAssertEqual(CaveSystem.countRevisitingPaths(exampleInput1), 36)
+    }
+
+    func testPart2Example2() {
+        XCTAssertEqual(CaveSystem.countRevisitingPaths(exampleInput2), 103)
+    }
+
+    func testPart2Example3() {
+        XCTAssertEqual(CaveSystem.countRevisitingPaths(exampleInput3), 3509)
     }
 
     func testPart2() {
-        XCTAssertEqual(day12_2(), 0)
+        XCTAssertEqual(day12_2(), 84870)
     }
 }

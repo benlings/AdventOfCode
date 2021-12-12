@@ -54,6 +54,26 @@ extension Cave {
         case .start, .small: return visited.contains(self) ? [] : connected.flatMap { $0.findPaths(visited: visited.union([self])).map { [self] + $0 } }
         }
     }
+
+    func findPaths(visited: Set<Cave>, visitedSmallCave: Cave?) -> [[Cave]] {
+        switch type {
+        case .end: return [[self]]
+        case .big: return connected.flatMap { $0.findPaths(visited: visited, visitedSmallCave: visitedSmallCave).map { [self] + $0 } }
+        case .start:
+            return visited.contains(self) ? [] : connected.flatMap { $0.findPaths(visited: visited.union([self]), visitedSmallCave: visitedSmallCave).map { [self] + $0 } }
+        case .small:
+            if visited.contains(self) {
+                if visitedSmallCave == nil {
+                    return connected.flatMap { $0.findPaths(visited: visited, visitedSmallCave: self).map { [self] + $0 } }
+                } else {
+                    return []
+                }
+            } else {
+                return connected.flatMap { $0.findPaths(visited: visited.union([self]), visitedSmallCave: visitedSmallCave).map { [self] + $0 } }
+            }
+        }
+    }
+
 }
 
 public struct CaveSystem {
@@ -64,6 +84,9 @@ public struct CaveSystem {
         caves["start"]!.findPaths(visited: Set())
     }
 
+    public func findRevistingPaths() -> [[Cave]] {
+        caves["start"]!.findPaths(visited: Set(), visitedSmallCave: nil)
+    }
 }
 
 extension CaveSystem {
@@ -87,6 +110,12 @@ extension CaveSystem {
         let paths = caves.findPaths()
         return paths.count
     }
+
+    public static func countRevisitingPaths(_ description: String) -> Int {
+        let caves = Self(description.lines())
+        let paths = caves.findRevistingPaths()
+        return paths.count
+    }
 }
 
 fileprivate let day12_input = Bundle.module.text(named: "day12")
@@ -96,5 +125,5 @@ public func day12_1() -> Int {
 }
 
 public func day12_2() -> Int {
-    0
+    CaveSystem.countRevisitingPaths(day12_input)
 }

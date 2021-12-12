@@ -11,7 +11,7 @@ final class Day12Tests: XCTestCase {
     b-d
     A-end
     b-end
-    """.lines()
+    """
 
     let exampleInput2 = """
     dc-end
@@ -24,7 +24,7 @@ final class Day12Tests: XCTestCase {
     kj-sa
     kj-HN
     kj-dc
-    """.lines()
+    """
 
     let exampleInput3 = """
     fs-end
@@ -45,24 +45,18 @@ final class Day12Tests: XCTestCase {
     zg-he
     pj-fs
     start-RW
-    """.lines()
+    """
 
     func testPart1Example1() {
-        let caves = CaveSystem(exampleInput1)
-        let paths = caves.findPaths()
-        XCTAssertEqual(paths.count, 10)
+        XCTAssertEqual(CaveSystem.countPaths(exampleInput1), 10)
     }
 
     func testPart1Example2() {
-        let caves = CaveSystem(exampleInput2)
-        let paths = caves.findPaths()
-        XCTAssertEqual(paths.count, 19)
+        XCTAssertEqual(CaveSystem.countPaths(exampleInput2), 19)
     }
 
     func testPart1Example3() {
-        let caves = CaveSystem(exampleInput3)
-        let paths = caves.findPaths()
-        XCTAssertEqual(paths.count, 226)
+        XCTAssertEqual(CaveSystem.countPaths(exampleInput3), 226)
     }
 
     func testPart1() {

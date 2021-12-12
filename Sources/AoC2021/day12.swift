@@ -81,14 +81,18 @@ extension CaveSystem {
         }
         self.caves = caves
     }
+
+    public static func countPaths(_ description: String) -> Int {
+        let caves = Self(description.lines())
+        let paths = caves.findPaths()
+        return paths.count
+    }
 }
 
-fileprivate let day12_input = Bundle.module.text(named: "day12").lines()
+fileprivate let day12_input = Bundle.module.text(named: "day12")
 
 public func day12_1() -> Int {
-    let caves = CaveSystem(day12_input)
-    let paths = caves.findPaths()
-    return paths.count
+    CaveSystem.countPaths(day12_input)
 }
 
 public func day12_2() -> Int {

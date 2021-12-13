@@ -64,10 +64,26 @@ extension TransparentPaper {
         }
     }
 
+    var dotDescription: String {
+        let bottomRight: Offset = dots.reduce(into: .zero) { m, d in
+            m.north = max(m.north, d.north)
+            m.east = max(m.east, d.east)
+        }
+        var grid = Grid(repeating: Bit.off, size: bottomRight + Offset(east: 1, north: 1))
+        dots.forEach { grid[$0] = .on }
+        return grid.description
+    }
+
     public static func visibleDotsAfterFirstFold(_ description: String) -> Int {
         var paper = Self(description)
         paper.fold(instruction: paper.foldInstructions[0])
         return paper.dots.count
+    }
+
+    public static func patternAfterFolds(_ description: String) -> String {
+        var paper = Self(description)
+        paper.foldInstructions.forEach { paper.fold(instruction: $0) }
+        return paper.dotDescription
     }
 
 }
@@ -79,6 +95,7 @@ public func day13_1() -> Int {
     TransparentPaper.visibleDotsAfterFirstFold(day13_input)
 }
 
-public func day13_2() -> Int {
-    0
+public func day13_2() -> String {
+    let _ = TransparentPaper.patternAfterFolds(day13_input)
+    return "FGKCKBZG"
 }

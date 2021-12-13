@@ -12,6 +12,15 @@ public enum Bit : Character {
     case off = "0"
 }
 
+extension Bit: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .on: return "#"
+        case .off: return "."
+        }
+    }
+}
+
 extension Bit {
 
     init(_ bool: Bool) {

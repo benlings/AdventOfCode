@@ -36,10 +36,11 @@ final class Day13Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        let _ = TransparentPaper.patternAfterFolds(exampleInput)
+        XCTAssertEqual("O", "O")
     }
 
     func testPart2() {
-        XCTAssertEqual(day13_2(), 0)
+        XCTAssertEqual(day13_2(), "FGKCKBZG")
     }
 }

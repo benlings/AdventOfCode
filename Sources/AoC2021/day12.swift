@@ -55,7 +55,7 @@ extension Cave {
         }
     }
 
-    func findPaths(visited: Set<Cave>, visitedSmallCave: Cave?) -> [[Cave]] {
+    func findPaths(visited: Set<Cave>, visitedSmallCave: Bool) -> [[Cave]] {
         switch type {
         case .end: return [[self]]
         case .big: return connected.flatMap { $0.findPaths(visited: visited, visitedSmallCave: visitedSmallCave).map { [self] + $0 } }
@@ -63,8 +63,8 @@ extension Cave {
             return visited.contains(self) ? [] : connected.flatMap { $0.findPaths(visited: visited.union([self]), visitedSmallCave: visitedSmallCave).map { [self] + $0 } }
         case .small:
             if visited.contains(self) {
-                if visitedSmallCave == nil {
-                    return connected.flatMap { $0.findPaths(visited: visited, visitedSmallCave: self).map { [self] + $0 } }
+                if visitedSmallCave == false {
+                    return connected.flatMap { $0.findPaths(visited: visited, visitedSmallCave: true).map { [self] + $0 } }
                 } else {
                     return []
                 }
@@ -85,7 +85,7 @@ public struct CaveSystem {
     }
 
     public func findRevistingPaths() -> [[Cave]] {
-        caves["start"]!.findPaths(visited: Set(), visitedSmallCave: nil)
+        caves["start"]!.findPaths(visited: Set(), visitedSmallCave: false)
     }
 }
 

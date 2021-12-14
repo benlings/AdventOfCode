@@ -25,18 +25,22 @@ final class Day14Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        var poly = Polymerization(exampleInput)
+        poly.step(count: 10)
+        XCTAssertEqual(poly.elementsDifference(), 1588)
     }
 
     func testPart1() {
-        XCTAssertEqual(day14_1(), 0)
+        XCTAssertEqual(day14_1(), 2988)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        var poly = Polymerization(exampleInput)
+        poly.step(count: 40)
+        XCTAssertEqual(poly.elementsDifference(), 2188189693529)
     }
 
     func testPart2() {
-        XCTAssertEqual(day14_2(), 0)
+        XCTAssertEqual(day14_2(), 3572761917024)
     }
 }

@@ -75,6 +75,10 @@ public extension Sequence {
         Dictionary(uniqueKeysWithValues: self)
     }
 
+    func toDictionarySummingValues<K, V>() -> Dictionary<K, V> where Element == (K, V), V : Numeric {
+        Dictionary(self, uniquingKeysWith: +)
+    }
+
     func toSet<E>() -> Set<E> where Element == E {
         Set(self)
     }

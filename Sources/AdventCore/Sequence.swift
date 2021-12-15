@@ -100,6 +100,10 @@ public extension Sequence {
             selector($0) < selector($1)
         }
     }
+
+    func min<T>(on selector: (Element) -> T) -> Element? where T : Comparable {
+        self.min { selector($0) < selector($1) }
+    }
 }
 
 public extension Sequence where Element == Int {

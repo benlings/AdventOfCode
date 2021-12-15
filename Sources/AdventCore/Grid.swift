@@ -28,6 +28,10 @@ public struct Grid<Element> {
         elements.first!.indices
     }
 
+    public func contains(_ position: Offset) -> Bool {
+        rowIndices.contains(position.north) && columnIndices.contains(position.east)
+    }
+
     public subscript(position: Offset) -> Element {
         get {
             elements[position.north][position.east]
@@ -51,9 +55,14 @@ public extension Grid {
     }
 }
 
+public extension Grid {
+    init(_ description: String, conversion: (Character) -> Element?) {
+        self.elements = description.lines().map { $0.compactMap(conversion) }
+    }
+}
 
 extension Grid: CustomStringConvertible where Element: CustomStringConvertible {
     public var description: String {
-        elements.map { $0.map { $0.description }.joined() }.lines()
+        elements.map { $0.map(\.description).joined() }.lines()
     }
 }

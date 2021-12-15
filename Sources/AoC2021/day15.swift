@@ -46,9 +46,6 @@ public struct ChitonMap {
         var visited = Set<Offset>()
         while !toVisit.isEmpty {
             let current = toVisit.removeMin()
-            if current == end {
-                return risks[current]!
-            }
             for neighbour in current.orthoNeighbours() {
                 guard let neighbourRisk = risk(neighbour),
                       !visited.contains(neighbour) else { continue }
@@ -60,7 +57,7 @@ public struct ChitonMap {
             }
             visited.insert(current)
         }
-        return nil
+        return risks[end]
     }
 }
 

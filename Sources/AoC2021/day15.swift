@@ -46,10 +46,11 @@ public struct ChitonMap {
         var visited = Set<Offset>()
         while !toVisit.isEmpty {
             let current = toVisit.removeMin()
+            let currentRisk = risks[current, default: .max]
             for neighbour in current.orthoNeighbours() {
                 guard let neighbourRisk = risk(neighbour),
                       !visited.contains(neighbour) else { continue }
-                let alt = risks[current, default: .max] + neighbourRisk
+                let alt = currentRisk + neighbourRisk
                 if alt < risks[neighbour, default: .max] {
                     risks[neighbour] = alt
                     toVisit.insert(neighbour, priority: alt)

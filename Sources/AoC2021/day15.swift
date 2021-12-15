@@ -5,8 +5,17 @@ public struct ChitonMap {
     var riskLevels: Grid<Int>
 
     public func findLowestRiskPath() -> Int? {
-        let start = Offset.zero;
-        let end = Offset(east: riskLevels.columnIndices.last!, north: riskLevels.columnIndices.last!)
+        findLowestRiskPath(start: .zero,
+                           end: Offset(east: riskLevels.columnIndices.upperBound - 1,
+                                       north: riskLevels.rowIndices.upperBound - 1),
+                           risk: risk(position:))
+    }
+
+    func risk(position: Offset) -> Int? {
+        riskLevels.contains(position) ? riskLevels[position] : nil
+    }
+
+    func findLowestRiskPath(start: Offset, end: Offset, risk: (Offset) -> Int?) -> Int? {
         var risks = [start: 0]
         var toVisit = [start] as Set
         var visited = Set<Offset>()
@@ -17,9 +26,9 @@ public struct ChitonMap {
                 return risks[current]!
             }
             for neighbour in current.orthoNeighbours() {
-                guard riskLevels.contains(neighbour),
+                guard let neighbourRisk = risk(neighbour),
                       !visited.contains(neighbour) else { continue }
-                let alt = risks[current, default: .max] + riskLevels[neighbour]
+                let alt = risks[current, default: .max] + neighbourRisk
                 if alt < risks[neighbour, default: .max] {
                     risks[neighbour] = alt
                     toVisit.insert(neighbour)

@@ -2,6 +2,13 @@ import Foundation
 import AdventCore
 import PriorityQueueModule
 
+fileprivate struct Sizes {
+    var width: Int
+    var height: Int
+    var totalWidth: Int
+    var totalHeight: Int
+}
+
 public struct ChitonMap {
     var riskLevels: Grid<Int>
 
@@ -15,28 +22,30 @@ public struct ChitonMap {
     }
 
     public func findLowestRiskPathExpanded() -> Int? {
-        findLowestRiskPath(start: .zero,
+        let sizes = Sizes(width: riskLevels.columnIndices.upperBound,
+                          height: riskLevels.rowIndices.upperBound,
+                          totalWidth: riskLevels.columnIndices.upperBound * expandedSize,
+                          totalHeight: riskLevels.rowIndices.upperBound * expandedSize)
+        return findLowestRiskPath(start: .zero,
                            end: Offset(east: riskLevels.columnIndices.upperBound * expandedSize - 1,
                                        north: riskLevels.rowIndices.upperBound * expandedSize - 1),
-                           risk: risk(expandedPosition:))
+                           risk: { risk(position: $0, sizes: sizes) })
     }
 
 
-    func risk(position: Offset) -> Int? {
+    private func risk(position: Offset) -> Int? {
         riskLevels.contains(position) ? riskLevels[position] : nil
     }
 
-    func risk(expandedPosition: Offset) -> Int? {
-        let width = riskLevels.columnIndices.upperBound
-        let height = riskLevels.rowIndices.upperBound
-        guard expandedPosition.east >= 0 && expandedPosition.east < width * expandedSize &&
-            expandedPosition.north >= 0 && expandedPosition.north < height * expandedSize
+    private func risk(position: Offset, sizes: Sizes) -> Int? {
+        guard position.east >= 0 && position.east < sizes.totalWidth &&
+                position.north >= 0 && position.north < sizes.totalHeight
         else {
             return nil
         }
-        let east = expandedPosition.east % width
-        let north = expandedPosition.north % height
-        let increment = expandedPosition.east / width + expandedPosition.north / height
+        let east = position.east % sizes.width
+        let north = position.north % sizes.height
+        let increment = position.east / sizes.width + position.north / sizes.height
         return (riskLevels[Offset(east: east, north: north)] + increment - 1) % 9 + 1
     }
 

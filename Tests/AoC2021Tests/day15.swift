@@ -25,10 +25,10 @@ final class Day15Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(ChitonMap(exampleInput).findLowestRiskPathExpanded(), 315)
     }
 
     func testPart2() {
-        XCTAssertEqual(day15_2(), 0)
+        XCTAssertEqual(day15_2(), 2858)
     }
 }

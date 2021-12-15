@@ -43,20 +43,17 @@ public struct ChitonMap {
     func findLowestRiskPath(start: Offset, end: Offset, risk: (Offset) -> Int?) -> Int? {
         var risks = [start: 0]
         var toVisit = [start: 0] as PriorityQueue
-        var visited = Set<Offset>()
         while !toVisit.isEmpty {
             let current = toVisit.removeMin()
             let currentRisk = risks[current, default: .max]
             for neighbour in current.orthoNeighbours() {
-                guard let neighbourRisk = risk(neighbour),
-                      !visited.contains(neighbour) else { continue }
+                guard let neighbourRisk = risk(neighbour) else { continue }
                 let alt = currentRisk + neighbourRisk
                 if alt < risks[neighbour, default: .max] {
                     risks[neighbour] = alt
                     toVisit.insert(neighbour, priority: alt)
                 }
             }
-            visited.insert(current)
         }
         return risks[end]
     }

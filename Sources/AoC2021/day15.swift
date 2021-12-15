@@ -1,5 +1,6 @@
 import Foundation
 import AdventCore
+import PriorityQueueModule
 
 public struct ChitonMap {
     var riskLevels: Grid<Int>
@@ -41,11 +42,10 @@ public struct ChitonMap {
 
     func findLowestRiskPath(start: Offset, end: Offset, risk: (Offset) -> Int?) -> Int? {
         var risks = [start: 0]
-        var toVisit = [start] as Set
+        var toVisit = [start: 0] as PriorityQueue
         var visited = Set<Offset>()
         while !toVisit.isEmpty {
-            let current = toVisit.min { risks[$0, default: .max] }!
-            toVisit.remove(current)
+            let current = toVisit.removeMin()
             if current == end {
                 return risks[current]!
             }
@@ -55,7 +55,7 @@ public struct ChitonMap {
                 let alt = risks[current, default: .max] + neighbourRisk
                 if alt < risks[neighbour, default: .max] {
                     risks[neighbour] = alt
-                    toVisit.insert(neighbour)
+                    toVisit.insert(neighbour, priority: alt)
                 }
             }
             visited.insert(current)

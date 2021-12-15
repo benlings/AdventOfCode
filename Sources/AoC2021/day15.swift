@@ -7,13 +7,11 @@ public struct ChitonMap {
     public func findLowestRiskPath() -> Int? {
         let start = Offset.zero;
         let end = Offset(east: riskLevels.columnIndices.last!, north: riskLevels.columnIndices.last!)
-        var toVisit: Set<Offset> = [start]
-        var risks = [Offset: Int]()
+        var risks = [start: 0]
+        var toVisit = [start] as Set
         var visited = Set<Offset>()
-        var current = start;
-        risks[start] = 0
         while !toVisit.isEmpty {
-            current = toVisit.min { risks[$0, default: .max] }!
+            let current = toVisit.min { risks[$0, default: .max] }!
             toVisit.remove(current)
             if current == end {
                 return risks[current]!

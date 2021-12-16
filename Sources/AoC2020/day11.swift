@@ -128,9 +128,7 @@ extension WaitingArea : LosslessStringConvertible {
     }
 
     public var description: String {
-        seats.map { row in
-            String(row.map(\.rawValue))
-        }.lines()
+        seats.map { $0.rawJoined() }.lines()
     }
 }
 

@@ -70,6 +70,12 @@ public extension Sequence where Element == UInt8 {
     }
 }
 
+public extension Sequence where Element : RawRepresentable, Element.RawValue == Character {
+    func rawJoined() -> String {
+        String(self.map(\.rawValue))
+    }
+}
+
 public extension Sequence {
     func toDictionary<K, V>() -> Dictionary<K, V> where Element == (K, V) {
         Dictionary(uniqueKeysWithValues: self)

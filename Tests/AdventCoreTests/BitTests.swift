@@ -10,7 +10,7 @@ final class BitTests: XCTestCase {
     }
 
     func testHexParsing() {
-        XCTAssertEqual(String(Array(hex: "D2FE28").map(\.rawValue)), "110100101111111000101000")
+        XCTAssertEqual(Array(hex: "D2FE28").rawJoined(), "110100101111111000101000")
     }
 
 }

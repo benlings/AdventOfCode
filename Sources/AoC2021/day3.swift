@@ -2,8 +2,16 @@ import Foundation
 import AdventCore
 
 public extension Array where Element == Bit {
-    func toInt() -> Int {
-        reduce(0) { $0 * 2 + $1.toInt() }
+    func toInt<B : BinaryInteger>() -> B {
+        reduce(0 as B) { $0 * 2 + $1.toInt() }
+    }
+
+    init(hex: String) {
+        self = hex.flatMap { c -> [Bit] in
+            let s = String(Int(String(c), radix: 16)!, radix: 2)
+            let p = (repeatElement("0", count: 4 - s.count) + s)
+            return p.compactMap(Bit.init(rawValue:))
+        }
     }
 }
 
@@ -27,7 +35,7 @@ extension Bit {
         self = bool ? .on : .off
     }
 
-    func toInt() -> Int {
+    func toInt<I : ExpressibleByIntegerLiteral>() -> I {
         switch self {
         case .on: return 1
         case .off: return 0

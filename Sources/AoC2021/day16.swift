@@ -23,6 +23,22 @@ public struct Packet : Equatable {
     public var contents: PacketContents
 }
 
+public enum PacketContents : Equatable {
+    case literal(Int)
+    case `operator`(PacketType, [Packet])
+}
+
+public enum PacketType: UInt8 {
+    case sum = 0
+    case product = 1
+    case minimum = 2
+    case maximum = 3
+    case literal = 4
+    case greaterThan = 5
+    case lessThan = 6
+    case equalTo = 7
+}
+
 public extension Packet {
     var versionSum: Int {
         Int(version) + contents.versionSum
@@ -45,17 +61,6 @@ public extension PacketContents {
     }
 }
 
-public enum PacketType: UInt8 {
-    case sum = 0
-    case product = 1
-    case minimum = 2
-    case maximum = 3
-    case literal = 4
-    case greaterThan = 5
-    case lessThan = 6
-    case equalTo = 7
-}
-
 extension PacketType {
     var operation: ([Int]) -> Int {
         switch self {
@@ -69,11 +74,6 @@ extension PacketType {
         case .equalTo: return { $0[0] == $0[1] ? 1 : 0 }
         }
     }
-}
-
-public enum PacketContents : Equatable {
-    case literal(Int)
-    case `operator`(PacketType, [Packet])
 }
 
 extension Packet {

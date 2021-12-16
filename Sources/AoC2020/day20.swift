@@ -3,21 +3,6 @@ import AdventCore
 
 public typealias EdgeId = UInt16
 
-extension EdgeId {
-
-    init<S>(bits: S) where S : Sequence, S.Element == Bool {
-        self = Self.init(bits.map { $0 ? "1" : "0" }.joined(), radix: 2)!
-    }
-
-    public func reversed(size: Int) -> EdgeId {
-        var r = 0 as EdgeId
-        for bit in 0..<size {
-            r[bit: size - bit - 1] = self[bit: bit]
-        }
-        return r
-    }
-}
-
 public enum TileEdge : Int8, Hashable, CaseIterable {
     case top, right, bottom, left
 

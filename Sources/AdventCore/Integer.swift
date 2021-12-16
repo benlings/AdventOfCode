@@ -25,6 +25,15 @@ public extension BinaryInteger {
         }
     }
 
+    func reversed(size: Int) -> Self {
+        precondition(size < bitWidth)
+        var r = 0 as Self
+        for bit in 0..<size {
+            r[bit: size - bit - 1] = self[bit: bit]
+        }
+        return r
+    }
+
     func setting(bit: Int, value: Bit) -> Self {
         var r = self
         r[bit: bit] = value
@@ -53,6 +62,14 @@ public extension BinaryInteger {
     static func lcm(_ m: Self, _ n: Self) -> Self {
         m / gcd(m, n) * n
     }
+}
+
+public extension FixedWidthInteger {
+
+    init<S>(bits: S) where S : Sequence, S.Element == Bool {
+        self = Self.init(bits.map { $0 ? "1" : "0" }.joined(), radix: 2)!
+    }
+
 }
 
 public extension Array where Element : BinaryInteger {

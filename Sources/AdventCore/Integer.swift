@@ -10,14 +10,14 @@ import Algorithms
 
 public extension BinaryInteger {
 
-    subscript(bit bit: Int) -> Bool {
+    subscript(bit bit: Int) -> Bit {
         get {
             let setBit: Self = 0b1 << bit
-            return self & setBit == setBit
+            return Bit(self & setBit == setBit)
         }
         set {
             let setBit: Self = 0b1 << bit
-            if newValue {
+            if Bool(newValue) {
                 self |= setBit
             } else {
                 self &= ~setBit
@@ -25,7 +25,7 @@ public extension BinaryInteger {
         }
     }
 
-    func setting(bit: Int, value: Bool) -> Self {
+    func setting(bit: Int, value: Bit) -> Self {
         var r = self
         r[bit: bit] = value
         return r

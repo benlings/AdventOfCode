@@ -19,6 +19,12 @@ public enum Bit : Character {
     case off = "0"
 }
 
+public extension Bool {
+    init(_ bit: Bit) {
+        self = bit == .on
+    }
+}
+
 public extension Bit {
 
     init(_ bool: Bool) {

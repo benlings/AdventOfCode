@@ -18,12 +18,6 @@ final class Day3Tests: XCTestCase {
     01010
     """
 
-    func testBinaryToInt()
-    {
-        XCTAssertEqual([Bit.on, .off, .on, .on, .off].toInt(), 22)
-        XCTAssertEqual([Bit.off, .on, .off, .off, .on].toInt(), 9)
-    }
-
     func testPart1Example()
     {
         let report = SubmarineDiagnostic(exampleInput)

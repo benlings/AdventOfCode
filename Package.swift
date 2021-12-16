@@ -36,6 +36,9 @@ let package = Package(
                 .product(name: "Algorithms", package: "swift-algorithms"),
                 .product(name: "Collections", package: "swift-collections"),
             ]),
+        .testTarget(
+            name: "AdventCoreTests",
+            dependencies: ["AdventCore"]),
         .target(
             name: "AoC2015",
             dependencies: ["AdventCore"],

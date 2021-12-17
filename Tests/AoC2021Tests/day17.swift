@@ -3,13 +3,11 @@ import AoC2021
 
 final class Day17Tests: XCTestCase {
 
-    let exampleInput = """
-    """
+    // target area: x=20..30, y=-10..-5
+    let exampleProbe = ProbeToss(targetX: 20...30, targetY: (-10)...(-5))
 
     func testPart1Example() {
-        // target area: x=20..30, y=-10..-5
-        let probe = ProbeToss(targetX: 20...30, stargetY: (-10)...(-5))
-        XCTAssertEqual(probe.maxHeight(), 45)
+        XCTAssertEqual(exampleProbe.maxHeight(), 45)
     }
 
     func testPart1() {
@@ -17,10 +15,10 @@ final class Day17Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(exampleProbe.countIntialVelocities(), 112)
     }
 
     func testPart2() {
-        XCTAssertEqual(day17_2(), 0)
+        XCTAssertEqual(day17_2(), 996)
     }
 }

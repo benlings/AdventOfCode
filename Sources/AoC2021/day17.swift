@@ -16,17 +16,14 @@ struct Probe {
         velocity += velocityChange
     }
 
-    mutating func stepUntilIn(targetHeight: ClosedRange<Int>) -> Int? {
-        var maxHeight = position.north
+    mutating func stepUntilIn(targetX: ClosedRange<Int>, targetY: ClosedRange<Int>) -> Bool {
         repeat {
             step()
-            print(position.north)
-            maxHeight = max(maxHeight, position.north)
-            if targetHeight.contains(position.north) {
-                return maxHeight
+            if targetY.contains(position.north) && targetX.contains(position.east) {
+                return true
             }
-        } while position.north >= targetHeight.lowerBound
-        return nil
+        } while position.north >= targetY.lowerBound && position.east <= targetX.upperBound
+        return false
     }
 }
 
@@ -39,22 +36,48 @@ public struct ProbeToss {
     var targetX: ClosedRange<Int>
     var targetY: ClosedRange<Int>
 
+    private func triangular(_ n: Int) -> Int {
+        n * (n + 1)/2
+    }
+
+    private func inv_triangular(_ n: Int) -> Double {
+        // y = x (x + 1) / 2
+        // x^2 + x - 2y = 0
+        // x = (-1 +- sqrt(1 + 8y))/2
+        // ignore negative solution
+        (sqrt(Double(1 + 8 * n)) - 1)/2
+    }
+
     public func maxHeight() -> Int {
         // Highest y velocity it can be going at and still bein in the target
         let maxInitialVelocity = -targetY.lowerBound - 1
-        let maxHeight = maxInitialVelocity * (maxInitialVelocity + 1)/2
+        let maxHeight = triangular(maxInitialVelocity)
         return maxHeight
+    }
+
+    public func countIntialVelocities() -> Int {
+        let initialXVelocityRange = Int(inv_triangular(targetX.lowerBound).rounded(.up))...targetX.upperBound
+        let initialYVelocityRange = targetY.lowerBound...(-targetY.lowerBound - 1)
+        var count = 0;
+        for x in initialXVelocityRange {
+            for y in initialYVelocityRange {
+                var probe = Probe(velocity: Offset(east: x, north: y))
+                if (probe.stepUntilIn(targetX: targetX, targetY: targetY)) {
+                    count += 1
+                }
+            }
+        }
+        return count
     }
 }
 
 // target area: x=269..292, y=-68..-44
-fileprivate let day17_input = Bundle.module.text(named: "day17").lines()
+fileprivate let day17_input = ProbeToss(targetX: 269...292, targetY: (-68)...(-44))
 
 public func day17_1() -> Int {
-    let probe = ProbeToss(targetX: 269...292, targetY: (-68)...(-44))
-    return probe.maxHeight()
+    return day17_input.maxHeight()
 }
 
 public func day17_2() -> Int {
-    0
+    day17_input.countIntialVelocities()
 }

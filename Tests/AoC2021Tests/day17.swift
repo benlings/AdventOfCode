@@ -8,7 +8,7 @@ final class Day17Tests: XCTestCase {
 
     func testPart1Example() {
         // target area: x=20..30, y=-10..-5
-        let probe = ProbeToss(targetHeight: (-10)...(-5))
+        let probe = ProbeToss(targetX: 20...30, stargetY: (-10)...(-5))
         XCTAssertEqual(probe.maxHeight(), 45)
     }
 

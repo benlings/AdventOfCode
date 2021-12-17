@@ -31,15 +31,17 @@ struct Probe {
 }
 
 public struct ProbeToss {
-    public init(targetHeight: ClosedRange<Int>) {
-        self.targetHeight = targetHeight
+    public init(targetX: ClosedRange<Int>, targetY: ClosedRange<Int>) {
+        self.targetX = targetX
+        self.targetY = targetY
     }
 
-    var targetHeight: ClosedRange<Int>
+    var targetX: ClosedRange<Int>
+    var targetY: ClosedRange<Int>
 
     public func maxHeight() -> Int {
         // Highest y velocity it can be going at and still bein in the target
-        let maxInitialVelocity = -targetHeight.lowerBound - 1
+        let maxInitialVelocity = -targetY.lowerBound - 1
         let maxHeight = maxInitialVelocity * (maxInitialVelocity + 1)/2
         return maxHeight
     }
@@ -49,7 +51,7 @@ public struct ProbeToss {
 fileprivate let day17_input = Bundle.module.text(named: "day17").lines()
 
 public func day17_1() -> Int {
-    let probe = ProbeToss(targetHeight: (-68)...(-44))
+    let probe = ProbeToss(targetX: 269...292, targetY: (-68)...(-44))
     return probe.maxHeight()
 }
 

@@ -39,21 +39,23 @@ public enum PacketType: UInt8 {
     case equalTo = 7
 }
 
-public extension Packet {
-    var versionSum: Int {
+extension Packet {
+    public var versionSum: Int {
         Int(version) + contents.versionSum
     }
 }
 
-public extension PacketContents {
+extension PacketContents {
     var versionSum: Int {
         switch self {
         case .literal: return 0
         case .operator(_, let packets): return packets.map(\.versionSum).sum()
         }
     }
+}
 
-    func value() -> Int {
+extension PacketContents {
+    public func value() -> Int {
         switch self {
         case let .literal(n): return n
         case let .operator(t, ps): return t.operation(ps.map { $0.contents.value() })

@@ -7,11 +7,13 @@ final class Day17Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        // target area: x=20..30, y=-10..-5
+        let probe = ProbeToss(targetHeight: (-10)...(-5))
+        XCTAssertEqual(probe.maxHeight(), 45)
     }
 
     func testPart1() {
-        XCTAssertEqual(day17_1(), 0)
+        XCTAssertEqual(day17_1(), 2278)
     }
 
     func testPart2Example() {

@@ -47,7 +47,7 @@ public extension SnailfishNumber {
             }
             switch rhs.explodeFirst(depth: depth + 1) {
             case let (l?, r)?:
-                lhs.addFirst(n: l)
+                lhs.addLast(n: l)
                 self = .pair(lhs, rhs)
                 return (nil, r)
             case let (nil, r)?:
@@ -65,6 +65,17 @@ public extension SnailfishNumber {
         case .pair(var lhs, let rhs):
             // Only go down left branch - if there's a pair, it will have a number in it
             lhs.addFirst(n: n)
+            self = .pair(lhs, rhs)
+        case let .regular(i):
+            self = .regular(i + n)
+        }
+    }
+
+    mutating func addLast(n: Int) {
+        switch self {
+        case .pair(let lhs, var rhs):
+            // Only go down right branch - if there's a pair, it will have a number in it
+            rhs.addLast(n: n)
             self = .pair(lhs, rhs)
         case let .regular(i):
             self = .regular(i + n)
@@ -137,6 +148,16 @@ public extension SnailfishNumber {
         let result = Self.pair(lhs, rhs)
         return result.reduced()
     }
+
+    static func += (lhs: inout Self, rhs: Self) {
+        lhs = lhs + rhs
+    }
+
+    static func sum(_ lines: [String]) -> SnailfishNumber? {
+        
+        lines.map(SnailfishNumber.init).reduce(+)
+    }
+
 }
 
 fileprivate let day18_input = Bundle.module.text(named: "day18").lines()

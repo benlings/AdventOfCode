@@ -6,6 +6,56 @@ public indirect enum SnailfishNumber : Equatable {
     case regular(Int)
 }
 
+public extension SnailfishNumber {
+
+    mutating func explodeFirst() -> Bool {
+        explodeFirst(depth: 1) != nil
+    }
+
+    mutating func explodeFirst(depth: Int) -> (Int?, Int?)? {
+        if depth > 4, case let .pair(.regular(lhs), .regular(rhs)) = self {
+            self = .regular(0)
+            return (lhs, rhs)
+        }
+        switch self {
+        case var .pair(lhs, rhs):
+            switch lhs.explodeFirst(depth: depth + 1) {
+            case let (l, r?)?:
+                rhs.addFirst(n: r)
+                self = .pair(lhs, rhs)
+                return (l, nil)
+            case let (l, nil)?:
+                self = .pair(lhs, rhs)
+                return (l, nil)
+            case nil: break
+            }
+            switch rhs.explodeFirst(depth: depth + 1) {
+            case let (l?, r)?:
+                lhs.addFirst(n: l)
+                self = .pair(lhs, rhs)
+                return (nil, r)
+            case let (nil, r)?:
+                self = .pair(lhs, rhs)
+                return (nil, r)
+            case nil: break
+            }
+        case .regular: break
+        }
+        return nil
+    }
+
+    mutating func addFirst(n: Int) {
+        switch self {
+        case .pair(var lhs, let rhs):
+            lhs.addFirst(n: n)
+            self = .pair(lhs, rhs)
+        case let .regular(i):
+            self = .regular(i + n)
+        }
+    }
+
+}
+
 fileprivate extension Scanner {
     func scanSnailfishNumber() -> SnailfishNumber? {
         let i = currentIndex
@@ -25,6 +75,15 @@ fileprivate extension Scanner {
             return .regular(number)
         } else {
             return scanSnailfishNumber()
+        }
+    }
+}
+
+extension SnailfishNumber : CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .pair(lhs, rhs): return "[\(lhs.description),\(rhs.description)]"
+        case let .regular(i): return i.description
         }
     }
 }

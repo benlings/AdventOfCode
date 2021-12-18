@@ -10,6 +10,27 @@ final class Day18Tests: XCTestCase {
         XCTAssertEqual(n, .pair(.pair(.regular(1), .regular(9)), .pair(.regular(8), .regular(5))))
     }
 
+    func testAddFirst() {
+        var n = SnailfishNumber(exampleInput)
+        n.addFirst(n: 5)
+        XCTAssertEqual(n.description, "[[6,9],[8,5]]")
+    }
+
+    func explodeEqual(_ number: String, _ exploded: String) {
+        var n = SnailfishNumber(number)
+        XCTAssertEqual(n.explodeFirst(), number != exploded)
+        XCTAssertEqual(n.description, exploded)
+    }
+
+    func testExplode() {
+        explodeEqual("[[6,9],[8,5]]", "[[6,9],[8,5]]")
+        explodeEqual("[[[[[9,8],1],2],3],4]", "[[[[0,9],2],3],4]")
+        explodeEqual("[7,[6,[5,[4,[3,2]]]]]", "[7,[6,[5,[7,0]]]]")
+        explodeEqual("[[6,[5,[4,[3,2]]]],1]", "[[6,[5,[7,0]]],3]")
+        explodeEqual("[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]")
+        explodeEqual("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]")
+    }
+
     func testPart1() {
         XCTAssertEqual(day18_1(), 0)
     }

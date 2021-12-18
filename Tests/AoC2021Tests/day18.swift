@@ -74,6 +74,15 @@ final class Day18Tests: XCTestCase {
         XCTAssertEqual(n.description, "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
     }
 
+    func testMagnitude() {
+        XCTAssertEqual(SnailfishNumber("[[1,2],[[3,4],5]]").magnitude, 143)
+        XCTAssertEqual(SnailfishNumber("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]").magnitude, 1384)
+        XCTAssertEqual(SnailfishNumber("[[[[1,1],[2,2]],[3,3]],[4,4]]").magnitude, 445)
+        XCTAssertEqual(SnailfishNumber("[[[[3,0],[5,3]],[4,4]],[5,5]]").magnitude, 791)
+        XCTAssertEqual(SnailfishNumber("[[[[5,0],[7,4]],[5,5]],[6,6]]").magnitude, 1137)
+        XCTAssertEqual(SnailfishNumber("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]").magnitude, 3488)
+    }
+
 
     func testPart1() {
         XCTAssertEqual(day18_1(), 0)

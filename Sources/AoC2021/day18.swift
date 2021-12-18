@@ -88,6 +88,12 @@ public extension SnailfishNumber {
         return false
     }
 
+    var magnitude: Int {
+        switch self {
+        case let .pair(lhs, rhs): return 3 * lhs.magnitude + 2 * rhs.magnitude
+        case let .regular(i): return i
+        }
+    }
 }
 
 fileprivate extension Scanner {

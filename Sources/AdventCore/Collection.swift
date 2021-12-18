@@ -5,7 +5,7 @@ public extension Collection {
         guard let first = first else {
             return nil
         }
-        return try reduce(first, nextPartialResult)
+        return try dropFirst().reduce(first, nextPartialResult)
     }
 
 }

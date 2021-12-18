@@ -8,6 +8,22 @@ public indirect enum SnailfishNumber : Equatable {
 
 public extension SnailfishNumber {
 
+    func reduced() -> SnailfishNumber {
+        var number = self;
+        number.reduce()
+        return number
+    }
+
+    mutating func reduce() {
+        while reduceAction() {
+            // nothing
+        }
+    }
+
+    mutating func reduceAction() -> Bool {
+        explodeFirst() || splitFirst()
+    }
+
     mutating func explodeFirst() -> Bool {
         explodeFirst(depth: 1) != nil
     }
@@ -110,6 +126,10 @@ public extension SnailfishNumber {
     init(_ description: String) {
         let scanner = Scanner(string: description)
         self = scanner.scanSnailfishNumber()!
+    }
+    static func + (lhs: Self, rhs: Self) -> Self {
+        let result = Self.pair(lhs, rhs)
+        return result.reduced()
     }
 }
 

@@ -43,6 +43,38 @@ final class Day18Tests: XCTestCase {
         splitEqual("[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]")
     }
 
+    func testActionsStepByStep() {
+        let n1 = SnailfishNumber("[[[[4,3],4],4],[7,[[8,4],9]]]")
+        let n2 = SnailfishNumber("[1,1]")
+        var n = SnailfishNumber.pair(n1, n2)
+        XCTAssertEqual(n.description, "[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]")
+        XCTAssertTrue(n.reduceAction())
+        XCTAssertEqual(n.description, "[[[[0,7],4],[7,[[8,4],9]]],[1,1]]")
+        XCTAssertTrue(n.reduceAction())
+        XCTAssertEqual(n.description, "[[[[0,7],4],[15,[0,13]]],[1,1]]")
+        XCTAssertTrue(n.reduceAction())
+        XCTAssertEqual(n.description, "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]")
+        XCTAssertTrue(n.reduceAction())
+        XCTAssertEqual(n.description, "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]")
+        XCTAssertTrue(n.reduceAction())
+        XCTAssertEqual(n.description, "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
+        XCTAssertFalse(n.reduceAction())
+    }
+
+    func testReduce() {
+        let n1 = SnailfishNumber("[[[[4,3],4],4],[7,[[8,4],9]]]")
+        let n2 = SnailfishNumber("[1,1]")
+        var n = SnailfishNumber.pair(n1, n2)
+        n.reduce()
+        XCTAssertEqual(n.description, "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
+    }
+
+    func testAdd() {
+        let n = SnailfishNumber("[[[[4,3],4],4],[7,[[8,4],9]]]") + SnailfishNumber("[1,1]")
+        XCTAssertEqual(n.description, "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
+    }
+
+
     func testPart1() {
         XCTAssertEqual(day18_1(), 0)
     }

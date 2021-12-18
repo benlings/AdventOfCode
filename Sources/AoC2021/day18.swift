@@ -153,8 +153,18 @@ public extension SnailfishNumber {
         lhs = lhs + rhs
     }
 
+    static func numbers(_ lines: [String]) -> [SnailfishNumber] {
+        lines.map(SnailfishNumber.init)
+    }
+
     static func sum(_ lines: [String]) -> SnailfishNumber? {
-        lines.map(SnailfishNumber.init).reduce(+)
+        numbers(lines).reduce(+)
+    }
+
+    static func largestPairMagnitude(_ lines: [String]) -> Int? {
+        numbers(lines).permutations(ofCount: 2).map { pair in
+            (pair[0] + pair[1]).magnitude
+        }.max()
     }
 
 }
@@ -166,5 +176,5 @@ public func day18_1() -> Int {
 }
 
 public func day18_2() -> Int {
-    0
+    SnailfishNumber.largestPairMagnitude(day18_input)!
 }

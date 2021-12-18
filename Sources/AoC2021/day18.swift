@@ -47,11 +47,29 @@ public extension SnailfishNumber {
     mutating func addFirst(n: Int) {
         switch self {
         case .pair(var lhs, let rhs):
+            // Only go down left branch - if there's a pair, it will have a number in it
             lhs.addFirst(n: n)
             self = .pair(lhs, rhs)
         case let .regular(i):
             self = .regular(i + n)
         }
+    }
+
+    mutating func splitFirst() -> Bool {
+        switch self {
+        case let .regular(i) where i > 9:
+            let half = i / 2
+            self = .pair(.regular(half), .regular(i - half))
+            return true
+        case var .pair(lhs, rhs):
+            if lhs.splitFirst() || rhs.splitFirst() {
+                self = .pair(lhs, rhs)
+                return true
+            }
+        case .regular:
+            break
+        }
+        return false
     }
 
 }

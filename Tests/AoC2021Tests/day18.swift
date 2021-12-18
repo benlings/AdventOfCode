@@ -31,6 +31,18 @@ final class Day18Tests: XCTestCase {
         explodeEqual("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]")
     }
 
+    func splitEqual(_ number: String, _ split: String) {
+        var n = SnailfishNumber(number)
+        XCTAssertEqual(n.splitFirst(), number != split)
+        XCTAssertEqual(n.description, split)
+    }
+
+    func testSplit() {
+        splitEqual("[[[[0,7],4],[15,[0,13]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]")
+        splitEqual("[[[[0,7],4],[[7,8],[0,13]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]")
+        splitEqual("[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]")
+    }
+
     func testPart1() {
         XCTAssertEqual(day18_1(), 0)
     }

@@ -148,7 +148,7 @@ final class Day18Tests: XCTestCase {
 
 
     func testPart1() {
-        XCTAssertEqual(day18_1(), 0)
+        XCTAssertEqual(day18_1(), 3665)
     }
 
     func testPart2Example() {

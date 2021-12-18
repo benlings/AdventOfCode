@@ -154,7 +154,6 @@ public extension SnailfishNumber {
     }
 
     static func sum(_ lines: [String]) -> SnailfishNumber? {
-        
         lines.map(SnailfishNumber.init).reduce(+)
     }
 
@@ -163,7 +162,7 @@ public extension SnailfishNumber {
 fileprivate let day18_input = Bundle.module.text(named: "day18").lines()
 
 public func day18_1() -> Int {
-    0
+    SnailfishNumber.sum(day18_input)!.magnitude
 }
 
 public func day18_2() -> Int {

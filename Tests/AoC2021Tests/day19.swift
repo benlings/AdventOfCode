@@ -5,9 +5,7 @@ final class Day19Tests: XCTestCase {
 
     func testOrientations() {
         let axes = [Offset3D(x: 1), Offset3D(y: 1), Offset3D(z: 1)]
-        let orientations = axes.map { $0.orientations() }
-        let orientedAxes = zip(orientations[0], zip(orientations[1], orientations[2]))
-            .map { [$0.0, $0.1.0, $0.1.1] }
+        let orientedAxes = axes.orientations()
         XCTAssertEqual(orientedAxes.count, 24)
         XCTAssertEqual(orientedAxes.toSet().count, 24)
     }

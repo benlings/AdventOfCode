@@ -61,6 +61,28 @@ public extension Offset3D {
 
 }
 
+public extension Set where Element == Offset3D {
+    func orientations() -> [Set<Offset3D>] {
+        var result = [Set<Offset3D>]()
+        let o = map { $0.orientations() }
+        for i in o[0].indices {
+            result.append(o.map { $0[i] }.toSet())
+        }
+        return result
+    }
+}
+
+public extension Array where Element == Offset3D {
+    func orientations() -> [[Offset3D]] {
+        var result = [[Offset3D]]()
+        let o = map { $0.orientations() }
+        for i in o[0].indices {
+            result.append(o.map { $0[i] })
+        }
+        return result
+    }
+}
+
 public struct ScannerReadings {
     var scannerResults: [Int: Set<Offset3D>]
 }

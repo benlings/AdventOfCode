@@ -98,5 +98,7 @@ public func day20_1() -> Int {
 }
 
 public func day20_2() -> Int {
-    0
+    var map = TrenchMap(day20_input)
+    map.enhance(count: 50)
+    return map.pixelCount
 }

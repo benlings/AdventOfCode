@@ -7,8 +7,7 @@ final class Day20Tests: XCTestCase {
 
     func testPart1Example() {
         var map = TrenchMap(exampleInput)
-        map.enhance()
-        map.enhance()
+        map.enhance(count: 2)
         XCTAssertEqual(map.pixelCount, 35)
     }
 
@@ -17,10 +16,12 @@ final class Day20Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        var map = TrenchMap(exampleInput)
+        map.enhance(count: 50)
+        XCTAssertEqual(map.pixelCount, 3351)
     }
 
     func testPart2() {
-        XCTAssertEqual(day20_2(), 0)
+        XCTAssertEqual(day20_2(), 6765)
     }
 }

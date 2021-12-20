@@ -66,3 +66,43 @@ extension Grid: CustomStringConvertible where Element: CustomStringConvertible {
         elements.map { $0.map(\.description).joined() }.lines()
     }
 }
+
+extension Set where Element == Offset {
+
+    public var bottomRight: Offset {
+        reduce(into: first!) { m, d in
+            m.north = Swift.max(m.north, d.north)
+            m.east = Swift.max(m.east, d.east)
+        }
+    }
+
+    public var topLeft: Offset {
+        reduce(into: first!) { m, d in
+            m.north = Swift.min(m.north, d.north)
+            m.east = Swift.min(m.east, d.east)
+        }
+    }
+
+}
+
+extension Grid where Element == Bit {
+
+    public init(sparse: Set<Offset>) {
+        let origin = sparse.topLeft
+        self = Grid(repeating: Bit.off, size: (sparse.bottomRight - origin) + Offset(east: 1, north: 1))
+        sparse.forEach { self[$0 - origin] = .on }
+    }
+
+    public func toSparse() -> Set<Offset> {
+        var sparse = Set<Offset>()
+        for row in rowIndices {
+            for column in columnIndices {
+                let offset = Offset(east: column, north: row)
+                if self[offset] == .on {
+                    sparse.insert(offset)
+                }
+            }
+        }
+        return sparse
+    }
+}

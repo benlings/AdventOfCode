@@ -65,13 +65,7 @@ extension TransparentPaper {
     }
 
     var dotDescription: String {
-        let bottomRight: Offset = dots.reduce(into: .zero) { m, d in
-            m.north = max(m.north, d.north)
-            m.east = max(m.east, d.east)
-        }
-        var grid = Grid(repeating: Bit.off, size: bottomRight + Offset(east: 1, north: 1))
-        dots.forEach { grid[$0] = .on }
-        return grid.description
+        return Grid(sparse: dots).description
     }
 
     public static func visibleDotsAfterFirstFold(_ description: String) -> Int {

@@ -13,7 +13,9 @@ final class Day19Tests: XCTestCase {
     let exampleInput = Bundle.module.text(named: "day19example")
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        var readings = ScannerReadings(exampleInput)
+        readings.findMatches()
+        XCTAssertEqual(readings.countUniqueBeacons(), 79)
     }
 
     func testPart1() {

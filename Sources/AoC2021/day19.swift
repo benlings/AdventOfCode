@@ -17,6 +17,16 @@ public enum Axis3D {
     case x, y, z
 }
 
+extension Offset3D {
+    subscript(axis axis: Axis3D) -> Int {
+        switch axis {
+        case .x: return x
+        case .y: return y
+        case .z: return z
+        }
+    }
+}
+
 public extension Offset3D {
 
     func rotated(angle: Int, axis: Axis3D) -> Offset3D {
@@ -70,6 +80,13 @@ public extension Set where Element == Offset3D {
         }
         return result
     }
+
+    func projection(axis: Axis3D) -> (Int, IndexSet) {
+        let p = map { $0[axis: axis] }
+        // Ensure IndexSet starts from 0
+        guard let min = p.min() else { return (0, IndexSet()) }
+        return (min, p.map { $0 - min }.toIndexSet())
+    }
 }
 
 public extension Array where Element == Offset3D {
@@ -85,6 +102,50 @@ public extension Array where Element == Offset3D {
 
 public struct ScannerReadings {
     var scannerResults: [Int: Set<Offset3D>]
+    var positions: [Int: Offset3D] = [:]
+
+    var scanner0: Set<Offset3D> { scannerResults[0]! }
+
+    func findMatches(_ first: Set<Offset3D>, _ second: Set<Offset3D>, axis: Axis3D) -> [Int] {
+        let (offset0, proj0) = first.projection(axis: axis)
+        var (offset1, proj1) = second.projection(axis: axis)
+        let last = proj0.last!
+        var dist = offset0 - offset1 + last
+        proj1.shift(startingAt: 0, by: last)
+        var result = [Int]()
+        while !proj1.isEmpty {
+            if proj0.intersection(proj1).count >= 12 {
+                result.append(dist)
+            }
+            dist -= 1
+            proj1.shift(startingAt: 0, by: -1)
+        }
+        return result
+    }
+
+    func findPosition(_ i: Int, axis: Axis3D) -> Int? {
+        let results = scannerResults[i]!.orientations().enumerated().map {
+            ($0.offset, findMatches(scanner0, $0.element, axis: axis))
+        }.filter { $0.1.count > 0 }
+        if results.count > 0 {
+            return results[0].1[0]
+        }
+        return nil
+    }
+
+    public mutating func findMatches() {
+        for i in scannerResults.keys.filter({ $0 != 0 }) {
+            if let x = findPosition(i, axis: .x),
+               let y = findPosition(i, axis: .y),
+               let z = findPosition(i, axis: .z) {
+                positions[i] = Offset3D(x: x, y: y, z: z)
+            }
+        }
+    }
+
+    public func countUniqueBeacons() -> Int {
+        0
+    }
 }
 
 fileprivate extension Scanner {
@@ -120,10 +181,12 @@ public extension ScannerReadings {
     }
 }
 
-fileprivate let day19_input = Bundle.module.text(named: "day19").lines()
+fileprivate let day19_input = Bundle.module.text(named: "day19")
 
 public func day19_1() -> Int {
-    0
+    var readings = ScannerReadings(day19_input)
+    readings.findMatches()
+    return readings.countUniqueBeacons()
 }
 
 public func day19_2() -> Int {

@@ -46,15 +46,14 @@ public struct DiceGame {
 
     var player1: Player
     var player2: Player
-    var dice = DeterministicDice()
 
-    public mutating func play() {
+    mutating func play(die: inout DeterministicDice) {
         while true {
-            player1.turn(dice: &dice)
+            player1.turn(dice: &die)
             if player1.score >= 1000 {
                 break
             }
-            player2.turn(dice: &dice)
+            player2.turn(dice: &die)
             if player2.score >= 1000 {
                 break
             }
@@ -69,8 +68,10 @@ public struct DiceGame {
         }
     }
 
-    public var part1Result: Int {
-        loser.score * dice.count
+    public mutating func part1() -> Int {
+        var die = DeterministicDice()
+        play(die: &die)
+        return loser.score * die.count
     }
 }
 
@@ -78,8 +79,7 @@ fileprivate let day21_input = Bundle.module.text(named: "day21").lines()
 
 public func day21_1() -> Int {
     var game = DiceGame(player1: 3, player2: 10)
-    game.play()
-    return game.part1Result
+    return game.part1()
 }
 
 public func day21_2() -> Int {

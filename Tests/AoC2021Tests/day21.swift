@@ -8,8 +8,7 @@ final class Day21Tests: XCTestCase {
 
     func testPart1Example() {
         var game = DiceGame(player1: 4, player2: 8)
-        game.play()
-        XCTAssertEqual(game.part1Result, 739785)
+        XCTAssertEqual(game.part1(), 739785)
     }
 
     func testPart1() {

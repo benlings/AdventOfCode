@@ -139,7 +139,7 @@ public struct ScannerReadings {
         proj1.shift(startingAt: 0, by: last)
         var result = [Int]()
         while !proj1.isEmpty {
-            if proj0.intersection(proj1).count >= 12 {
+            if proj0.intersection(proj1).count >= 10 {
                 result.append(dist)
             }
             dist -= 1

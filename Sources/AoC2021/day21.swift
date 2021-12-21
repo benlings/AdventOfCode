@@ -28,8 +28,8 @@ struct DeterministicDice {
 public struct DiceGame {
 
     public init(player1: Int, player2: Int) {
-        self.player1 = .init(position: player1)
-        self.player2 = .init(position: player2)
+        self.currentPlayer = .init(position: player1)
+        self.nextPlayer = .init(position: player2)
     }
 
 
@@ -44,28 +44,26 @@ public struct DiceGame {
         }
     }
 
-    var player1: Player
-    var player2: Player
+    var currentPlayer: Player
+    var nextPlayer: Player
 
-    mutating func play(die: inout DeterministicDice) {
-        while true {
-            player1.turn(dice: &die)
-            if player1.score >= 1000 {
-                break
-            }
-            player2.turn(dice: &die)
-            if player2.score >= 1000 {
-                break
-            }
+    mutating func playTurn(die: inout DeterministicDice, winningScore: Int) -> Bool {
+        currentPlayer.turn(dice: &die)
+        if currentPlayer.score >= winningScore {
+            return true
+        }
+        swap(&currentPlayer, &nextPlayer)
+        return false
+    }
+
+    mutating func play(die: inout DeterministicDice, winningScore: Int = 1000) {
+        while !playTurn(die: &die, winningScore: winningScore) {
+            // nothing
         }
     }
 
     var loser: Player {
-        if (player1.score < player2.score) {
-            return player1
-        } else {
-            return player2
-        }
+        nextPlayer
     }
 
     public mutating func part1() -> Int {

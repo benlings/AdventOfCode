@@ -7,11 +7,13 @@ final class Day21Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        var game = DiceGame(player1: 4, player2: 8)
+        game.play()
+        XCTAssertEqual(game.part1Result, 739785)
     }
 
     func testPart1() {
-        XCTAssertEqual(day21_1(), 0)
+        XCTAssertEqual(day21_1(), 713328)
     }
 
     func testPart2Example() {

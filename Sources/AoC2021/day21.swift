@@ -7,69 +7,90 @@ extension Int {
     }
 }
 
-struct DeterministicDice {
+protocol Dice {
+    mutating func roll() -> [Int]
+}
+
+extension Dice {
+    mutating func roll3() -> [Int] {
+        roll()
+            .flatMap { prev in roll().map { prev + $0 } }
+            .flatMap { prev in roll().map { prev + $0 } }
+    }
+}
+
+struct DeterministicDice : Dice {
     var value: Int = 1
     var count: Int = 0
 
-    mutating func roll() -> Int {
+    mutating func roll() -> [Int] {
         count += 1
         defer {
             value += 1
             value = value.mod1(100)
         }
-        return value
-    }
-
-    mutating func roll3() -> Int {
-        roll() + roll() + roll()
+        return [value]
     }
 }
 
 public struct DiceGame {
 
-    public init(player1: Int, player2: Int) {
-        self.currentPlayer = .init(position: player1)
-        self.nextPlayer = .init(position: player2)
-    }
-
-
     struct Player {
         var position: Int
         var score: Int = 0
 
-        mutating func turn(dice: inout DeterministicDice) {
-            position += dice.roll3()
+        mutating func turn(roll: Int) {
+            position += roll
             position = position.mod1(10)
             score += position
+        }
+
+        func turn<D : Dice>(dice: inout D) -> [Player] {
+            dice.roll3().map { roll in
+                var copy = self
+                copy.turn(roll: roll)
+                return copy
+            }
         }
     }
 
     var currentPlayer: Player
     var nextPlayer: Player
 
-    mutating func playTurn(die: inout DeterministicDice, winningScore: Int) -> Bool {
-        currentPlayer.turn(dice: &die)
-        if currentPlayer.score >= winningScore {
-            return true
-        }
+    mutating func swapPlayers() {
         swap(&currentPlayer, &nextPlayer)
-        return false
     }
 
-    mutating func play(die: inout DeterministicDice, winningScore: Int = 1000) {
-        while !playTurn(die: &die, winningScore: winningScore) {
-            // nothing
+
+    func playTurn<D : Dice>(die: inout D) -> [DiceGame] {
+        currentPlayer.turn(dice: &die).map { player in
+            var newGame = DiceGame(currentPlayer: player, nextPlayer: nextPlayer)
+            newGame.swapPlayers()
+            return newGame
+        }
+    }
+
+    mutating func play(die: inout DeterministicDice) {
+        while nextPlayer.score < 1000 {
+            self = playTurn(die: &die).first!
         }
     }
 
     var loser: Player {
-        nextPlayer
+        currentPlayer
     }
 
     public mutating func part1() -> Int {
         var die = DeterministicDice()
         play(die: &die)
         return loser.score * die.count
+    }
+}
+
+extension DiceGame {
+    public init(player1: Int, player2: Int) {
+        self.currentPlayer = .init(position: player1)
+        self.nextPlayer = .init(position: player2)
     }
 }
 

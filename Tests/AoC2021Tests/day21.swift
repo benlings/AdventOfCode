@@ -3,9 +3,6 @@ import AoC2021
 
 final class Day21Tests: XCTestCase {
 
-    let exampleInput = """
-    """
-
     func testPart1Example() {
         var game = DiceGame(player1: 4, player2: 8)
         XCTAssertEqual(game.part1(), 739785)

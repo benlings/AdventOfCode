@@ -40,6 +40,12 @@ extension Offset3D {
         case .z: return z
         }
     }
+
+    public func manhattanDistance(to other: Offset3D) -> Int {
+        let difference = other - self
+        return abs(difference.x) + abs(difference.y) + abs(difference.z)
+    }
+
 }
 
 public extension Offset3D {
@@ -187,6 +193,13 @@ public struct ScannerReadings {
             report.beacons.map { $0 + report.position }
         }.toSet().count
     }
+
+    public var maxScannerDistance: Int {
+        scannerResults.values
+            .combinations(ofCount: 2)
+            .map { $0[0].position.manhattanDistance(to: $0[1].position) }
+            .max()!
+    }
 }
 
 fileprivate extension Scanner {
@@ -231,5 +244,7 @@ public func day19_1() -> Int {
 }
 
 public func day19_2() -> Int {
-    0
+    var readings = ScannerReadings(day19_input)
+    readings.findMatches()
+    return readings.maxScannerDistance
 }

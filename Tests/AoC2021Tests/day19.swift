@@ -23,10 +23,12 @@ final class Day19Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        var readings = ScannerReadings(exampleInput)
+        readings.findMatches()
+        XCTAssertEqual(readings.maxScannerDistance, 3621)
     }
 
     func testPart2() {
-        XCTAssertEqual(day19_2(), 0)
+        XCTAssertEqual(day19_2(), 11079)
     }
 }

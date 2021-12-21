@@ -56,15 +56,17 @@ public struct DiceGame {
 
     var currentPlayer: Player
     var nextPlayer: Player
+    var whichPlayer = false
 
     mutating func swapPlayers() {
         swap(&currentPlayer, &nextPlayer)
+        whichPlayer.toggle()
     }
-
 
     func playTurn<D : Dice>(die: inout D) -> [DiceGame] {
         currentPlayer.turn(dice: &die).map { player in
-            var newGame = DiceGame(currentPlayer: player, nextPlayer: nextPlayer)
+            var newGame = self
+            newGame.currentPlayer = player
             newGame.swapPlayers()
             return newGame
         }

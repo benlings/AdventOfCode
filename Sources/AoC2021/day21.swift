@@ -19,6 +19,12 @@ extension Dice {
     }
 }
 
+struct DiracDice : Dice {
+    func roll() -> [Int] {
+        [1, 2, 3]
+    }
+}
+
 struct DeterministicDice : Dice {
     var value: Int = 1
     var count: Int = 0
@@ -33,9 +39,9 @@ struct DeterministicDice : Dice {
     }
 }
 
-public struct DiceGame {
+public struct DiceGame : Hashable {
 
-    struct Player {
+    struct Player : Hashable {
         var position: Int
         var score: Int = 0
 
@@ -78,6 +84,20 @@ public struct DiceGame {
         }
     }
 
+    func play(die: inout DiracDice) -> [DiceGame : Int] {
+        var state = [self : 1]
+        while state.keys.contains(where: { $0.nextPlayer.score < 21 }) {
+            state = state.flatMap { game, count -> [(DiceGame, Int)] in
+                if game.nextPlayer.score < 21 {
+                    return game.playTurn(die: &die).map { ($0, count) }
+                } else {
+                    return [(game, count)]
+                }
+            }.toDictionarySummingValues()
+        }
+        return state
+    }
+
     var loser: Player {
         currentPlayer
     }
@@ -86,6 +106,13 @@ public struct DiceGame {
         var die = DeterministicDice()
         play(die: &die)
         return loser.score * die.count
+    }
+
+    public func part2() -> Int {
+        var die = DiracDice()
+        return play(die: &die)
+            .map { game, count in (game.whichPlayer, count) }
+            .toDictionarySummingValues().values.max()!
     }
 }
 
@@ -104,5 +131,6 @@ public func day21_1() -> Int {
 }
 
 public func day21_2() -> Int {
-    0
+    let game = DiceGame(player1: 3, player2: 10)
+    return game.part2()
 }

@@ -13,10 +13,11 @@ final class Day21Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        let game = DiceGame(player1: 4, player2: 8)
+        XCTAssertEqual(game.part2(), 444356092776315)
     }
 
     func testPart2() {
-        XCTAssertEqual(day21_2(), 0)
+        XCTAssertEqual(day21_2(), 92399285032143)
     }
 }

@@ -35,8 +35,8 @@ public struct SubReactor {
         }
     }
 
-    public static func countBooted(instructions description: String) -> Int {
-        let instructions = description.lines().map(RebootStep.init)
+    public static func countOn(initialization: String) -> Int {
+        let instructions = initialization.lines().map(RebootStep.init)
         var reactor = SubReactor()
         reactor.boot(steps: instructions)
         return reactor.cubes.count
@@ -98,7 +98,7 @@ extension RebootStep {
 fileprivate let day22_input = Bundle.module.text(named: "day22")
 
 public func day22_1() -> Int {
-    SubReactor.countBooted(instructions: day22_input)
+    SubReactor.countOn(initialization: day22_input)
 }
 
 public func day22_2() -> Int {

@@ -36,11 +36,11 @@ final class Day22Tests: XCTestCase {
     """
 
     func testPart1Example1() {
-        XCTAssertEqual(SubReactor.countBooted(instructions: exampleInput1), 39)
+        XCTAssertEqual(SubReactor.countOn(initialization: exampleInput1), 39)
     }
 
     func testPart1Example2() {
-        XCTAssertEqual(SubReactor.countBooted(instructions: exampleInput2), 590784)
+        XCTAssertEqual(SubReactor.countOn(initialization: exampleInput2), 590784)
     }
 
     func testPart1() {

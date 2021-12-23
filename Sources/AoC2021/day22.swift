@@ -1,5 +1,6 @@
 import Foundation
 import AdventCore
+import SE0270_RangeSet
 
 struct RebootStep {
     var xRange: ClosedRange<Int>
@@ -8,9 +9,112 @@ struct RebootStep {
     var state: Bit
 }
 
+struct Geometry {
+
+    // non intersecting - every Offset3D is within at most one cube
+    var cubes = [Cube]()
+
+    var volume: Int {
+        cubes.map(\.volume).sum()
+    }
+
+    class Cube {
+
+        init(x: ClosedRange<Int>, y: ClosedRange<Int>, z: ClosedRange<Int>) {
+            self.x = x
+            self.y = y
+            self.z = z
+        }
+
+        // inclusive (closed) bounds
+        var x: ClosedRange<Int>
+        var y: ClosedRange<Int>
+        var z: ClosedRange<Int>
+
+        func range(axis: Axis3D) -> ClosedRange<Int> {
+            switch axis {
+            case .x: return x
+            case .y: return y
+            case .z: return z
+            }
+        }
+
+        func intersects(_ other: Cube) -> Bool {
+            x.overlaps(other.x) && y.overlaps(other.y) && z.overlaps(other.z)
+        }
+
+        func split(_ other: Cube, axis: Axis3D) -> [ClosedRange<Int>] {
+            let r = range(axis: axis)
+            let o = other.range(axis: axis)
+            assert(r.overlaps(o))
+            var result = [r]
+            if o.lowerBound < r.lowerBound {
+                result.append(o.lowerBound...(r.lowerBound - 1))
+            }
+            if o.upperBound > r.upperBound {
+                result.append((r.upperBound + 1)...o.upperBound)
+            }
+            return result
+        }
+
+        // Returns cubes that make up other, without self
+        func divide(_ other: Cube) -> [Cube] {
+            let xSplits = split(other, axis: .x)
+            let ySplits = split(other, axis: .y)
+            let zSplits = split(other, axis: .z)
+            return xSplits.flatMap { xSplit in
+                ySplits.flatMap { ySplit in
+                    zSplits.map { zSplit in
+                        Cube(x: xSplit, y: ySplit, z: zSplit)
+                    }
+                }
+            }
+        }
+
+        func add(_ other: Cube) -> [Cube] {
+            divide(other).filter { !$0.intersects(self) }
+        }
+
+        func subtract(_ other: Cube) -> [Cube] {
+            other.divide(self).filter { !$0.intersects(self) }
+        }
+
+        var volume: Int {
+            x.count * y.count * z.count
+        }
+    }
+
+    mutating func add(_ cube: Cube) {
+        guard let existing = cubes.first(where: { $0.intersects(cube) }) else {
+            cubes.append(cube)
+            return
+        }
+        let toAdd = existing.add(cube)
+        for c in toAdd {
+            // ensure any other intersecting cubes are updated
+            self.add(c)
+        }
+    }
+
+    mutating func subtract(_ cube: Cube) {
+        let r = cubes.subranges(where: { $0.intersects(cube) })
+        let intersecting = Array(cubes[r])
+        cubes.removeSubranges(r)
+        for existing in intersecting {
+            cubes.append(contentsOf: existing.subtract(cube))
+        }
+    }
+}
+
+extension Geometry.Cube : Equatable {
+    static func == (lhs: Geometry.Cube, rhs: Geometry.Cube) -> Bool {
+        lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z
+    }
+}
+
 public struct SubReactor {
 
-    var cubes = Set<Offset3D>()
+    var cubes = Geometry()
 
     let limit = -50..<51
 
@@ -20,17 +124,11 @@ public struct SubReactor {
 
     mutating func boot(steps: [RebootStep]) {
         for step in steps {
-            for x in limit(step.xRange) {
-                for y in limit(step.yRange) {
-                    for z in limit(step.zRange) {
-                        let offset = Offset3D(x: x, y: y, z: z)
-                        if Bool(step.state) {
-                            cubes.insert(offset)
-                        } else {
-                            cubes.remove(offset)
-                        }
-                    }
-                }
+            let cube = Geometry.Cube(x: step.xRange, y: step.yRange, z: step.zRange)
+            if Bool(step.state) {
+                cubes.add(cube)
+            } else {
+                cubes.subtract(cube)
             }
         }
     }
@@ -39,7 +137,14 @@ public struct SubReactor {
         let instructions = initialization.lines().map(RebootStep.init)
         var reactor = SubReactor()
         reactor.boot(steps: instructions)
-        return reactor.cubes.count
+        return reactor.cubes.volume
+    }
+
+    public static func countOn(reboot: String) -> Int {
+        let instructions = reboot.lines().map(RebootStep.init)
+        var reactor = SubReactor()
+        reactor.boot(steps: instructions)
+        return reactor.cubes.volume
     }
 
 }

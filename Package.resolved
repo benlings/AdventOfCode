@@ -27,6 +27,33 @@
           "revision": "0a5bc04095a675662cf24757cc0640aa2204253b",
           "version": "1.0.2"
         }
+      },
+      {
+        "package": "swift-se0270-range-set",
+        "repositoryURL": "https://github.com/apple/swift-se0270-range-set",
+        "state": {
+          "branch": null,
+          "revision": "7d6d7531d40e95f4e1e26f6565265be6df228911",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "swift-se0288-is-power",
+        "repositoryURL": "https://github.com/apple/swift-se0288-is-power",
+        "state": {
+          "branch": null,
+          "revision": "f85a3e4624c5de4294f2644ffb111dbc974d4bab",
+          "version": "2.0.0"
+        }
+      },
+      {
+        "package": "swift-standard-library-preview",
+        "repositoryURL": "https://github.com/apple/swift-standard-library-preview.git",
+        "state": {
+          "branch": null,
+          "revision": "6f72db4c56431d2a2aba0ea41697f60f7cd5917e",
+          "version": "0.0.3"
+        }
       }
     ]
   },

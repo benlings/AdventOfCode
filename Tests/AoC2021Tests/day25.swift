@@ -13,18 +13,15 @@ final class Day25Tests: XCTestCase {
     .vv..>.>v.
     v.v..>>v.v
     ....v..v.>
-    """
+    """.lines()
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        var map = CucumberMap(exampleInput)
+        XCTAssertEqual(map.stepUntilStable(), 58)
     }
 
     func testPart1() {
-        XCTAssertEqual(day25_1(), 0)
-    }
-
-    func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(day25_1(), 367)
     }
 
     func testPart2() {

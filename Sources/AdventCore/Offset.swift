@@ -19,6 +19,19 @@ public struct Offset {
         self = Offset(east: newEast, north: newNorth)
     }
 
+    public func wrapped(size: Offset) -> Offset {
+        var new = self
+        while new.east < 0 {
+            new.east += size.east
+        }
+        while new.north < 0 {
+            new.north += size.east
+        }
+        new.east %= size.east
+        new.north %= size.north
+        return new
+    }
+
     public func manhattanDistance(to other: Offset) -> Int {
         let difference = other - self
         return abs(difference.east) + abs(difference.north)

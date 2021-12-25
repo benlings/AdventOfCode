@@ -41,6 +41,10 @@ public struct Grid<Element> {
         }
     }
 
+    public var size: Offset {
+        return Offset(east: elements.first!.count, north: elements.count)
+    }
+
 }
 
 public extension Grid where Element: RawRepresentable {
@@ -65,6 +69,10 @@ extension Grid: CustomStringConvertible where Element: CustomStringConvertible {
     public var description: String {
         elements.map { $0.map(\.description).joined() }.lines()
     }
+}
+
+extension Grid: Equatable where Element: Equatable {
+    
 }
 
 extension Set where Element == Offset {

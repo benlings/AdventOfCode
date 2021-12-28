@@ -3,16 +3,17 @@ import AdventCore
 import SE0270_RangeSet
 
 struct RebootStep {
-    var xRange: ClosedRange<Int>
-    var yRange: ClosedRange<Int>
-    var zRange: ClosedRange<Int>
+    var cube: Geometry.Cube
     var state: Bit
+
+    var volume: Int {
+        cube.volume * (Bool(state) ? 1 : -1)
+    }
 }
 
 struct Geometry {
 
-    // non intersecting - every Offset3D is within at most one cube
-    var cubes = [Cube]()
+    var cubes = [RebootStep]()
 
     var volume: Int {
         cubes.map(\.volume).sum()
@@ -41,6 +42,24 @@ struct Geometry {
 
         func intersects(_ other: Cube) -> Bool {
             x.overlaps(other.x) && y.overlaps(other.y) && z.overlaps(other.z)
+        }
+
+        func intersection(_ other: Cube) -> Cube? {
+            if intersects(other) {
+                return Cube(x: x.clamped(to: other.x),
+                            y: y.clamped(to: other.y),
+                            z: z.clamped(to: other.z))
+            } else {
+                return nil
+            }
+        }
+
+        func limit(_ region: Cube?) -> Cube? {
+            if let region = region {
+                return intersection(region)
+            } else {
+                return self
+            }
         }
 
         func split(_ other: Cube, axis: Axis3D) -> [ClosedRange<Int>] {
@@ -84,25 +103,53 @@ struct Geometry {
         }
     }
 
-    mutating func add(_ cube: Cube) {
-        guard let existing = cubes.first(where: { $0.intersects(cube) }) else {
-            cubes.append(cube)
-            return
-        }
-        let toAdd = existing.add(cube)
-        for c in toAdd {
-            // ensure any other intersecting cubes are updated
-            self.add(c)
+/*
+ Adding: 1 + 2
+ ======
+ 1 & 2 overlap - add 2 + RebootStep(cube: V, state: .off) = 1 + 2 - (1 ∩ 2)
+ +---------+
+ | 1   +---+--+
+ |     | V | 2|
+ +-----+---+  |
+       +------+
+ Adding to -ve cubes:
+
+ 1 + 2 - (1 ∩ 2)
+ + 3 - (1 ∩ 3) - (2 ∩ 3) + ((1 ∩ 2) ∩ 2)
+
+ Subtracting: 1 - 2
+ ===========
+ - Add RebootStep(cube: V, state: .off) = 1 - (1 ∩ 2)
+ +---------+
+ | 1   +---+--+
+ |     | V | 2|
+ +-----+---+  |
+       +------+
+
+ Subtracting from -ve cubes:
+
+ 1 - (1 ∩ 2)
+ - (1 ∩ 3) + ((1 ∩ 2) ∩ 2)
+
+ */
+
+
+    fileprivate func intersctions(_ cube: Geometry.Cube) -> [RebootStep] {
+        return cubes.compactMap { step -> RebootStep? in
+            guard let i = step.cube.intersection(cube) else { return nil }
+            return RebootStep(cube: i, state: step.state.toggled() )
         }
     }
 
+    mutating func add(_ cube: Cube) {
+        let intersections = intersctions(cube)
+        cubes.append(RebootStep(cube: cube, state: .on))
+        cubes.append(contentsOf: intersections)
+    }
+
     mutating func subtract(_ cube: Cube) {
-        let r = cubes.subranges(where: { $0.intersects(cube) })
-        let intersecting = Array(cubes[r])
-        cubes.removeSubranges(r)
-        for existing in intersecting {
-            cubes.append(contentsOf: existing.subtract(cube))
-        }
+        let intersections = intersctions(cube)
+        cubes.append(contentsOf: intersections)
     }
 }
 
@@ -116,15 +163,9 @@ public struct SubReactor {
 
     var cubes = Geometry()
 
-    let limit = -50..<51
-
-    func limit(_ range: ClosedRange<Int>) -> Range<Int> {
-        (range.lowerBound..<(range.upperBound + 1)).clamped(to: limit)
-    }
-
-    mutating func boot(steps: [RebootStep]) {
+    mutating func boot(steps: [RebootStep], region: Geometry.Cube? = nil) {
         for step in steps {
-            let cube = Geometry.Cube(x: step.xRange, y: step.yRange, z: step.zRange)
+            guard let cube = step.cube.limit(region) else { continue }
             if Bool(step.state) {
                 cubes.add(cube)
             } else {
@@ -135,8 +176,9 @@ public struct SubReactor {
 
     public static func countOn(initialization: String) -> Int {
         let instructions = initialization.lines().map(RebootStep.init)
+        let initializationRegion = Geometry.Cube(x: -50...50, y: -50...50, z: -50...50)
         var reactor = SubReactor()
-        reactor.boot(steps: instructions)
+        reactor.boot(steps: instructions, region: initializationRegion)
         return reactor.cubes.volume
     }
 
@@ -180,7 +222,7 @@ fileprivate extension Scanner {
            let yRange = scanRange(name: "y"),
            let _ = scanString(","),
            let zRange = scanRange(name: "z") {
-            return RebootStep(xRange: xRange, yRange: yRange, zRange: zRange, state: state)
+            return RebootStep(cube: .init(x: xRange, y: yRange, z: zRange), state: state)
         } else {
             return nil
         }
@@ -207,5 +249,5 @@ public func day22_1() -> Int {
 }
 
 public func day22_2() -> Int {
-    0
+    SubReactor.countOn(reboot: day22_input)
 }

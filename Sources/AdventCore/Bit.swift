@@ -27,6 +27,13 @@ public extension Bool {
 
 public extension Bit {
 
+    func toggled() -> Bit {
+        switch self {
+        case .on: return .off
+        case .off: return .on
+        }
+    }
+
     init(_ bool: Bool) {
         self = bool ? .on : .off
     }

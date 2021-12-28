@@ -2,11 +2,15 @@ import Foundation
 import AdventCore
 import PriorityQueueModule
 
-enum Amphipod : Int {
+enum Amphipod : Int, Comparable {
     case amber
     case bronze
     case copper
     case desert
+
+    static func < (lhs: Self, rhs: Self) -> Bool {
+        return lhs.rawValue < rhs.rawValue
+    }
 }
 
 extension Amphipod {
@@ -69,15 +73,12 @@ struct Burrow : Hashable {
         .desert: [9,8,6,4,2,2,3],
     ]
 
-    let sideRoomPositions: [Amphipod : Int] = [
-        .amber: 2,
-        .bronze: 3,
-        .copper: 4,
-        .desert: 5,
-    ]
+    func sideRoomPosition(sideRoom: Amphipod) -> Int {
+        sideRoom.rawValue + 2
+    }
 
     func distanceBetween(sideRoom: Amphipod, hallway: Int) -> Int? {
-        let p = sideRoomPositions[sideRoom]!
+        let p = sideRoomPosition(sideRoom: sideRoom)
         if hallway < p {
             if self.hallway[hallway..<p].contains(where: { $0 != nil }) {
                 return nil
@@ -98,9 +99,9 @@ struct Burrow : Hashable {
 
     func distance(from sideRoom: Amphipod, to destinationSideRoom: Amphipod) -> Int? {
         precondition(sideRoom != destinationSideRoom)
-        let lower = min(sideRoom.rawValue, destinationSideRoom.rawValue) + 2
-        let upper = max(sideRoom.rawValue, destinationSideRoom.rawValue) + 1
-        if self.hallway[lower...upper].contains(where: { $0 != nil }) {
+        let lower = sideRoomPosition(sideRoom: min(sideRoom, destinationSideRoom))
+        let upper = sideRoomPosition(sideRoom: max(sideRoom, destinationSideRoom))
+        if self.hallway[lower..<upper].contains(where: { $0 != nil }) {
             return nil
         }
         return 2 + 2 * abs(sideRoom.rawValue - destinationSideRoom.rawValue)
@@ -246,8 +247,8 @@ public func day23_1() -> Int {
 
 public func day23_2() -> Int {
     let burrow = Burrow(a: [.amber, .desert, .desert, .bronze],
-                   b: [.desert, .copper, .bronze, .copper],
-                   c: [.bronze, .bronze, .amber, .amber],
-                   d: [.desert, .amber, .copper, .copper])
+                        b: [.desert, .copper, .bronze, .copper],
+                        c: [.bronze, .bronze, .amber, .amber],
+                        d: [.desert, .amber, .copper, .copper])
     return burrow.findLeastTotalEnergy()
 }

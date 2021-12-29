@@ -32,14 +32,6 @@ struct Geometry {
         var y: ClosedRange<Int>
         var z: ClosedRange<Int>
 
-        func range(axis: Axis3D) -> ClosedRange<Int> {
-            switch axis {
-            case .x: return x
-            case .y: return y
-            case .z: return z
-            }
-        }
-
         func intersects(_ other: Cube) -> Bool {
             x.overlaps(other.x) && y.overlaps(other.y) && z.overlaps(other.z)
         }
@@ -60,42 +52,6 @@ struct Geometry {
             } else {
                 return self
             }
-        }
-
-        func split(_ other: Cube, axis: Axis3D) -> [ClosedRange<Int>] {
-            let r = range(axis: axis)
-            let o = other.range(axis: axis)
-            assert(r.overlaps(o))
-            var result = [r]
-            if o.lowerBound < r.lowerBound {
-                result.append(o.lowerBound...(r.lowerBound - 1))
-            }
-            if o.upperBound > r.upperBound {
-                result.append((r.upperBound + 1)...o.upperBound)
-            }
-            return result
-        }
-
-        // Returns cubes that make up other, without self
-        func divide(_ other: Cube) -> [Cube] {
-            let xSplits = split(other, axis: .x)
-            let ySplits = split(other, axis: .y)
-            let zSplits = split(other, axis: .z)
-            return xSplits.flatMap { xSplit in
-                ySplits.flatMap { ySplit in
-                    zSplits.map { zSplit in
-                        Cube(x: xSplit, y: ySplit, z: zSplit)
-                    }
-                }
-            }
-        }
-
-        func add(_ other: Cube) -> [Cube] {
-            divide(other).filter { !$0.intersects(self) }
-        }
-
-        func subtract(_ other: Cube) -> [Cube] {
-            other.divide(self).filter { !$0.intersects(self) }
         }
 
         var volume: Int {
@@ -150,12 +106,6 @@ struct Geometry {
     mutating func subtract(_ cube: Cube) {
         let intersections = intersctions(cube)
         cubes.append(contentsOf: intersections)
-    }
-}
-
-extension Geometry.Cube : Equatable {
-    static func == (lhs: Geometry.Cube, rhs: Geometry.Cube) -> Bool {
-        lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z
     }
 }
 

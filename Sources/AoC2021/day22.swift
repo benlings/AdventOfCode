@@ -19,15 +19,8 @@ struct Geometry {
         cubes.map(\.volume).sum()
     }
 
-    class Cube {
+    struct Cube {
 
-        init(x: ClosedRange<Int>, y: ClosedRange<Int>, z: ClosedRange<Int>) {
-            self.x = x
-            self.y = y
-            self.z = z
-        }
-
-        // inclusive (closed) bounds
         var x: ClosedRange<Int>
         var y: ClosedRange<Int>
         var z: ClosedRange<Int>

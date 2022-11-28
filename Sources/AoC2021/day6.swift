@@ -6,7 +6,7 @@ public struct School {
     var fish: Deque<Int>
 
     mutating func tick() {
-        let current = fish.popFirst()!
+        let current = fish.removeFirst()
         fish[6] += current
         fish.append(current)
     }

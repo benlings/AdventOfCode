@@ -1,6 +1,5 @@
 import Foundation
 import AdventCore
-import PriorityQueueModule
 
 fileprivate struct Sizes {
     var width: Int

@@ -25,7 +25,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-algorithms", from: "1.0.0"),
-        .package(url: "https://github.com/AquaGeek/swift-collections", .branch("priority-queue")),
+        .package(url: "https://github.com/apple/swift-collections", .branch("release/1.1")),
         .package(url: "https://github.com/apple/swift-standard-library-preview.git", from: "0.0.1"),
     ],
     targets: [

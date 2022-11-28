@@ -1,6 +1,5 @@
 import Foundation
 import AdventCore
-import PriorityQueueModule
 
 enum Amphipod : Int, Comparable {
     case amber

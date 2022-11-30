@@ -20,6 +20,9 @@ let package = Package(
         .library(
             name: "AoC2021",
             targets: ["AoC2021"]),
+        .library(
+            name: "AoC2022",
+            targets: ["AoC2022"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -63,6 +66,14 @@ let package = Package(
         .testTarget(
             name: "AoC2021Tests",
             dependencies: ["AoC2021"],
+            resources: [.process("Resources")]),
+        .target(
+            name: "AoC2022",
+            dependencies: ["AdventCore"],
+            resources: [.process("Resources")]),
+        .testTarget(
+            name: "AoC2022Tests",
+            dependencies: ["AoC2022"],
             resources: [.process("Resources")]),
     ]
 )

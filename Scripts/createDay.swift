@@ -53,6 +53,10 @@ let sourceURL = URL(fileURLWithPath: "Sources/AoC\(year)/day\(day).swift")
 let testURL = URL(fileURLWithPath: "Tests/AoC\(year)Tests/day\(day).swift")
 let inputURL = URL(fileURLWithPath: "Sources/AoC\(year)/Resources/day\(day).txt")
 
+try? FileManager.default.createDirectory(at: sourceURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+try? FileManager.default.createDirectory(at: testURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+try? FileManager.default.createDirectory(at: inputURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+
 try? source.write(to: sourceURL, atomically: true, encoding: .utf8)
 try? tests.write(to: testURL, atomically: true, encoding: .utf8)
 try? "".write(to: inputURL, atomically: true, encoding: .utf8)

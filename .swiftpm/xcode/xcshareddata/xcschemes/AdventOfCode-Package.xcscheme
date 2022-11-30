@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AdventOfCode_AoC2021"
-               BuildableName = "AdventOfCode_AoC2021"
-               BlueprintName = "AdventOfCode_AoC2021"
+               BlueprintIdentifier = "AdventOfCode_AoC2015"
+               BuildableName = "AdventOfCode_AoC2015"
+               BlueprintName = "AdventOfCode_AoC2015"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AdventOfCode_AoC2015"
-               BuildableName = "AdventOfCode_AoC2015"
-               BlueprintName = "AdventOfCode_AoC2015"
+               BlueprintIdentifier = "AdventOfCode_AoC2021"
+               BuildableName = "AdventOfCode_AoC2021"
+               BlueprintName = "AdventOfCode_AoC2021"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -70,79 +70,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AoC2015"
-               BuildableName = "AoC2015"
-               BlueprintName = "AoC2015"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AoC2020"
-               BuildableName = "AoC2020"
-               BlueprintName = "AoC2020"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AoC2021"
-               BuildableName = "AoC2021"
-               BlueprintName = "AoC2021"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AoC2015Tests"
-               BuildableName = "AoC2015Tests"
-               BlueprintName = "AoC2015Tests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AoC2020Tests"
-               BuildableName = "AoC2020Tests"
-               BlueprintName = "AoC2020Tests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AoC2021Tests"
-               BuildableName = "AoC2021Tests"
-               BlueprintName = "AoC2021Tests"
+               BlueprintIdentifier = "AdventOfCode_AoC2021Tests"
+               BuildableName = "AdventOfCode_AoC2021Tests"
+               BlueprintName = "AdventOfCode_AoC2021Tests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -168,9 +98,79 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AdventOfCode_AoC2021Tests"
-               BuildableName = "AdventOfCode_AoC2021Tests"
-               BlueprintName = "AdventOfCode_AoC2021Tests"
+               BlueprintIdentifier = "AoC2015"
+               BuildableName = "AoC2015"
+               BlueprintName = "AoC2015"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2015Tests"
+               BuildableName = "AoC2015Tests"
+               BlueprintName = "AoC2015Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2020"
+               BuildableName = "AoC2020"
+               BlueprintName = "AoC2020"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2020Tests"
+               BuildableName = "AoC2020Tests"
+               BlueprintName = "AoC2020Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2021"
+               BuildableName = "AoC2021"
+               BlueprintName = "AoC2021"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2021Tests"
+               BuildableName = "AoC2021Tests"
+               BlueprintName = "AoC2021Tests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -182,6 +182,18 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AdventCoreTests"
+               BuildableName = "AdventCoreTests"
+               BlueprintName = "AdventCoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
          <TestableReference
             skipped = "NO"
             parallelizable = "YES"
@@ -215,18 +227,6 @@
                BlueprintIdentifier = "AoC2021Tests"
                BuildableName = "AoC2021Tests"
                BlueprintName = "AoC2021Tests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AdventCoreTests"
-               BuildableName = "AdventCoreTests"
-               BlueprintName = "AdventCoreTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

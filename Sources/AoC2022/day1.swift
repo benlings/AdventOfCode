@@ -4,8 +4,16 @@ import AdventCore
 public struct Inventory {
     var calories: [[Int]]
 
+    func calorieGroups() -> [Int] {
+        calories.map { $0.sum() }
+    }
+
     public func mostCalories() -> Int? {
-        calories.map { $0.sum() }.max()
+        calorieGroups().max()
+    }
+
+    public func mostCalories(count: Int) -> Int? {
+        calorieGroups().max(count: count).sum()
     }
 }
 
@@ -22,5 +30,5 @@ public func day1_1() -> Int {
 }
 
 public func day1_2() -> Int {
-    0
+    Inventory(day1_input).mostCalories(count: 3)!
 }

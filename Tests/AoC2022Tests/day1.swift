@@ -30,10 +30,11 @@ final class Day1Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        let inventory = Inventory(exampleInput)
+        XCTAssertEqual(inventory.mostCalories(count: 3), 45000)
     }
 
     func testPart2() {
-        XCTAssertEqual(day1_2(), 0)
+        XCTAssertEqual(day1_2(), 212489)
     }
 }

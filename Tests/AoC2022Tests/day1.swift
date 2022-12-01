@@ -4,14 +4,29 @@ import AoC2022
 final class Day1Tests: XCTestCase {
 
     let exampleInput = """
+    1000
+    2000
+    3000
+
+    4000
+
+    5000
+    6000
+
+    7000
+    8000
+    9000
+
+    10000
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        let inventory = Inventory(exampleInput)
+        XCTAssertEqual(inventory.mostCalories(), 24000)
     }
 
     func testPart1() {
-        XCTAssertEqual(day1_1(), 0)
+        XCTAssertEqual(day1_1(), 71780)
     }
 
     func testPart2Example() {

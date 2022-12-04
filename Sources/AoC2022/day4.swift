@@ -22,14 +22,6 @@ func parseRow(_ row: String) -> (ClosedRange<Int>, ClosedRange<Int>)? {
     return (first, second)
 }
 
-extension ClosedRange {
-
-    func contains(_ other: ClosedRange<Self.Bound>) -> Bool {
-        lowerBound <= other.lowerBound && upperBound >= other.upperBound
-    }
-
-}
-
 public func countOverlappingSections(_ input: [String]) -> Int {
     input.compactMap(parseRow).count { sections in
         sections.0.contains(sections.1) || sections.1.contains(sections.0)

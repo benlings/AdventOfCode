@@ -17,6 +17,10 @@ public struct Rucksack {
 
     var compartments: (Set<Item>, Set<Item>)
 
+    var contents: Set<Item> {
+        compartments.0.union(compartments.1)
+    }
+
     func errorItems() -> Set<Item> {
         compartments.0.intersection(compartments.1)
     }
@@ -36,6 +40,18 @@ public extension Rucksack {
         }.sum()
     }
 
+    static func sumBadgePriorities(_ lines: [String]) -> Int {
+        lines
+            .map(Rucksack.init)
+            .chunks(ofCount: 3)
+            .map { group in
+                group.map(\.contents)
+                    .reduce { $0.intersection($1) }!
+                    .map(\.priority)
+                    .sum()
+            }.sum()
+    }
+
 }
 
 fileprivate let day3_input = Bundle.module.text(named: "day3").lines()
@@ -45,5 +61,5 @@ public func day3_1() -> Int {
 }
 
 public func day3_2() -> Int {
-    0
+    Rucksack.sumBadgePriorities(day3_input)
 }

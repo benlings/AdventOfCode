@@ -21,10 +21,10 @@ final class Day3Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(Rucksack.sumBadgePriorities(exampleInput), 70)
     }
 
     func testPart2() {
-        XCTAssertEqual(day3_2(), 0)
+        XCTAssertEqual(day3_2(), 2587)
     }
 }

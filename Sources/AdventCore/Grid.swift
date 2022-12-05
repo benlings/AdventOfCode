@@ -75,7 +75,7 @@ extension Grid: Equatable where Element: Equatable {
     
 }
 
-extension Set where Element == Offset {
+extension Set<Offset> {
 
     public var bottomRight: Offset {
         reduce(into: first!) { m, d in
@@ -93,7 +93,7 @@ extension Set where Element == Offset {
 
 }
 
-extension Grid where Element == Bit {
+extension Grid<Bit> {
 
     public init(sparse: Set<Offset>) {
         let origin = sparse.topLeft

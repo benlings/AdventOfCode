@@ -1,6 +1,6 @@
 import Foundation
 
-public extension Array where Element == Bit {
+public extension Array<Bit> {
     func toInt<B : BinaryInteger>() -> B {
         reduce(0 as B) { $0 * 2 + $1.toInt() }
     }

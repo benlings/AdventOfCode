@@ -92,7 +92,7 @@ public extension Offset3D {
 
 }
 
-public extension Set where Element == Offset3D {
+public extension Set<Offset3D> {
     func projection(axis: Axis3D) -> (Int, IndexSet) {
         let p = map { $0[axis: axis] }
         // Ensure IndexSet starts from 0
@@ -101,7 +101,7 @@ public extension Set where Element == Offset3D {
     }
 }
 
-public extension Array where Element == Offset3D {
+public extension Array<Offset3D> {
     func orientations() -> [[Offset3D]] {
         var result = [[Offset3D]]()
         let o = map { $0.orientations() }

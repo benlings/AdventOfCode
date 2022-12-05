@@ -15,7 +15,7 @@ public extension Array {
     }
 }
 
-public extension Array where Element == String {
+public extension Array<String> {
     func lines() -> String {
         joined(separator: "\n")
     }

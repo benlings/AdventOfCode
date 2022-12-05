@@ -5,7 +5,7 @@ public enum Wire : Character {
     case a = "a", b = "b", c = "c", d = "d", e = "e", f = "f", g = "g"
 }
 
-public extension Set where Element == Wire {
+public extension Set<Wire> {
     init(_ description: String) {
         self = description.compactMap(Wire.init(rawValue:)).toSet()
     }

@@ -163,7 +163,7 @@ extension CameraImage {
     }
 }
 
-fileprivate extension Array where Element == [Bool] {
+fileprivate extension [[Bool]] {
 
     mutating func rotateClockwise() {
         let old = self

@@ -13,7 +13,7 @@ final class Day4Tests: XCTestCase {
     """.lines()
 
     func testPart1Example() {
-        XCTAssertEqual(countOverlappingSections(exampleInput), 2)
+        XCTAssertEqual(countContainedSections(exampleInput), 2)
     }
 
     func testPart1() {
@@ -21,10 +21,10 @@ final class Day4Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(countOverlappingSections(exampleInput), 4)
     }
 
     func testPart2() {
-        XCTAssertEqual(day4_2(), 0)
+        XCTAssertEqual(day4_2(), 924)
     }
 }

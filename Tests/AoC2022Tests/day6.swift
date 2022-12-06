@@ -4,14 +4,15 @@ import AoC2022
 final class Day6Tests: XCTestCase {
 
     let exampleInput = """
+    mjqjpqmgbljsphdztnvjfqwrcgsmlb
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(findStartOfPacket(exampleInput), 7)
     }
 
     func testPart1() {
-        XCTAssertEqual(day6_1(), 0)
+        XCTAssertEqual(day6_1(), 1965)
     }
 
     func testPart2Example() {

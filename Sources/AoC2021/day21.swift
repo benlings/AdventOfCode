@@ -51,7 +51,7 @@ public struct DiceGame : Hashable {
             score += position
         }
 
-        func turn<D : Dice>(dice: inout D) -> [Player] {
+        func turn(dice: inout some Dice) -> [Player] {
             dice.roll3().map { roll in
                 var copy = self
                 copy.turn(roll: roll)
@@ -69,7 +69,7 @@ public struct DiceGame : Hashable {
         whichPlayer.toggle()
     }
 
-    func playTurn<D : Dice>(die: inout D) -> [DiceGame] {
+    func playTurn(die: inout some Dice) -> [DiceGame] {
         currentPlayer.turn(dice: &die).map { player in
             var newGame = self
             newGame.currentPlayer = player

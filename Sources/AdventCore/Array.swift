@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Array {
-    mutating func sort<T>(on selector: (Element) -> T) where T : Comparable {
+    mutating func sort(on selector: (Element) -> some Comparable) {
         sort {
             selector($0) < selector($1)
         }

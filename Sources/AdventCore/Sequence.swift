@@ -101,13 +101,13 @@ public extension Sequence {
         Array(self)
     }
 
-    func sorted<T>(on selector: (Element) -> T) -> [Element] where T : Comparable {
+    func sorted(on selector: (Element) -> some Comparable) -> [Element] {
         sorted {
             selector($0) < selector($1)
         }
     }
 
-    func min<T>(on selector: (Element) -> T) -> Element? where T : Comparable {
+    func min(on selector: (Element) -> some Comparable) -> Element? {
         self.min { selector($0) < selector($1) }
     }
 }

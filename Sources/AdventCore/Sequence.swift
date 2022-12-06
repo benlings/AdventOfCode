@@ -62,7 +62,7 @@ public extension Sequence where Element: Numeric {
     }
 }
 
-public extension Sequence where Element == UInt8 {
+public extension Sequence<UInt8> {
     var hex: String {
         return self.reduce("") { string, byte in
             string + String(format: "%02x", byte)
@@ -112,7 +112,7 @@ public extension Sequence {
     }
 }
 
-public extension Sequence where Element == Int {
+public extension Sequence<Int> {
     func toIndexSet() -> IndexSet {
         self.reduce(IndexSet()) {
             $0.union(IndexSet(integer: $1))

@@ -38,7 +38,7 @@ public struct XMASCypher {
         return nil
     }
 
-    public static func encryptionWeakness<C>(_ range: C) -> Int where C : Collection, C.Element == Int {
+    public static func encryptionWeakness(_ range: some Collection<Int>) -> Int {
         range.min()! + range.max()!
     }
 }

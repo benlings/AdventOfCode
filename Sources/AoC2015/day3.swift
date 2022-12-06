@@ -20,7 +20,7 @@ enum Movement : String {
 public struct DeliveryRoute {
     var moves: [Movement]
 
-    static func follow<T : Sequence>(route: T) -> [Offset : Int] where T.Element == Movement {
+    static func follow(route: some Sequence<Movement>) -> [Offset : Int] {
         var position = Offset.zero
         var houses = [position : 1]
         for move in route {

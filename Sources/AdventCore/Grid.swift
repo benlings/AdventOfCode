@@ -48,7 +48,7 @@ public struct Grid<Element> {
 }
 
 public extension Grid where Element: RawRepresentable {
-    init<C>(lines: C) where C: Collection, C.Element: Collection, C.Element.Element == Element.RawValue {
+    init(lines: some Collection<some Collection<Element.RawValue>>) {
         self.elements = lines.map { $0.compactMap(Element.init) }
     }
 }

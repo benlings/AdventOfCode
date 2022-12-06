@@ -151,7 +151,7 @@ extension PriorityQueue {
   ///
   /// - Complexity: O(n), where `n` is the length of `elements`.
   @inlinable
-  public init<S: Sequence>(_ elements: S) where S.Element == Pair {
+  public init(_ elements: some Sequence<Pair>) {
     _base = Heap(
       elements
         .enumerated()

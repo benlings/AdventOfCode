@@ -66,7 +66,7 @@ public extension BinaryInteger {
 
 public extension FixedWidthInteger {
 
-    init<S>(bits: S) where S : Sequence, S.Element == Bool {
+    init(bits: some Sequence<Bool>) {
         self = Self.init(bits.map { $0 ? "1" : "0" }.joined(), radix: 2)!
     }
 

@@ -4,18 +4,18 @@ import AdventCore
 
 fileprivate let day6_input = Bundle.module.text(named: "day6")
 
-public func findStartOfPacket(_ input: String) -> Int? {
-    let windows = Array(input).windows(ofCount: 4)
-    let i = windows.firstIndex { $0.toSet().count == 4 }
+public func findStart(_ input: String, distinct: Int = 4) -> Int? {
+    let windows = Array(input).windows(ofCount: distinct)
+    let i = windows.firstIndex { $0.toSet().count == distinct }
     guard let i else { return nil }
     let start = windows.distance(from: windows.startIndex, to: i)
-    return start + 4
+    return start + distinct
 }
 
 public func day6_1() -> Int {
-    findStartOfPacket(day6_input)!
+    findStart(day6_input)!
 }
 
 public func day6_2() -> Int {
-    0
+    findStart(day6_input, distinct: 14)!
 }

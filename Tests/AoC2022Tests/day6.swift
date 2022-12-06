@@ -8,7 +8,7 @@ final class Day6Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(findStartOfPacket(exampleInput), 7)
+        XCTAssertEqual(findStart(exampleInput), 7)
     }
 
     func testPart1() {
@@ -16,10 +16,10 @@ final class Day6Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(findStart(exampleInput, distinct: 14), 19)
     }
 
     func testPart2() {
-        XCTAssertEqual(day6_2(), 0)
+        XCTAssertEqual(day6_2(), 2773)
     }
 }

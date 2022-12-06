@@ -5,11 +5,10 @@ import AdventCore
 fileprivate let day6_input = Bundle.module.text(named: "day6")
 
 public func findStart(_ input: String, distinct: Int = 4) -> Int? {
-    let windows = Array(input).windows(ofCount: distinct)
-    let i = windows.firstIndex { $0.toSet().count == distinct }
-    guard let i else { return nil }
-    let start = windows.distance(from: windows.startIndex, to: i)
-    return start + distinct
+    Array(input)
+        .windows(ofCount: distinct)
+        .first { $0.toSet().count == distinct }?
+        .endIndex
 }
 
 public func day6_1() -> Int {

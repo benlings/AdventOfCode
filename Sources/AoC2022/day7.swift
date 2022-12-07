@@ -3,48 +3,66 @@ import AdventCore
 
 public class FSNode {
 
-    enum NodeType {
-        case file
-        case directory
+    enum Entry {
+        case file(size: Int)
+        case directory(contents: [String: FSNode])
     }
 
-    init(parent: FSNode? = nil, type: NodeType) {
+    init(parent: FSNode? = nil, fileSize: Int? = nil) {
         self.parent = parent
-        self.type = type
+        self.entry = fileSize.map(Entry.file) ?? .directory(contents: [:])
     }
 
-    let type: NodeType
-    var size: Int = 0
-    var contents: [String: FSNode] = [:]
     weak var parent: FSNode? = nil
+    var entry: Entry
 
-    var totalSize: Int {
-        size + contents.values.map(\.totalSize).sum()
+    subscript(name: String) -> FSNode? {
+        get {
+            switch entry {
+            case .directory(let contents): return contents[name]
+            case .file: return nil
+            }
+        }
+        set {
+            switch entry {
+            case .directory(var contents):
+                contents[name] = newValue
+                entry = .directory(contents: contents)
+            case .file: fatalError()
+            }
+        }
+    }
+
+    var size: Int {
+        switch entry {
+        case .directory(contents: let c): return c.values.map(\.size).sum()
+        case .file(size: let s): return s
+        }
     }
 
     var directories: [FSNode] {
-        if type == .directory {
-            return [self] + contents.values.flatMap(\.directories)
+        if case .directory(contents: let c) = entry {
+            return [self] + c.values.flatMap(\.directories)
         } else {
             return []
         }
     }
 
     public func smallDirectorySizes() -> Int {
-        directories.map(\.totalSize).filter { $0 < 100000 }.sum()
+        directories.map(\.size).filter { $0 < 100000 }.sum()
     }
 
     public func sizeToDelete() -> Int {
-        let currentFreeSpace = 70000000 - totalSize
+        let currentFreeSpace = 70000000 - size
         let toFree = 30000000 - currentFreeSpace
-        return directories.map(\.totalSize).filter { $0 >= toFree }.min()!
+        return directories.map(\.size).filter { $0 >= toFree }.min()!
     }
 
 }
 
 public extension FSNode {
     convenience init(_ input: String) {
-        self.init(parent: nil, type: .directory)
+        self.init(parent: nil)
 
         let scanner = Scanner(string: input)
         var cwd: FSNode = self
@@ -56,20 +74,18 @@ public extension FSNode {
                     switch scanner.scanUpToCharacters(from: .whitespacesAndNewlines) {
                     case "/": cwd = self
                     case "..": cwd = cwd.parent!
-                    case let dir?: cwd = cwd.contents[dir, setDefault: FSNode(parent: cwd, type: .directory)]
+                    case let dir?: cwd = cwd[dir]!
                     default: fatalError("cd must have an argument")
                     }
                 case "ls":
                     // Scan output from ls
                     while !scanner.peekString("$") && !scanner.isAtEnd {
                         if let _ = scanner.scanString("dir"),
-                           let _ = scanner.scanUpToCharacters(from: .whitespacesAndNewlines) {
-                            // Ignore directory, we will create when cd-ing
+                           let dirName = scanner.scanUpToCharacters(from: .whitespacesAndNewlines) {
+                            cwd[dirName] = FSNode(parent: cwd)
                         } else if let size = scanner.scanInt(),
                                   let fileName = scanner.scanUpToCharacters(from: .whitespacesAndNewlines) {
-                            let fsFile = FSNode(parent: cwd, type: .file)
-                            fsFile.size = size
-                            cwd.contents[fileName] = fsFile
+                            cwd[fileName] = FSNode(parent: cwd, fileSize: size)
                         } else {
                             fatalError("unknown ls output")
                         }

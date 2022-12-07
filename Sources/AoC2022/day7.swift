@@ -34,6 +34,12 @@ public class FSNode {
         directories.map(\.totalSize).filter { $0 < 100000 }.sum()
     }
 
+    public func sizeToDelete() -> Int {
+        let currentFreeSpace = 70000000 - totalSize
+        let toFree = 30000000 - currentFreeSpace
+        return directories.map(\.totalSize).filter { $0 >= toFree }.min()!
+    }
+
 }
 
 public extension FSNode {
@@ -85,5 +91,5 @@ public func day7_1() -> Int {
 }
 
 public func day7_2() -> Int {
-    0
+    FSNode(day7_input).sizeToDelete()
 }

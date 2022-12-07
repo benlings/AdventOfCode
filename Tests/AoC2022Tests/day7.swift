@@ -38,10 +38,10 @@ final class Day7Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(FSNode(exampleInput).sizeToDelete(), 24933642)
     }
 
     func testPart2() {
-        XCTAssertEqual(day7_2(), 0)
+        XCTAssertEqual(day7_2(), 4443914)
     }
 }

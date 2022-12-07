@@ -30,7 +30,7 @@ final class Day7Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(smallDirectorySizes(node: buildFileSystem(exampleInput)), 95437)
+        XCTAssertEqual(FSNode(exampleInput).smallDirectorySizes(), 95437)
     }
 
     func testPart1() {

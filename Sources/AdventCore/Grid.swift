@@ -45,6 +45,10 @@ public struct Grid<Element> {
         return Offset(east: elements.first!.count, north: elements.count)
     }
 
+    public func range() -> OffsetRange {
+        OffsetRange(southWest: .zero, northEast: size - Offset(east: 1, north: 1))
+    }
+
 }
 
 public extension Grid where Element: RawRepresentable {

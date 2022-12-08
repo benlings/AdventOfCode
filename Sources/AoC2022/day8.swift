@@ -4,32 +4,31 @@ import AdventCore
 public struct TreeMap {
     var treeHeights: Grid<Int>
 
-    public func visibleTreeCount() -> Int {
-        var count = 0
-        let range = OffsetRange(southWest: .zero, northEast: treeHeights.size - Offset(east: 1, north: 1))
-        let directions = Offset.orthoNeighbours()
-        for offset in range {
-            let height = treeHeights[offset]
-            var isVisible = false
-            for direction in directions {
-                isVisible = true
-                var tree = offset + direction
-                while treeHeights.contains(tree) {
-                    if treeHeights[tree] >= height {
-                        isVisible = false
-                        break
-                    }
-                    tree += direction
-                }
-                if isVisible {
-                    break;
-                }
-            }
-            if isVisible {
-                count += 1
+    func isVisible(offset: Offset) -> Bool {
+        for direction in Offset.orthoNeighbours() {
+            if isVisible(offset: offset, direction: direction) {
+                return true
             }
         }
-        return count
+        return false
+
+    }
+
+    func isVisible(offset: Offset, direction: Offset) -> Bool {
+        let height = treeHeights[offset]
+        var tree = offset + direction
+        while treeHeights.contains(tree) {
+            if treeHeights[tree] >= height {
+                return false
+            }
+            tree += direction
+        }
+        return true
+    }
+
+
+    public func visibleTreeCount() -> Int {
+        treeHeights.range().filter(isVisible(offset:)).count
     }
 }
 

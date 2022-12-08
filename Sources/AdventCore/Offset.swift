@@ -51,10 +51,10 @@ public struct Offset {
 }
 
 extension Offset {
-    static func orthoNeighbours() -> [Offset] {
+    public static func orthoNeighbours() -> [Offset] {
         return [Self(east: -1), Self(north: -1), Self(east: 1), Self(north: 1)]
     }
-    static func neighbours() -> [Offset] {
+    public static func neighbours() -> [Offset] {
         return [
             Self(east: -1, north: -1), Self(north: -1), Self(east: 1, north: -1),
             Self(east: -1, north: 0),                   Self(east: 1, north: 0),

@@ -20,10 +20,10 @@ final class Day8Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(TreeMap(exampleInput).maxScenicScore(), 8)
     }
 
     func testPart2() {
-        XCTAssertEqual(day8_2(), 0)
+        XCTAssertEqual(day8_2(), 314820)
     }
 }

@@ -11,7 +11,6 @@ public struct TreeMap {
             }
         }
         return false
-
     }
 
     func isVisible(offset: Offset, direction: Offset) -> Bool {
@@ -30,6 +29,28 @@ public struct TreeMap {
     public func visibleTreeCount() -> Int {
         treeHeights.range().filter(isVisible(offset:)).count
     }
+
+    public func scenicScore(offset: Offset) -> Int {
+        Offset.orthoNeighbours().map { countVisible(offset: offset, direction: $0) }.product()
+    }
+
+    public func countVisible(offset: Offset, direction: Offset) -> Int {
+        var count = 0
+        let height = treeHeights[offset]
+        var tree = offset + direction
+        while treeHeights.contains(tree) {
+            if treeHeights[tree] >= height {
+                return count + 1
+            }
+            count += 1
+            tree += direction
+        }
+        return count
+    }
+
+    public func maxScenicScore() -> Int {
+        treeHeights.range().map(scenicScore(offset:)).max()!
+    }
 }
 
 public extension TreeMap {
@@ -45,5 +66,5 @@ public func day8_1() -> Int {
 }
 
 public func day8_2() -> Int {
-    0
+    TreeMap(day8_input).maxScenicScore()
 }

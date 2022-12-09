@@ -42,6 +42,17 @@ public struct Offset {
         return abs(difference.east) <= 1 && abs(difference.north) <= 1
     }
 
+    public func unit() -> Self {
+        var copy = self
+        if east != 0 {
+            copy.east /= abs(east)
+        }
+        if north != 0 {
+            copy.north /= abs(north)
+        }
+        return copy
+    }
+
     public func distanceProduct() -> Int {
         return north * east
     }

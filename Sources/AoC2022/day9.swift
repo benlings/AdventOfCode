@@ -28,19 +28,11 @@ extension Motion {
         var visited: Set<Offset> = [ropes.last!]
         for move in input.compactMap(Motion.init) {
             for _ in 1...move.count {
+                ropes[0] += move.direction
                 for (headIndex, tailIndex) in ropes.indices.adjacentPairs() {
-                    if headIndex == 0 {
-                        ropes[headIndex] += move.direction
-                    }
                     if !ropes[headIndex].touching(ropes[tailIndex]) {
-                        var difference = ropes[headIndex] - ropes[tailIndex]
-                        if difference.east != 0 {
-                            difference.east /= abs(difference.east)
-                        }
-                        if difference.north != 0 {
-                            difference.north /= abs(difference.north)
-                        }
-                        ropes[tailIndex] += difference
+                        let difference = ropes[headIndex] - ropes[tailIndex]
+                        ropes[tailIndex] += difference.unit()
                     }
                 }
                 visited.update(with: ropes.last!)

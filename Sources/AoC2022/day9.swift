@@ -23,24 +23,27 @@ extension Motion {
         count = c
     }
 
-    public static func countTailPositions(_ input: some Sequence<String>) -> Int {
-        var head = Offset()
-        var tail = Offset()
-        var visited: Set<Offset> = [tail]
+    public static func countTailPositions(_ input: some Sequence<String>, knots: Int = 2) -> Int {
+        var ropes = Array(repeating: Offset(), count: knots)
+        var visited: Set<Offset> = [ropes.last!]
         for move in input.compactMap(Motion.init) {
             for _ in 1...move.count {
-                head += move.direction
-                if !head.touching(tail) {
-                    var difference = head - tail
-                    if difference.east != 0 {
-                        difference.east /= abs(difference.east)
+                for (headIndex, tailIndex) in ropes.indices.adjacentPairs() {
+                    if headIndex == 0 {
+                        ropes[headIndex] += move.direction
                     }
-                    if difference.north != 0 {
-                        difference.north /= abs(difference.north)
+                    if !ropes[headIndex].touching(ropes[tailIndex]) {
+                        var difference = ropes[headIndex] - ropes[tailIndex]
+                        if difference.east != 0 {
+                            difference.east /= abs(difference.east)
+                        }
+                        if difference.north != 0 {
+                            difference.north /= abs(difference.north)
+                        }
+                        ropes[tailIndex] += difference
                     }
-                    tail += difference
                 }
-                visited.update(with: tail)
+                visited.update(with: ropes.last!)
             }
         }
         return visited.count
@@ -56,5 +59,5 @@ public func day9_1() -> Int {
 }
 
 public func day9_2() -> Int {
-    0
+    Motion.countTailPositions(day9_input, knots: 10)
 }

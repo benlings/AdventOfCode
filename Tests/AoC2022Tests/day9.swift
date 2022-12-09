@@ -23,10 +23,25 @@ final class Day9Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(Motion.countTailPositions(exampleInput, knots: 10), 1)
+    }
+
+    let exampleInput2 = """
+    R 5
+    U 8
+    L 8
+    D 3
+    R 17
+    D 10
+    L 25
+    U 20
+    """.lines()
+
+    func testPart2Example2() {
+        XCTAssertEqual(Motion.countTailPositions(exampleInput2, knots: 10), 36)
     }
 
     func testPart2() {
-        XCTAssertEqual(day9_2(), 0)
+        XCTAssertEqual(day9_2(), 2536)
     }
 }

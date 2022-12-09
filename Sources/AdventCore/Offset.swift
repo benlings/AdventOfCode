@@ -37,6 +37,11 @@ public struct Offset {
         return abs(difference.east) + abs(difference.north)
     }
 
+    public func touching(_ other: Offset) -> Bool {
+        let difference = other - self
+        return abs(difference.east) <= 1 && abs(difference.north) <= 1
+    }
+
     public func distanceProduct() -> Int {
         return north * east
     }

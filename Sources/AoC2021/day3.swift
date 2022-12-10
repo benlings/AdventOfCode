@@ -1,15 +1,6 @@
 import Foundation
 import AdventCore
 
-extension Bit: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .on: return "#"
-        case .off: return "."
-        }
-    }
-}
-
 public struct SubmarineDiagnostic {
     var bits: Grid<Bit>
 

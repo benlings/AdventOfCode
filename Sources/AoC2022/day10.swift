@@ -31,6 +31,7 @@ extension Instruction {
 
 struct CPU {
     var x: Int = 1
+    var screen = Grid(repeating: Bit.off, size: Offset(east: 40, north: 6))
 
     mutating func execute(instructions: some Sequence<Instruction>) -> Int {
         var inspection = [20, 60, 100, 140, 180, 220] as Deque<Int>
@@ -47,7 +48,7 @@ struct CPU {
             }
 
             switch instruction {
-            case .addx(var v): x += v
+            case .addx(let v): x += v
             case .noop: ()
             }
 
@@ -55,11 +56,40 @@ struct CPU {
         }
         return sumSigStrength
     }
+
+    mutating func execute2(instructions: some Sequence<Instruction>) {
+        var cycle = 1
+        for instruction in instructions {
+
+            for _ in 0..<instruction.cycles {
+                let column = (cycle - 1) % screen.size.east
+                let row = (cycle - 1) / screen.size.east
+                let pos = Offset(east: column, north: row)
+
+                if ((x - 1)...(x + 1)).contains(column) {
+                    screen[pos] = .on
+                }
+
+                cycle += 1
+            }
+
+            switch instruction {
+            case .addx(var v): x += v
+            case .noop: ()
+            }
+        }
+    }
 }
 
 public func sumSignalStrengths(_ lines: some Sequence<String>) -> Int {
     var cpu = CPU()
     return cpu.execute(instructions: lines.compactMap(Instruction.init))
+}
+
+public func getScreenContents(_ lines: some Sequence<String>) -> String {
+    var cpu = CPU()
+    cpu.execute2(instructions: lines.compactMap(Instruction.init))
+    return cpu.screen.description
 }
 
 fileprivate let day10_input = Bundle.module.text(named: "day10").lines()
@@ -69,5 +99,6 @@ public func day10_1() -> Int {
 }
 
 public func day10_2() -> Int {
-    0
+    print(getScreenContents(day10_input))
+    return 0
 }

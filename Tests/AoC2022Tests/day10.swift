@@ -161,7 +161,15 @@ final class Day10Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        let expected = """
+        ##..##..##..##..##..##..##..##..##..##..
+        ###...###...###...###...###...###...###.
+        ####....####....####....####....####....
+        #####.....#####.....#####.....#####.....
+        ######......######......######......####
+        #######.......#######.......#######.....
+        """
+        XCTAssertEqual(getScreenContents(exampleInput), expected)
     }
 
     func testPart2() {

@@ -12,13 +12,13 @@ import Collections
 // move 2 from 2 to 1
 // move 1 from 1 to 2
 
-struct Instruction {
+struct CrateInstruction {
     var count: Int
     var from: Int
     var to: Int
 
     init?(_ input: String) {
-        var scanner = Scanner(string: input)
+        let scanner = Scanner(string: input)
         guard let _ = scanner.scanString("move"),
               let count = scanner.scanInt(),
               let _ = scanner.scanString("from"),
@@ -37,7 +37,7 @@ public struct Crates {
 
     var stacks: [Deque<String>]
 
-    mutating func process(instructions: [Instruction], reverse: Bool) {
+    mutating func process(instructions: [CrateInstruction], reverse: Bool) {
         for i in instructions {
             var items = stacks[i.from].prefix(i.count)
             stacks[i.from].removeFirst(i.count)
@@ -77,7 +77,7 @@ public extension Crates {
     static func solve(_ input: String, reverse: Bool = true) -> String {
         let sections = input.groups()
         var crates = Crates(sections[0])
-        let instructions = sections[1].lines().compactMap(Instruction.init)
+        let instructions = sections[1].lines().compactMap(CrateInstruction.init)
         crates.process(instructions: instructions, reverse: reverse)
         return crates.top.joined()
     }

@@ -1,10 +1,71 @@
 import Foundation
 import AdventCore
+import Collections
+
+enum Instruction {
+    case addx(Int)
+    case noop
+
+    var cycles: Int {
+        switch self {
+        case .addx: return 2
+        case .noop: return 1
+        }
+    }
+}
+
+extension Instruction {
+    init?(_ input: String) {
+        let scanner = Scanner(string: input)
+        switch scanner.scanUpToCharacters(from: .whitespaces) {
+        case "addx":
+            guard let v = scanner.scanInt() else { return nil }
+            self = .addx(v)
+        case "noop":
+            self = .noop
+        default:
+            return nil
+        }
+    }
+}
+
+struct CPU {
+    var x: Int = 1
+
+    mutating func execute(instructions: some Sequence<Instruction>) -> Int {
+        var inspection = [20, 60, 100, 140, 180, 220] as Deque<Int>
+        var sumSigStrength = 0
+        var cycle = 1
+        for instruction in instructions {
+
+            guard let nextInspection = inspection.first else {
+                break
+            }
+            if (cycle..<(cycle + instruction.cycles)).contains(nextInspection) {
+                inspection.removeFirst()
+                sumSigStrength += nextInspection * x
+            }
+
+            switch instruction {
+            case .addx(var v): x += v
+            case .noop: ()
+            }
+
+            cycle += instruction.cycles
+        }
+        return sumSigStrength
+    }
+}
+
+public func sumSignalStrengths(_ lines: some Sequence<String>) -> Int {
+    var cpu = CPU()
+    return cpu.execute(instructions: lines.compactMap(Instruction.init))
+}
 
 fileprivate let day10_input = Bundle.module.text(named: "day10").lines()
 
 public func day10_1() -> Int {
-    0
+    sumSignalStrengths(day10_input)
 }
 
 public func day10_2() -> Int {

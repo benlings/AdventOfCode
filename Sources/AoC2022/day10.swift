@@ -30,51 +30,43 @@ extension Instruction {
 }
 
 struct CPU {
+    var cycle: Int = 1
     var x: Int = 1
-    var screen = Grid(repeating: Bit.off, size: Offset(east: 40, north: 6))
 
-    mutating func execute(instructions: some Sequence<Instruction>) -> Int {
-        var inspection = [20, 60, 100, 140, 180, 220] as Deque<Int>
+    mutating func execute1(instructions: some Sequence<Instruction>) -> Int {
+        let inspections = (20...220).striding(by: 40)
         var sumSigStrength = 0
-        var cycle = 1
-        for instruction in instructions {
-
-            guard let nextInspection = inspection.first else {
-                break
+        execute(instructions: instructions) { cpu in
+            if inspections.contains(cpu.cycle) {
+                sumSigStrength += cpu.cycle * cpu.x
             }
-            if (cycle..<(cycle + instruction.cycles)).contains(nextInspection) {
-                inspection.removeFirst()
-                sumSigStrength += nextInspection * x
-            }
-
-            switch instruction {
-            case .addx(let v): x += v
-            case .noop: ()
-            }
-
-            cycle += instruction.cycles
         }
         return sumSigStrength
     }
 
-    mutating func execute2(instructions: some Sequence<Instruction>) {
-        var cycle = 1
+    mutating func execute2(instructions: some Sequence<Instruction>) -> Grid<Bit> {
+        var screen = Grid(repeating: Bit.off, size: Offset(east: 40, north: 6))
+        execute(instructions: instructions) { cpu in
+            let (row, column) = (cpu.cycle - 1).quotientAndRemainder(dividingBy: screen.size.east)
+            let pos = Offset(east: column, north: row)
+
+            if ((cpu.x - 1)...(cpu.x + 1)).contains(column) {
+                screen[pos] = .on
+            }
+        }
+        return screen
+    }
+
+    mutating func execute(instructions: some Sequence<Instruction>, observer: (CPU) -> ()) {
         for instruction in instructions {
 
             for _ in 0..<instruction.cycles {
-                let column = (cycle - 1) % screen.size.east
-                let row = (cycle - 1) / screen.size.east
-                let pos = Offset(east: column, north: row)
-
-                if ((x - 1)...(x + 1)).contains(column) {
-                    screen[pos] = .on
-                }
-
+                observer(self)
                 cycle += 1
             }
 
             switch instruction {
-            case .addx(var v): x += v
+            case .addx(let v): x += v
             case .noop: ()
             }
         }
@@ -83,13 +75,12 @@ struct CPU {
 
 public func sumSignalStrengths(_ lines: some Sequence<String>) -> Int {
     var cpu = CPU()
-    return cpu.execute(instructions: lines.compactMap(Instruction.init))
+    return cpu.execute1(instructions: lines.compactMap(Instruction.init))
 }
 
 public func getScreenContents(_ lines: some Sequence<String>) -> String {
     var cpu = CPU()
-    cpu.execute2(instructions: lines.compactMap(Instruction.init))
-    return cpu.screen.description
+    return cpu.execute2(instructions: lines.compactMap(Instruction.init)).description
 }
 
 fileprivate let day10_input = Bundle.module.text(named: "day10").lines()

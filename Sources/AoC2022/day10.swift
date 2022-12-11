@@ -98,7 +98,6 @@ public func day10_1() -> Int {
     sumSignalStrengths(day10_input)
 }
 
-public func day10_2() -> Int {
-    print(getScreenContents(day10_input))
-    return 0
+public func day10_2() -> String {
+    getScreenContents(day10_input)
 }

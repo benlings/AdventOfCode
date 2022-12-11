@@ -23,25 +23,37 @@ public struct Monkey {
     let num: Int
     var items: Deque<Item>
     let operation: (Int) -> Int
-    let test: (Int) -> Bool
+    let testDivisor: Int
     let destination: (true: Int, false: Int)
 
-    mutating func takeTurn() -> [(destination: Int, item: Item)] {
+    mutating func takeTurn(_ reduceSize: (Int) -> Int) -> [(destination: Int, item: Item)] {
         var result = [(Int, Item)]()
         while let item = items.popFirst() {
-            item.worryLevel = operation(item.worryLevel) / 3
-            let testResult = test(item.worryLevel)
+            item.worryLevel = reduceSize(operation(item.worryLevel))
+            let testResult = item.worryLevel.isMultiple(of: testDivisor)
             result.append((destination: testResult ? destination.true : destination.false, item: item))
         }
         return result
     }
 
-    public static func monkeyBusiness(_ input: String) -> Int {
+    public static func monkeyBusiness1(_ input: String) -> Int {
+        monkeyBusiness(input, rounds: 20) { _ in { $0 / 3 } }
+    }
+
+    public static func monkeyBusiness2(_ input: String) -> Int {
+        monkeyBusiness(input, rounds: 10000) { monkeys in
+            let commonModulus = monkeys.map(\.testDivisor).product()
+            return { $0 % commonModulus }
+        }
+    }
+
+    public static func monkeyBusiness(_ input: String, rounds: Int, reduceSizeFactory: ([Monkey]) -> (Int) -> Int) -> Int {
         var monkeys = input.groups().compactMap(Monkey.init)
+        let reduceSize = reduceSizeFactory(monkeys)
         var inspectionCounts = Array(repeating: 0, count: monkeys.count)
-        for _ in 0..<20 {
+        for _ in 0..<rounds {
             for i in monkeys.indices {
-                let thrownItems = monkeys[i].takeTurn()
+                let thrownItems = monkeys[i].takeTurn(reduceSize)
                 inspectionCounts[i] += thrownItems.count
                 for (dest, item) in thrownItems {
                     monkeys[dest].items.append(item)
@@ -90,7 +102,7 @@ extension Monkey {
             default: return nil
             }
         }
-        test = { $0 % testDivisor == 0 }
+        self.testDivisor = testDivisor
         destination = (true: trueDestination, false: falseDestination)
     }
 }
@@ -99,9 +111,9 @@ extension Monkey {
 fileprivate let day11_input = Bundle.module.text(named: "day11")
 
 public func day11_1() -> Int {
-    Monkey.monkeyBusiness(day11_input)
+    Monkey.monkeyBusiness1(day11_input)
 }
 
 public func day11_2() -> Int {
-    0
+    Monkey.monkeyBusiness2(day11_input)
 }

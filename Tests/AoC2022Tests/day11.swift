@@ -34,7 +34,7 @@ final class Day11Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(Monkey.monkeyBusiness(exampleInput), 10605)
+        XCTAssertEqual(Monkey.monkeyBusiness1(exampleInput), 10605)
     }
 
     func testPart1() {
@@ -42,10 +42,10 @@ final class Day11Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(Monkey.monkeyBusiness2(exampleInput), 2713310158)
     }
 
     func testPart2() {
-        XCTAssertEqual(day11_2(), 0)
+        XCTAssertEqual(day11_2(), 25272176808)
     }
 }

@@ -51,6 +51,15 @@ public struct Grid<Element> {
 
 }
 
+public extension Grid where Element: Equatable {
+    func firstIndex(of element: Element) -> Offset? {
+        guard let rowIndex = elements.firstIndex(where: { $0.contains(element) }),
+              let columnIndex = elements[rowIndex].firstIndex(of: element)
+        else { return nil }
+        return Offset(east: columnIndex, north: rowIndex)
+    }
+}
+
 public extension Grid where Element: RawRepresentable {
     init(lines: some Collection<some Collection<Element.RawValue>>) {
         self.elements = lines.map { $0.compactMap(Element.init) }

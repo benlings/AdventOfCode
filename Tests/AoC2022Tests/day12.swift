@@ -12,11 +12,11 @@ final class Day12Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(HeightMap(exampleInput).findShortestPath(), 31)
     }
 
     func testPart1() {
-        XCTAssertEqual(day12_1(), 0)
+        XCTAssertEqual(day12_1(), 520)
     }
 
     func testPart2Example() {

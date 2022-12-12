@@ -20,10 +20,10 @@ final class Day12Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(HeightMap(exampleInput).findAnyShortestPath(), 29)
     }
 
     func testPart2() {
-        XCTAssertEqual(day12_2(), 0)
+        XCTAssertEqual(day12_2(), 508)
     }
 }

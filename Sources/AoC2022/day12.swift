@@ -19,7 +19,17 @@ public struct HeightMap {
     }
 
     public func findShortestPath() -> Int {
+        findShortestPath(start: start)!
+    }
 
+    public func findAnyShortestPath() -> Int {
+        map.range()
+            .filter { height($0) == 0 }
+            .compactMap { findShortestPath(start: $0) }
+            .min()!
+    }
+
+    func findShortestPath(start: Offset) -> Int? {
         findLowestRiskPath(start: start, end: end, risk: { current, neighbour in
             if map.contains(neighbour) {
                 let currentHeight = height(current)
@@ -27,7 +37,7 @@ public struct HeightMap {
                 return neighbourHeight <= currentHeight + 1 ? 1 : nil
             }
             return nil
-        })!
+        })
     }
 
     func findLowestRiskPath(start: Offset, end: Offset, risk: (Offset, Offset) -> Int?) -> Int? {
@@ -69,5 +79,5 @@ public func day12_1() -> Int {
 }
 
 public func day12_2() -> Int {
-    0
+    HeightMap(day12_input).findAnyShortestPath()
 }

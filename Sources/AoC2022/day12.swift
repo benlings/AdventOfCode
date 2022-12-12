@@ -23,10 +23,15 @@ public struct HeightMap {
     }
 
     public func findAnyShortestPath() -> Int {
-        map.range()
-            .filter { height($0) == 0 }
-            .compactMap { findShortestPath(start: $0) }
-            .min()!
+        let pathLengths = findPathLengths(start: end) { current, neighbour in
+            if map.contains(neighbour) {
+                let currentHeight = height(current)
+                let neighbourHeight = height(neighbour)
+                return neighbourHeight >= currentHeight - 1 ? 1 : nil
+            }
+            return nil
+        }
+        return map.range().filter { map[$0] == "a" }.compactMap { pathLengths[$0] }.min()!
     }
 
     func findShortestPath(start: Offset) -> Int? {
@@ -58,6 +63,23 @@ public struct HeightMap {
             }
         }
         return distances[end]
+    }
+
+    func findPathLengths(start: Offset, distance: (Offset, Offset) -> Int?) -> [Offset : Int] {
+        var distances = [start: 0]
+        var toVisit = [start: 0] as PriorityQueue
+        while let current = toVisit.popMin() {
+            let currentDistance = distances[current, default: .max]
+            for neighbour in current.orthoNeighbours() {
+                guard let neighbourDistance = distance(current, neighbour) else { continue }
+                let alt = currentDistance + neighbourDistance
+                if alt < distances[neighbour, default: .max] {
+                    distances[neighbour] = alt
+                    toVisit.insert(neighbour, priority: alt)
+                }
+            }
+        }
+        return distances
     }
 }
 

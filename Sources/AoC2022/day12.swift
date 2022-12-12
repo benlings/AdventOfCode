@@ -30,7 +30,7 @@ public struct HeightMap {
     }
 
     func findShortestPath(start: Offset) -> Int? {
-        findLowestRiskPath(start: start, end: end, risk: { current, neighbour in
+        findShortestPath(start: start, end: end, distance: { current, neighbour in
             if map.contains(neighbour) {
                 let currentHeight = height(current)
                 let neighbourHeight = height(neighbour)
@@ -40,24 +40,24 @@ public struct HeightMap {
         })
     }
 
-    func findLowestRiskPath(start: Offset, end: Offset, risk: (Offset, Offset) -> Int?) -> Int? {
-        var risks = [start: 0]
+    func findShortestPath(start: Offset, end: Offset, distance: (Offset, Offset) -> Int?) -> Int? {
+        var distances = [start: 0]
         var toVisit = [start: 0] as PriorityQueue
         while let current = toVisit.popMin() {
             if current == end {
-                return risks[current]
+                return distances[current]
             }
-            let currentRisk = risks[current, default: .max]
+            let currentDistance = distances[current, default: .max]
             for neighbour in current.orthoNeighbours() {
-                guard let neighbourRisk = risk(current, neighbour) else { continue }
-                let alt = currentRisk + neighbourRisk
-                if alt < risks[neighbour, default: .max] {
-                    risks[neighbour] = alt
+                guard let neighbourDistance = distance(current, neighbour) else { continue }
+                let alt = currentDistance + neighbourDistance
+                if alt < distances[neighbour, default: .max] {
+                    distances[neighbour] = alt
                     toVisit.insert(neighbour, priority: alt)
                 }
             }
         }
-        return risks[end]
+        return distances[end]
     }
 }
 

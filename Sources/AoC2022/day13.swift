@@ -23,7 +23,7 @@ fileprivate extension Scanner {
     }
 }
 
-enum PacketData {
+enum PacketData : Equatable {
     case integer(Int)
     case list([PacketData])
 }
@@ -72,6 +72,16 @@ public struct DistressSignal {
             .map { $0.offset + 1 }
             .sum()
     }
+
+    public func decoderKey() -> Int {
+        var packetsWithDividers = packets.flatMap { [$0.0, $0.1] }
+        let divider1 = PacketData("[[2]]")!
+        let divider2 = PacketData("[[6]]")!
+        packetsWithDividers.append(divider1)
+        packetsWithDividers.append(divider2)
+        packetsWithDividers.sort()
+        return (packetsWithDividers.firstIndex(of: divider1)! + 1) * (packetsWithDividers.firstIndex(of: divider2)! + 1)
+    }
 }
 
 public extension DistressSignal {
@@ -91,5 +101,5 @@ public func day13_1() -> Int {
 }
 
 public func day13_2() -> Int {
-    0
+    DistressSignal(day13_input).decoderKey()
 }

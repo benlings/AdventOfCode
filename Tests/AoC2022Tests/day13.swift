@@ -38,10 +38,10 @@ final class Day13Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(DistressSignal(exampleInput).decoderKey(), 140)
     }
 
     func testPart2() {
-        XCTAssertEqual(day13_2(), 0)
+        XCTAssertEqual(day13_2(), 22344)
     }
 }

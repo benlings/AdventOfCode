@@ -4,7 +4,6 @@ import SE0270_RangeSet
 
 fileprivate extension Scanner {
     func scanPacketData() -> PacketData? {
-        let i = currentIndex
         if let _ = scanString("[") {
             var contents = [PacketData]()
             while let d = scanPacketData() {

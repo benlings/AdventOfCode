@@ -8,6 +8,12 @@
 import Foundation
 
 public struct Line {
+
+    public init(start: Offset, end: Offset) {
+        self.start = start
+        self.end = end
+    }
+
     var start: Offset
     var end: Offset
 

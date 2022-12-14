@@ -5,17 +5,23 @@ import Algorithms
 public struct CaveStructure {
     var rocks: Set<Offset>
     var sand: Set<Offset> = []
+    let bottom: Int
+    let hasFloor: Bool
+
+    func isBocked(_ pos: Offset) -> Bool {
+        rocks.contains(pos) || sand.contains(pos) || (hasFloor && pos.north >= bottom)
+    }
 
     static let moves = [Offset(east: 0, north: 1), Offset(east: -1, north: 1), Offset(east: 1, north: 1)]
 
     mutating func addSandGrain(startLocation: Offset) -> Bool {
-        let bottom = rocks.bottomRight.north
         var pos = startLocation
+        if isBocked(pos) { return false }
         while pos.north < bottom {
             var atRest = true
             for move in Self.moves {
                 let next = pos + move
-                if !(rocks.contains(next) || sand.contains(next)) {
+                if !isBocked(next) {
                     // Move succeeded
                     pos = next
                     atRest = false
@@ -40,13 +46,15 @@ public struct CaveStructure {
 }
 
 public extension CaveStructure {
-    init(_ input: some Sequence<String>) {
+    init(_ input: some Sequence<String>, hasFloor: Bool = false) {
         rocks = []
         for line in input {
             let scanner = Scanner(string: line)
             let path = scanner.scanLineSequence()
             rocks.formUnion(path.flatMap(\.points))
         }
+        self.hasFloor = hasFloor
+        self.bottom = rocks.bottomRight.north + (hasFloor ? 2 : 0)
     }
 }
 extension Scanner {
@@ -68,5 +76,5 @@ public func day14_1() -> Int {
 }
 
 public func day14_2() -> Int {
-    0
+    CaveStructure(day14_input, hasFloor: true).countSand()
 }

@@ -17,10 +17,10 @@ final class Day14Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(CaveStructure(exampleInput, hasFloor: true).countSand(), 93)
     }
 
     func testPart2() {
-        XCTAssertEqual(day14_2(), 0)
+        XCTAssertEqual(day14_2(), 26729)
     }
 }

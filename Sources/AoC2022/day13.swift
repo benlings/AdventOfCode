@@ -39,24 +39,18 @@ extension PacketData : Comparable {
     static func < (lhs: PacketData, rhs: PacketData) -> Bool {
         switch (lhs, rhs) {
         case (.integer(let l), .integer(let r)): return l < r
-        case (.list(let l), .list(let r)):
-            for i in 0..<(max(l.count, r.count)) {
-                if i >= l.count {
-                    return true
-                }
-                if i >= r.count {
-                    return false
-                }
-                if l[i] < r[i] {
-                    return true
-                }
-                if l[i] > r[i] {
-                    return false
-                }
+        case (.list(let lList), .list(let rList)):
+            for (l, r) in zip(lList, rList) {
+                // Exit early if not equal
+                if l < r { return true }
+                if l > r { return false }
             }
+            // All corresponding items in list up to here are equal
+            if lList.count < rList.count { return true }
+            // Either r list is longer, or both equal size and equal elements
             return false
-        case (.integer(let l), .list(let r)): return .list([.integer(l)]) < .list(r)
-        case (.list(let l), .integer(let r)): return .list(l) < .list([.integer(r)])
+        case (.integer, .list): return .list([lhs]) < rhs
+        case (.list, .integer): return lhs < .list([rhs])
         }
     }
 }

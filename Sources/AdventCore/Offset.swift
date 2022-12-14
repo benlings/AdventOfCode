@@ -151,3 +151,14 @@ extension OffsetRange : Collection {
     }
 
 }
+
+public extension Scanner {
+    func scanOffset() -> Offset? {
+        guard let east = scanInt(),
+              let _ = scanString(","),
+              let north = scanInt() else {
+            return nil
+        }
+        return Offset(east: east, north: north)
+    }
+}

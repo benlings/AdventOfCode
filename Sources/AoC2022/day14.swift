@@ -14,22 +14,22 @@ public struct CaveStructure {
 
     static let moves = [Offset(east: 0, north: 1), Offset(east: -1, north: 1), Offset(east: 1, north: 1)]
 
-    mutating func addSandGrain(startLocation: Offset) -> Bool {
-        var pos = startLocation
-        if isBocked(pos) { return false }
-        while pos.north < bottom {
+    mutating func addSandGrain(startLocations: inout [Offset]) -> Bool {
+        while let pos = startLocations.last,
+              pos.north < bottom {
             var atRest = true
             for move in Self.moves {
                 let next = pos + move
                 if !isBocked(next) {
                     // Move succeeded
-                    pos = next
+                    startLocations.append(next)
                     atRest = false
                     break
                 }
             }
             if atRest {
                 sand.insert(pos)
+                startLocations.removeLast()
                 return true
             }
         }
@@ -38,7 +38,8 @@ public struct CaveStructure {
 
     public func countSand() -> Int {
         var copy = self
-        while copy.addSandGrain(startLocation: Offset(east: 500, north: 0)) {
+        var startLocations = [Offset(east: 500, north: 0)]
+        while copy.addSandGrain(startLocations: &startLocations) {
 
         }
         return copy.sand.count

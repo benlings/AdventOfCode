@@ -16,15 +16,34 @@ public struct BeaconSensor {
 
     public static func countNonBeacons(_ input: some Sequence<String>, row: Int) -> Int {
         let sensors = input.compactMap(Self.init).filter { $0.rowRange.contains(row) }
-        let beacons = sensors.filter { $0.closestBeacon.north == row }
+        let knownBeacons = sensors.filter { $0.closestBeacon.north == row }.map(\.closestBeacon.east).toSet()
         var nonBeacons = Set<Int>()
         for sensor in sensors {
             nonBeacons.formUnion(sensor.columnRange(row: row))
         }
-        for sensor in beacons {
-            nonBeacons.remove(sensor.closestBeacon.east)
-        }
+        nonBeacons.subtract(knownBeacons)
         return nonBeacons.count
+    }
+
+    public static func findBeaconTuningFrequency(_ input: some Sequence<String>, range: ClosedRange<Int>) -> Int {
+        let sensors = input.compactMap(Self.init)
+        for row in range {
+            let rowRanges = sensors
+                .lazy
+                .filter { $0.rowRange.contains(row) }
+                .map { $0.columnRange(row: row) }
+                .sorted(on: \.lowerBound)
+            var col = range.lowerBound
+            for r in rowRanges {
+                if r.contains(col) {
+                    col = r.upperBound + 1
+                }
+            }
+            if col <= range.upperBound {
+                return col * 4000000 + row
+            }
+        }
+        return 0
     }
 }
 
@@ -55,5 +74,5 @@ public func day15_1() -> Int {
 }
 
 public func day15_2() -> Int {
-    0
+    BeaconSensor.findBeaconTuningFrequency(day15_input, range: 0...4000000)
 }

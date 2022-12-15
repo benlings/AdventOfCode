@@ -7,6 +7,10 @@ public struct BeaconSensor {
 
     var distance: Int { sensor.manhattanDistance(to: closestBeacon) }
 
+    func canDetect(_ point: Offset) -> Bool {
+        sensor.manhattanDistance(to: point) <= distance
+    }
+
     var rowRange: ClosedRange<Int> { (sensor.north - distance)...(sensor.north + distance) }
 
     func columnRange(row: Int) -> ClosedRange<Int> {
@@ -27,23 +31,34 @@ public struct BeaconSensor {
 
     public static func findBeaconTuningFrequency(_ input: some Sequence<String>, range: ClosedRange<Int>) -> Int {
         let sensors = input.compactMap(Self.init)
-        for row in range {
-            let rowRanges = sensors
-                .lazy
-                .filter { $0.rowRange.contains(row) }
-                .map { $0.columnRange(row: row) }
-                .sorted(on: \.lowerBound)
-            var col = range.lowerBound
-            for r in rowRanges {
-                if r.contains(col) {
-                    col = r.upperBound + 1
-                }
-            }
-            if col <= range.upperBound {
-                return col * 4000000 + row
-            }
+
+        // Only one sensor location, so it must be immediately adjacent to boundary of sensor visibility
+        // Find all intersections of the lines just outside the boundaries and then filter the ones that aren't
+        // detectable by any sensor
+        let lines = sensors.flatMap { s -> [(m: Int, c: Int)] in
+            [ // y = mx + c => c = y - mx
+                (m: 1, c: s.sensor.north - s.sensor.east + s.distance + 1),
+                (m: 1, c: s.sensor.north - s.sensor.east - s.distance - 1),
+                (m: -1, c: s.sensor.north + s.sensor.east + s.distance + 1),
+                (m: -1, c: s.sensor.north + s.sensor.east - s.distance - 1),
+            ]
         }
-        return 0
+
+        // Intersections:
+        // m1 x + c1 = m2 x + c2 => x = (c2 - c1)/(m1 - m2)
+        // y = m1 x + c1
+        let intersections = lines.permutations(ofCount: 2).compactMap { combo -> Offset? in
+            let (m1, c1) = combo[0], (m2, c2) = combo[1]
+            if m1 == m2 { return nil }
+            let x = (c2 - c1)/(m1 - m2)
+            let y = (m1 * (c2 - c1))/(m1 - m2) + c1
+            return range.contains(x) && range.contains(y) ? Offset(east: x, north: y) : nil
+        }.toSet()
+
+        let point = intersections.first { point in
+            !sensors.contains { s in s.canDetect(point) }
+        }!
+        return point.east * 4_000_000 + point.north
     }
 }
 

@@ -25,7 +25,7 @@ final class Day16Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(ValveScan(exampleInput, withElephant: true).maxPressureRelease(), 1707)
     }
 
     func testPart2() {

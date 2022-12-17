@@ -6,4 +6,13 @@ public extension Scanner {
         defer { currentIndex = i }
         return scanString(s) != nil
     }
+
+    func scanSequence<T>(separator: String, scanElement: (Scanner) -> T?) -> [T] {
+        var result = [T]()
+        while let r = scanElement(self) {
+            result.append(r)
+            _ = scanString(separator)
+        }
+        return result
+    }
 }

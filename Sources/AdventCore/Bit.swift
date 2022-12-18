@@ -53,5 +53,9 @@ extension Bit: CustomStringConvertible {
         case .off: return "."
         }
     }
+
+    public init(pixel: Character) {
+        self = Self(pixel == "#")
+    }
 }
 

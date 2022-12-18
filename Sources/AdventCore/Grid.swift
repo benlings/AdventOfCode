@@ -114,13 +114,13 @@ extension Grid<Bit> {
         sparse.forEach { self[$0 - origin] = .on }
     }
 
-    public func toSparse() -> Set<Offset> {
+    public func toSparse(base: Offset = .zero) -> Set<Offset> {
         var sparse = Set<Offset>()
         for row in rowIndices {
             for column in columnIndices {
                 let offset = Offset(east: column, north: row)
                 if self[offset] == .on {
-                    sparse.insert(offset)
+                    sparse.insert(base + offset)
                 }
             }
         }

@@ -4,14 +4,17 @@ import AoC2022
 final class Day17Tests: XCTestCase {
 
     let exampleInput = """
+    >>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        var chamber = Chamber(exampleInput)
+        chamber.simulate(count: 2022)
+        XCTAssertEqual(chamber.maxHeight, 3068)
     }
 
     func testPart1() {
-        XCTAssertEqual(day17_1(), 0)
+        XCTAssertEqual(day17_1(), 3224)
     }
 
     func testPart2Example() {

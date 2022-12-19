@@ -48,9 +48,15 @@ public struct Chamber {
 
     var jets: [Jet]
     var rocks = Set<Offset>()
-    public private(set) var maxHeight = 0
+    var maxHeight = 0
 
-    public mutating func simulate(count: Int) {
+    public func maxHeight(count: Int) -> Int {
+        var copy = self
+        copy.simulate(count: count)
+        return copy.maxHeight
+    }
+
+    mutating func simulate(count: Int) {
         var jetIterator = jets.cycled().makeIterator()
         var shapesIterator = Rock.shapes.makeIterator()
         for _ in 0..<count {
@@ -103,9 +109,7 @@ public extension Chamber {
 fileprivate let day17_input = Bundle.module.text(named: "day17")
 
 public func day17_1() -> Int {
-    var chamber = Chamber(day17_input)
-    chamber.simulate(count: 2022)
-    return chamber.maxHeight
+    Chamber(day17_input).maxHeight(count: 2022)
 }
 
 public func day17_2() -> Int {

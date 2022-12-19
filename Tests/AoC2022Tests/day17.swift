@@ -8,9 +8,7 @@ final class Day17Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        var chamber = Chamber(exampleInput)
-        chamber.simulate(count: 2022)
-        XCTAssertEqual(chamber.maxHeight, 3068)
+        XCTAssertEqual(Chamber(exampleInput).maxHeight(count: 2022), 3068)
     }
 
     func testPart1() {

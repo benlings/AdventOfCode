@@ -35,7 +35,7 @@ struct Rock {
     ##
     """, conversion: Bit.init(pixel:))
 
-    static let shapes = [shape1, shape2, shape3, shape4, shape5].cycled()
+    static let shapes = [shape1, shape2, shape3, shape4, shape5]
 
 }
 
@@ -58,16 +58,26 @@ public struct Chamber {
 
     mutating func simulate(count: Int) {
         var jetIterator = jets.cycled().makeIterator()
-        var shapesIterator = Rock.shapes.makeIterator()
+        var shapesIterator = Rock.shapes.cycled().makeIterator()
         for _ in 0..<count {
             var rock = Rock(shape: shapesIterator.next()!,
                             location: Offset(east: 2, north: maxHeight + 3))
             repeat {
-                move(rock: &rock, direction: jetIterator.next()!)
+                let jet = jetIterator.next()!
+                move(rock: &rock, direction: jet)
             } while moveDown(rock: &rock)
-            rocks.formUnion(rock.pattern())
-            maxHeight = max(maxHeight, rock.location.north + rock.shape.size.north)
+            collide(rock: rock)
         }
+    }
+
+    mutating func collide(rock: Rock) {
+        let pattern = rock.pattern()
+        rocks.formUnion(pattern)
+        maxHeight = max(maxHeight, rock.location.north + rock.shape.size.north)
+    }
+
+    func noCollision(rock: Rock) -> Bool {
+        maxHeight <= rock.location.north || rocks.isDisjoint(with: rock.pattern())
     }
 
     func move(rock: inout Rock, direction: Jet) {
@@ -79,7 +89,7 @@ public struct Chamber {
         } else {
             return
         }
-        if maxHeight < moved.location.north || rocks.isDisjoint(with: moved.pattern()) {
+        if noCollision(rock: moved) {
             rock = moved
         }
     }
@@ -91,7 +101,7 @@ public struct Chamber {
         } else {
             return false
         }
-        if maxHeight < moved.location.north || rocks.isDisjoint(with: moved.pattern()) {
+        if noCollision(rock: moved) {
             rock = moved
             return true
         }

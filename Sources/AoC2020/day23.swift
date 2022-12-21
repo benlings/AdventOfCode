@@ -3,67 +3,44 @@ import AdventCore
 
 class CircularList<Element : Hashable> {
 
-    class Node {
-        let value: Element
-        unowned let list: CircularList
-        var next: Node!
-        internal init(_ value: Element, _ list: CircularList) {
-            self.value = value
-            self.list = list
-            list.nodeLookup[value] = self
-        }
-
-        func append(_ node: Node) {
-            node.next = next
-            next = node
-        }
-
-        func append<S : BidirectionalCollection>(contentsOf elements: S) where S.Element == Element {
-            for e in elements.reversed() {
-                append(Node(e, list))
-            }
-        }
-
-        func append<S : BidirectionalCollection>(nodes: S) where S.Element == Node {
-            for n in nodes.reversed() {
-                append(n)
-            }
-        }
-
-        func removeAfter(count: Int) -> [Node] {
-            var result = [Node]()
-            var e = self
-            for _ in 0..<count {
-                let nextNode: Node = e.next
-                assert(nextNode !== self)
-                result.append(nextNode)
-                e = nextNode
-            }
-            next = e.next
-            return result
-        }
-
-        func prefix(_ count: Int) -> [Element] {
-            var result = [Element]()
-            var e = self
-            for _ in 0..<count {
-                let nextNode: Node = e.next
-                assert(nextNode !== self)
-                result.append(nextNode.value)
-                e = nextNode
-            }
-            return result
-        }
-
+    func append(_ node: Element) {
+        nextLookup[node] = nextLookup[current]
+        nextLookup[current] = node
     }
 
-    var current: Node!
-    var nodeLookup: [Element : Node] = [:]
-
-    init(single: Element) {
-        current = Node(single, self)
-        current.next = current
+    func append<S : BidirectionalCollection>(contentsOf elements: S) where S.Element == Element {
+        for e in elements.reversed() {
+            append(e)
+        }
     }
+
+    func removeAfter(count: Int) -> [Element] {
+        var result = [Element]()
+        var e = current
+        for _ in 0..<count {
+            let next = nextLookup[e]!
+            result.append(next)
+            e = next
+        }
+        nextLookup[current] = nextLookup[e]
+        return result
+    }
+
+    func prefix(_ count: Int) -> [Element] {
+        var result = [Element]()
+        var e = self
+        for _ in 0..<count {
+            let nextNode: Node = e.next
+            assert(nextNode !== self)
+            result.append(nextNode.value)
+            e = nextNode
+        }
+        return result
+    }
+
+    var nextLookup: [Element : Element] = [:]
+
+    var current: Element
 
 }
 
@@ -88,8 +65,8 @@ public struct CupGame {
      * The crab selects a new current cup: the cup which is immediately clockwise of the current cup.
      */
     mutating func playMove() {
-        let currentCup = cups.current.value
-        let pickedUp = cups.current.removeAfter(count: 3)
+        let currentCup = cups.current
+        let pickedUp = cups.removeAfter(count: 3)
         var destinationCup = decrement(cup: currentCup)
         let values = pickedUp.map(\.value)
         while values.contains(destinationCup) {

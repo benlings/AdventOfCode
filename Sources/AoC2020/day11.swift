@@ -20,6 +20,15 @@ public struct WaitingArea : Equatable {
         seats.indices
     }
 
+    subscript(position: Offset) -> Seat {
+        get {
+            self[position.east, position.north]
+        }
+        set {
+            self[position.east, position.north] = newValue
+        }
+    }
+
     subscript(x: Int, y: Int) -> Seat {
         get {
             if columnIndices.contains(y),
@@ -69,30 +78,39 @@ public struct WaitingArea : Equatable {
 
     }
 
-    mutating func step(strategy: Strategy = .neighbour) {
+    mutating func forEach(_ body: (inout Seat, Offset) -> Void) {
         let oldLayout = self
         for y in columnIndices {
             for x in rowIndices {
-                if strategy == .neighbour {
-                    switch oldLayout[x, y] {
-                    case .empty where oldLayout.seatedNeighbours(x: x, y: y) == 0:
-                        self[x, y] = .occupied
-                    case .occupied where oldLayout.seatedNeighbours(x: x, y: y) >= 4:
-                        self[x, y] = .empty
-                    default:
-                        break
-                    }
-                } else {
-                    switch oldLayout[x, y] {
-                    case .empty where oldLayout.visibleNeighbours(x: x, y: y) == 0:
-                        self[x, y] = .occupied
-                    case .occupied where oldLayout.visibleNeighbours(x: x, y: y) >= 5:
-                        self[x, y] = .empty
-                    default:
-                        break
-                    }
+                let position = Offset(east: x, north: y)
+                var seat = oldLayout[position]
+                body(&seat, position)
+                self[position] = seat
+            }
+        }
+    }
 
+    mutating func step(strategy: Strategy = .neighbour) {
+        forEach { seat, position in
+            if strategy == .neighbour {
+                switch seat {
+                case .empty where oldLayout.seatedNeighbours(x: x, y: y) == 0:
+                    seat = .occupied
+                case .occupied where oldLayout.seatedNeighbours(x: x, y: y) >= 4:
+                    seat = .empty
+                default:
+                    break
                 }
+            } else {
+                switch seat {
+                case .empty where oldLayout.visibleNeighbours(x: x, y: y) == 0:
+                    seat = .occupied
+                case .occupied where oldLayout.visibleNeighbours(x: x, y: y) >= 5:
+                    seat = .empty
+                default:
+                    break
+                }
+
             }
         }
     }

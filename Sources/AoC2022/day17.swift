@@ -70,6 +70,31 @@ public struct Chamber {
         }
     }
 
+    public func maxHeight2(count: Int) -> Int {
+        var copy = self
+        copy.simulate2(count: count)
+        return copy.maxHeight
+    }
+
+    mutating func simulate2(count: Int) {
+        var jetIterator = jets.cycled().makeIterator()
+        var shapesIterator = Rock.shapes.cycled().makeIterator()
+
+        var i = 0
+        var rock = Rock(shape: shapesIterator.next()!,
+                        location: Offset(east: 2, north: maxHeight + 3))
+        while i < count {
+            let jet = jetIterator.next()!
+            move(rock: &rock, direction: jet)
+            if !moveDown(rock: &rock) {
+                collide(rock: rock)
+                i += 1
+                rock = Rock(shape: shapesIterator.next()!,
+                            location: Offset(east: 2, north: maxHeight + 3))
+            }
+        }
+    }
+
     mutating func collide(rock: Rock) {
         let pattern = rock.pattern()
         rocks.formUnion(pattern)
@@ -123,5 +148,5 @@ public func day17_1() -> Int {
 }
 
 public func day17_2() -> Int {
-    0
+    Chamber(day17_input).maxHeight(count: 1000000000000)
 }

@@ -1,5 +1,6 @@
 import XCTest
 import AoC2022
+import AdventCore
 
 final class Day17Tests: XCTestCase {
 
@@ -16,7 +17,7 @@ final class Day17Tests: XCTestCase {
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(Chamber(exampleInput).maxHeight(count: 1000000000000), 1514285714288)
     }
 
     func testPart2() {

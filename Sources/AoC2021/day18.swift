@@ -28,6 +28,8 @@ public extension SnailfishNumber {
         explodeFirst(depth: 1) != nil
     }
 
+    // TODO - enum for return type
+    // see https://github.com/bereal/AdventOfCodeHaskell/blob/main/src/Year2021/Day18.hs
     mutating func explodeFirst(depth: Int) -> (Int?, Int?)? {
         if depth > 4, case let .pair(.regular(lhs), .regular(rhs)) = self {
             self = .regular(0)

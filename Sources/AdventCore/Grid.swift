@@ -4,6 +4,16 @@ import Foundation
 public struct Grid<Element> {
     var elements: [[Element]]
 
+    public func element(_ position: Offset) -> Element? {
+        if rowIndices.contains(position.east),
+           columnIndices.contains(position.north) {
+            return elements[position.east][position.north]
+        } else {
+            return nil
+        }
+    }
+
+
     public func row(_ index: Int) -> [Element] {
         elements[index]
     }
@@ -59,6 +69,37 @@ public extension Grid where Element: Equatable {
         return Offset(east: columnIndex, north: rowIndex)
     }
 }
+
+extension Grid : MutableCollection {
+    public typealias Index = Offset
+
+    public var startIndex: Offset {
+        .zero
+    }
+
+    public var endIndex: Offset {
+        // 1 past the end
+        Offset(east: 0, north: elements.count)
+    }
+
+    public subscript(position: Offset) -> Element {
+        get {
+            elements[position.east][position.north]
+        }
+        set {
+            elements[position.east][position.north] = newValue
+        }
+    }
+
+    public func index(after i: Offset) -> Offset {
+        if i.east < elements[i.north].count {
+            return i + Offset(east: 1)
+        }
+        return Offset(east: 0, north: i.north + 1)
+    }
+
+}
+
 
 public extension Grid where Element: RawRepresentable {
     init(lines: some Collection<some Collection<Element.RawValue>>) {

@@ -3,32 +3,16 @@ import AdventCore
 
 public struct EnergyLevels {
 
-    var levels: [[Int]]
+    var levels: Grid<Int>
     public var flashes: Int = 0
     public var stepCount: Int = 0
 
-    var rowIndices: Range<Int> {
-        levels.indices
-    }
-
-    var columnIndices: Range<Int>  {
-        levels.columnIndices
-    }
-
     subscript(position: Offset) -> Int {
         get {
-            if rowIndices.contains(position.east),
-               columnIndices.contains(position.north) {
-                return levels[position.east][position.north]
-            } else {
-                return 0
-            }
+            levels.element(position) ?? 0
         }
         set {
-            if rowIndices.contains(position.east),
-               columnIndices.contains(position.north) {
-                levels[position.east][position.north] = newValue
-            }
+            levels[position] = newValue
         }
     }
 
@@ -42,11 +26,8 @@ public struct EnergyLevels {
     }
 
     public mutating func step() {
-        for x in rowIndices {
-            for y in columnIndices {
-                let pos = Offset(east: x, north: y)
-                increment(pos: pos)
-            }
+        levels.indices.forEach {
+            increment(pos: $0)
         }
         for x in rowIndices {
             for y in columnIndices {
@@ -61,14 +42,7 @@ public struct EnergyLevels {
     }
 
     var isSynchronised: Bool {
-        for x in rowIndices {
-            for y in columnIndices {
-                if self[Offset(east: x, north: y)] != 0 {
-                    return false
-                }
-            }
-        }
-        return true
+        levels.allSatisfy { $0 == 0 }
     }
 
     public mutating func iterate(steps: Int) {

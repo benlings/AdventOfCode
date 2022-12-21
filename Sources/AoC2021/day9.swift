@@ -3,24 +3,11 @@ import AdventCore
 import DequeModule
 
 public struct HeightMap {
-    var heights: [[Int]]
-
-    var rowIndices: Range<Int> {
-        heights.indices
-    }
-
-    var columnIndices: Range<Int>  {
-        heights.columnIndices
-    }
+    var heights: Grid<Int>
 
     subscript(position: Offset) -> Int {
         get {
-            if rowIndices.contains(position.east),
-               columnIndices.contains(position.north) {
-                return heights[position.east][position.north]
-            } else {
-                return 10
-            }
+            heights.element(position) ?? 10
         }
     }
 
@@ -30,16 +17,9 @@ public struct HeightMap {
     }
 
     func lowPoints() -> [Offset] {
-        var positions = [Offset]()
-        for x in rowIndices {
-            for y in columnIndices {
-                let pos = Offset(east: x, north: y)
-                if isMinimum(position: pos) {
-                    positions.append(pos)
-                }
-            }
+        heights.indices.compactMap { pos in
+            isMinimum(position: pos) ? pos : nil
         }
-        return positions
     }
 
     func risk(position: Offset) -> Int {

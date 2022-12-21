@@ -10,6 +10,12 @@ public extension Collection {
 
 }
 
+public extension Collection where Element: BinaryInteger {
+    func mean() -> Double {
+        isEmpty ? .nan : lazy.map(Double.init).sum() / Double(count)
+    }
+}
+
 public extension Collection where Element: Comparable {
     func median() -> Element? {
         count % 2 == 1 ? sorted()[count / 2] : nil

@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day9Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day9").lines()
+
     let exampleInput = """
     R 4
     U 4
@@ -15,15 +17,15 @@ final class Day9Tests: XCTestCase {
     """.lines()
 
     func testPart1Example() {
-        XCTAssertEqual(Motion.countTailPositions(exampleInput), 13)
+        XCTAssertEqual(day9_1(exampleInput), 13)
     }
 
     func testPart1() {
-        XCTAssertEqual(day9_1(), 6367)
+        XCTAssertEqual(day9_1(input), 6367)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(Motion.countTailPositions(exampleInput, knots: 10), 1)
+        XCTAssertEqual(day9_2(exampleInput), 1)
     }
 
     let exampleInput2 = """
@@ -38,10 +40,10 @@ final class Day9Tests: XCTestCase {
     """.lines()
 
     func testPart2Example2() {
-        XCTAssertEqual(Motion.countTailPositions(exampleInput2, knots: 10), 36)
+        XCTAssertEqual(day9_2(exampleInput2), 36)
     }
 
     func testPart2() {
-        XCTAssertEqual(day9_2(), 2536)
+        XCTAssertEqual(day9_2(input), 2536)
     }
 }

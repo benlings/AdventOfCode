@@ -3,23 +3,25 @@ import AoC2022
 
 final class Day6Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day6")
+
     let exampleInput = """
     mjqjpqmgbljsphdztnvjfqwrcgsmlb
     """
 
     func testPart1Example() {
-        XCTAssertEqual(findStart(exampleInput), 7)
+        XCTAssertEqual(day6_1(exampleInput), 7)
     }
 
     func testPart1() {
-        XCTAssertEqual(day6_1(), 1965)
+        XCTAssertEqual(day6_1(input), 1965)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(findStart(exampleInput, distinct: 14), 19)
+        XCTAssertEqual(day6_2(exampleInput), 19)
     }
 
     func testPart2() {
-        XCTAssertEqual(day6_2(), 2773)
+        XCTAssertEqual(day6_2(input), 2773)
     }
 }

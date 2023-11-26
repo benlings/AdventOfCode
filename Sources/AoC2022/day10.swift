@@ -83,12 +83,10 @@ public func getScreenContents(_ lines: some Sequence<String>) -> String {
     return cpu.execute2(instructions: lines.compactMap(Instruction.init)).description
 }
 
-fileprivate let day10_input = Bundle.module.text(named: "day10").lines()
-
-public func day10_1() -> Int {
-    sumSignalStrengths(day10_input)
+public func day10_1(_ input: [String]) -> Int {
+    sumSignalStrengths(input)
 }
 
-public func day10_2() -> String {
-    getScreenContents(day10_input)
+public func day10_2(_ input: [String]) -> String {
+    getScreenContents(input)
 }

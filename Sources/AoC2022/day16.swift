@@ -32,13 +32,13 @@ struct ValveState : Hashable {
     }
 }
 
-public struct ValveScan {
+struct ValveScan {
 
     var tunnels: [String : [String]]
     var startingState: ValveState
     var withElephant: Bool
 
-    public func maxPressureRelease() -> Int {
+    func maxPressureRelease() -> Int {
         findLargestRelease(start: startingState)!
     }
 
@@ -115,7 +115,7 @@ public struct ValveScan {
 
 }
 
-public extension ValveScan {
+extension ValveScan {
     init(_ input: some Sequence<String>, withElephant: Bool = false) {
         startingState = ValveState(flowRates: [:], remaining: withElephant ? 26 : 30)
         tunnels = [:]
@@ -135,12 +135,10 @@ public extension ValveScan {
     }
 }
 
-fileprivate let day16_input = Bundle.module.text(named: "day16").lines()
-
-public func day16_1() -> Int {
-    ValveScan(day16_input).maxPressureRelease()
+public func day16_1(_ input: [String]) -> Int {
+    ValveScan(input).maxPressureRelease()
 }
 
-public func day16_2() -> Int {
-    ValveScan(day16_input, withElephant: true).maxPressureRelease()
+public func day16_2(_ input: [String]) -> Int {
+    ValveScan(input, withElephant: true).maxPressureRelease()
 }

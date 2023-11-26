@@ -19,7 +19,7 @@ class Item {
     var worryLevel: Int
 }
 
-public struct Monkey {
+struct Monkey {
     let num: Int
     var items: Deque<Item>
     let operation: (Int) -> Int
@@ -108,12 +108,10 @@ extension Monkey {
 }
 
 
-fileprivate let day11_input = Bundle.module.text(named: "day11")
-
-public func day11_1() -> Int {
-    Monkey.monkeyBusiness1(day11_input)
+public func day11_1(_ input: String) -> Int {
+    Monkey.monkeyBusiness1(input)
 }
 
-public func day11_2() -> Int {
-    Monkey.monkeyBusiness2(day11_input)
+public func day11_2(_ input: String) -> Int {
+    Monkey.monkeyBusiness2(input)
 }

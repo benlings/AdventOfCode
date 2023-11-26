@@ -48,11 +48,11 @@ public class FSNode {
         }
     }
 
-    public func smallDirectorySizes() -> Int {
+    func smallDirectorySizes() -> Int {
         directories.map(\.size).filter { $0 < 100000 }.sum()
     }
 
-    public func sizeToDelete() -> Int {
+    func sizeToDelete() -> Int {
         let currentFreeSpace = 70000000 - size
         let toFree = 30000000 - currentFreeSpace
         return directories.map(\.size).filter { $0 >= toFree }.min()!
@@ -60,7 +60,7 @@ public class FSNode {
 
 }
 
-public extension FSNode {
+extension FSNode {
     convenience init(_ input: String) {
         self.init(parent: nil)
 
@@ -100,12 +100,10 @@ public extension FSNode {
     }
 }
 
-fileprivate let day7_input = Bundle.module.text(named: "day7")
-
-public func day7_1() -> Int {
-    FSNode(day7_input).smallDirectorySizes()
+public func day7_1(_ input: String) -> Int {
+    FSNode(input).smallDirectorySizes()
 }
 
-public func day7_2() -> Int {
-    FSNode(day7_input).sizeToDelete()
+public func day7_2(_ input: String) -> Int {
+    FSNode(input).sizeToDelete()
 }

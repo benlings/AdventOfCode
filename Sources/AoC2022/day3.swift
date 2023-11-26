@@ -1,9 +1,9 @@
 import Foundation
 import AdventCore
 
-public struct Rucksack {
+struct Rucksack {
 
-    public struct Item : Hashable {
+    struct Item : Hashable {
         var character: String.UTF8View.Element
 
         var priority: Int {
@@ -26,7 +26,7 @@ public struct Rucksack {
     }
 }
 
-public extension Rucksack {
+extension Rucksack {
 
     init(_ line: String) {
         let items = Array(line.utf8.map(Item.init(character:)))
@@ -54,12 +54,10 @@ public extension Rucksack {
 
 }
 
-fileprivate let day3_input = Bundle.module.text(named: "day3").lines()
-
-public func day3_1() -> Int {
-    Rucksack.sumErrorPriorities(day3_input)
+public func day3_1(_ input: [String]) -> Int {
+    Rucksack.sumErrorPriorities(input)
 }
 
-public func day3_2() -> Int {
-    Rucksack.sumBadgePriorities(day3_input)
+public func day3_2(_ input: [String]) -> Int {
+    Rucksack.sumBadgePriorities(input)
 }

@@ -2,7 +2,7 @@ import Foundation
 import AdventCore
 import Algorithms
 
-public struct CaveStructure {
+struct CaveStructure {
     var rocks: Set<Offset>
     var sand: Set<Offset> = []
     let bottom: Int
@@ -36,7 +36,7 @@ public struct CaveStructure {
         return false
     }
 
-    public func countSand() -> Int {
+    func countSand() -> Int {
         var copy = self
         var startLocations = [Offset(east: 500, north: 0)]
         while copy.addSandGrain(startLocations: &startLocations) {
@@ -46,7 +46,7 @@ public struct CaveStructure {
     }
 }
 
-public extension CaveStructure {
+extension CaveStructure {
     init(_ input: some Sequence<String>, hasFloor: Bool = false) {
         rocks = []
         for line in input {
@@ -66,12 +66,10 @@ extension Scanner {
 }
 
 
-fileprivate let day14_input = Bundle.module.text(named: "day14").lines()
-
-public func day14_1() -> Int {
-    CaveStructure(day14_input).countSand()
+public func day14_1(_ input: [String]) -> Int {
+    CaveStructure(input).countSand()
 }
 
-public func day14_2() -> Int {
-    CaveStructure(day14_input, hasFloor: true).countSand()
+public func day14_2(_ input: [String]) -> Int {
+    CaveStructure(input, hasFloor: true).countSand()
 }

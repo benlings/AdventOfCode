@@ -55,18 +55,18 @@ extension PacketData : Comparable {
     }
 }
 
-public struct DistressSignal {
+struct DistressSignal {
 
     var packets: [(PacketData, PacketData)]
 
-    public func sumRightOrderIndexes() -> Int {
+    func sumRightOrderIndexes() -> Int {
         packets.enumerated()
             .filter { $0.element.0 < $0.element.1 }
             .map { $0.offset + 1 }
             .sum()
     }
 
-    public func decoderKey() -> Int {
+    func decoderKey() -> Int {
         var packetsWithDividers = packets.flatMap { [$0.0, $0.1] }
         let divider1 = PacketData("[[2]]")!
         let divider2 = PacketData("[[6]]")!
@@ -77,7 +77,7 @@ public struct DistressSignal {
     }
 }
 
-public extension DistressSignal {
+extension DistressSignal {
     init(_ input: String) {
         packets = input.groups().map { group in
             let packets = group.lines().compactMap(PacketData.init)
@@ -87,12 +87,10 @@ public extension DistressSignal {
     }
 }
 
-fileprivate let day13_input = Bundle.module.text(named: "day13")
-
-public func day13_1() -> Int {
-    DistressSignal(day13_input).sumRightOrderIndexes()
+public func day13_1(_ input: String) -> Int {
+    DistressSignal(input).sumRightOrderIndexes()
 }
 
-public func day13_2() -> Int {
-    DistressSignal(day13_input).decoderKey()
+public func day13_2(_ input: String) -> Int {
+    DistressSignal(input).decoderKey()
 }

@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day12Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day12")
+
     let exampleInput = """
     Sabqponm
     abcryxxl
@@ -12,18 +14,18 @@ final class Day12Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(HeightMap(exampleInput).findShortestPath(), 31)
+        XCTAssertEqual(day12_1(exampleInput), 31)
     }
 
     func testPart1() {
-        XCTAssertEqual(day12_1(), 520)
+        XCTAssertEqual(day12_1(input), 520)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(HeightMap(exampleInput).findAnyShortestPath(), 29)
+        XCTAssertEqual(day12_2(exampleInput), 29)
     }
 
     func testPart2() {
-        XCTAssertEqual(day12_2(), 508)
+        XCTAssertEqual(day12_2(input), 508)
     }
 }

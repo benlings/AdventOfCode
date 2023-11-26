@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day10Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day10").lines()
+
     let exampleInput = """
     addx 15
     addx -11
@@ -153,11 +155,11 @@ final class Day10Tests: XCTestCase {
     """.lines()
 
     func testPart1Example() {
-        XCTAssertEqual(sumSignalStrengths(exampleInput), 13140)
+        XCTAssertEqual(day10_1(exampleInput), 13140)
     }
 
     func testPart1() {
-        XCTAssertEqual(day10_1(), 14040)
+        XCTAssertEqual(day10_1(input), 14040)
     }
 
     func testPart2Example() {
@@ -169,7 +171,7 @@ final class Day10Tests: XCTestCase {
         ######......######......######......####
         #######.......#######.......#######.....
         """
-        XCTAssertEqual(getScreenContents(exampleInput), expected)
+        XCTAssertEqual(day10_2(exampleInput), expected)
     }
 
     func testPart2() {
@@ -181,6 +183,6 @@ final class Day10Tests: XCTestCase {
         #....#..#.#..#.#..#.#....#..#.#....#....
         ####..###..##...##..####..##..#....####.
         """
-        XCTAssertEqual(day10_2(), expected)
+        XCTAssertEqual(day10_2(input), expected)
     }
 }

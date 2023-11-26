@@ -34,12 +34,10 @@ public func countOverlappingSections(_ input: [String]) -> Int {
     }
 }
 
-fileprivate let day4_input = Bundle.module.text(named: "day4").lines()
-
-public func day4_1() -> Int {
-    countContainedSections(day4_input)
+public func day4_1(_ input: [String]) -> Int {
+    countContainedSections(input)
 }
 
-public func day4_2() -> Int {
-    countOverlappingSections(day4_input)
+public func day4_2(_ input: [String]) -> Int {
+    countOverlappingSections(input)
 }

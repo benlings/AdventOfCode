@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day1Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day1")
+
     let exampleInput = """
     1000
     2000
@@ -21,20 +23,18 @@ final class Day1Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        let inventory = Inventory(exampleInput)
-        XCTAssertEqual(inventory.mostCalories(), 24000)
+        XCTAssertEqual(day1_1(exampleInput), 24000)
     }
 
     func testPart1() {
-        XCTAssertEqual(day1_1(), 71780)
+        XCTAssertEqual(day1_1(input), 71780)
     }
 
     func testPart2Example() {
-        let inventory = Inventory(exampleInput)
-        XCTAssertEqual(inventory.mostCalories(count: 3), 45000)
+        XCTAssertEqual(day1_2(exampleInput), 45000)
     }
 
     func testPart2() {
-        XCTAssertEqual(day1_2(), 212489)
+        XCTAssertEqual(day1_2(input), 212489)
     }
 }

@@ -44,13 +44,13 @@ enum Jet : Character {
     case right = ">"
 }
 
-public struct Chamber {
+struct Chamber {
 
     var jets: [Jet]
     var rocks = Set<Offset>()
     var maxHeight = 0
 
-    public func maxHeight(count: Int) -> Int {
+    func maxHeight(count: Int) -> Int {
         var copy = self
         copy.simulate(count: count)
         return copy.maxHeight
@@ -110,18 +110,16 @@ public struct Chamber {
 
 }
 
-public extension Chamber {
+extension Chamber {
     init(_ input: String) {
         jets = input.compactMap(Jet.init(rawValue:))
     }
 }
 
-fileprivate let day17_input = Bundle.module.text(named: "day17")
-
-public func day17_1() -> Int {
-    Chamber(day17_input).maxHeight(count: 2022)
+public func day17_1(_ input: String) -> Int {
+    Chamber(input).maxHeight(count: 2022)
 }
 
-public func day17_2() -> Int {
+public func day17_2(_ input: String) -> Int {
     0
 }

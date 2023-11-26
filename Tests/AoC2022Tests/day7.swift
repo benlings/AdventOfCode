@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day7Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day7")
+
     let exampleInput = """
     $ cd /
     $ ls
@@ -30,18 +32,18 @@ final class Day7Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(FSNode(exampleInput).smallDirectorySizes(), 95437)
+        XCTAssertEqual(day7_1(exampleInput), 95437)
     }
 
     func testPart1() {
-        XCTAssertEqual(day7_1(), 1243729)
+        XCTAssertEqual(day7_1(input), 1243729)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(FSNode(exampleInput).sizeToDelete(), 24933642)
+        XCTAssertEqual(day7_2(exampleInput), 24933642)
     }
 
     func testPart2() {
-        XCTAssertEqual(day7_2(), 4443914)
+        XCTAssertEqual(day7_2(input), 4443914)
     }
 }

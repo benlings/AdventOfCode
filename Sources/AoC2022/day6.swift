@@ -2,8 +2,6 @@ import Foundation
 import Algorithms
 import AdventCore
 
-fileprivate let day6_input = Bundle.module.text(named: "day6")
-
 public func findStart(_ input: String, distinct: Int = 4) -> Int? {
     Array(input)
         .windows(ofCount: distinct)
@@ -11,10 +9,10 @@ public func findStart(_ input: String, distinct: Int = 4) -> Int? {
         .endIndex
 }
 
-public func day6_1() -> Int {
-    findStart(day6_input)!
+public func day6_1(_ input: String) -> Int {
+    findStart(input)!
 }
 
-public func day6_2() -> Int {
-    findStart(day6_input, distinct: 14)!
+public func day6_2(_ input: String) -> Int {
+    findStart(input, distinct: 14)!
 }

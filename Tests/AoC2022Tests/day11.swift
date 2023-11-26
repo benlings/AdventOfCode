@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day11Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day11")
+
     let exampleInput = """
     Monkey 0:
       Starting items: 79, 98
@@ -34,18 +36,18 @@ final class Day11Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(Monkey.monkeyBusiness1(exampleInput), 10605)
+        XCTAssertEqual(day11_1(exampleInput), 10605)
     }
 
     func testPart1() {
-        XCTAssertEqual(day11_1(), 112221)
+        XCTAssertEqual(day11_1(input), 112221)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(Monkey.monkeyBusiness2(exampleInput), 2713310158)
+        XCTAssertEqual(day11_2(exampleInput), 2713310158)
     }
 
     func testPart2() {
-        XCTAssertEqual(day11_2(), 25272176808)
+        XCTAssertEqual(day11_2(input), 25272176808)
     }
 }

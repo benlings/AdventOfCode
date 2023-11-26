@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day8Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day8")
+
     let exampleInput = """
     30373
     25512
@@ -12,18 +14,18 @@ final class Day8Tests: XCTestCase {
     """
 
     func testPart1Example() {
-        XCTAssertEqual(TreeMap(exampleInput).visibleTreeCount(), 21)
+        XCTAssertEqual(day8_1(exampleInput), 21)
     }
 
     func testPart1() {
-        XCTAssertEqual(day8_1(), 1789)
+        XCTAssertEqual(day8_1(input), 1789)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(TreeMap(exampleInput).maxScenicScore(), 8)
+        XCTAssertEqual(day8_2(exampleInput), 8)
     }
 
     func testPart2() {
-        XCTAssertEqual(day8_2(), 314820)
+        XCTAssertEqual(day8_2(input), 314820)
     }
 }

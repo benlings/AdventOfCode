@@ -33,7 +33,7 @@ struct CrateInstruction {
     }
 }
 
-public struct Crates {
+struct Crates {
 
     var stacks: [Deque<String>]
 
@@ -56,7 +56,7 @@ public struct Crates {
 
 //"[Z] [M] [P]"
 
-public extension Crates {
+extension Crates {
 
     init(_ input: String) {
         let lines = input.lines().reversed()
@@ -84,12 +84,10 @@ public extension Crates {
 }
 
 
-fileprivate let day5_input = Bundle.module.text(named: "day5")
-
-public func day5_1() -> String {
-    Crates.solve(day5_input)
+public func day5_1(_ input: String) -> String {
+    Crates.solve(input)
 }
 
-public func day5_2() -> String {
-    Crates.solve(day5_input, reverse: false)
+public func day5_2(_ input: String) -> String {
+    Crates.solve(input, reverse: false)
 }

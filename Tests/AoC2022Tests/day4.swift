@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day4Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day4").lines()
+
     let exampleInput = """
     2-4,6-8
     2-3,4-5
@@ -13,18 +15,18 @@ final class Day4Tests: XCTestCase {
     """.lines()
 
     func testPart1Example() {
-        XCTAssertEqual(countContainedSections(exampleInput), 2)
+        XCTAssertEqual(day4_1(exampleInput), 2)
     }
 
     func testPart1() {
-        XCTAssertEqual(day4_1(), 562)
+        XCTAssertEqual(day4_1(input), 562)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(countOverlappingSections(exampleInput), 4)
+        XCTAssertEqual(day4_2(exampleInput), 4)
     }
 
     func testPart2() {
-        XCTAssertEqual(day4_2(), 924)
+        XCTAssertEqual(day4_2(input), 924)
     }
 }

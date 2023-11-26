@@ -3,6 +3,8 @@ import AoC2022
 
 final class Day16Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day16").lines()
+
     let exampleInput = """
     Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
     Valve BB has flow rate=13; tunnels lead to valves CC, AA
@@ -17,18 +19,18 @@ final class Day16Tests: XCTestCase {
     """.lines()
 
     func testPart1Example() {
-        XCTAssertEqual(ValveScan(exampleInput).maxPressureRelease(), 1651)
+        XCTAssertEqual(day16_1(exampleInput), 1651)
     }
 
     func testPart1() {
-        XCTAssertEqual(day16_1(), 2181)
+        XCTAssertEqual(day16_1(input), 2181)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(ValveScan(exampleInput, withElephant: true).maxPressureRelease(), 1707)
+        XCTAssertEqual(day16_2(exampleInput), 1707)
     }
 
     func testPart2() {
-        XCTAssertEqual(day16_2(), 0)
+        XCTAssertEqual(day16_2(input), 0)
     }
 }

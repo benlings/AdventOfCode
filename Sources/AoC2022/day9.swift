@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-public struct Motion {
+struct Motion {
     var direction: Offset
     var count: Int
 }
@@ -44,12 +44,10 @@ extension Motion {
 
 }
 
-fileprivate let day9_input = Bundle.module.text(named: "day9").lines()
-
-public func day9_1() -> Int {
-    Motion.countTailPositions(day9_input)
+public func day9_1(_ input: [String]) -> Int {
+    Motion.countTailPositions(input)
 }
 
-public func day9_2() -> Int {
-    Motion.countTailPositions(day9_input, knots: 10)
+public func day9_2(_ input: [String]) -> Int {
+    Motion.countTailPositions(input, knots: 10)
 }

@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-public struct HeightMap {
+struct HeightMap {
 
     var map: Grid<Character>
     var start: Offset
@@ -18,11 +18,11 @@ public struct HeightMap {
         return Int(value.asciiValue! - ("a" as Character).asciiValue!)
     }
 
-    public func findShortestPath() -> Int {
+    func findShortestPath() -> Int {
         findShortestPath(start: start)!
     }
 
-    public func findAnyShortestPath() -> Int {
+    func findAnyShortestPath() -> Int {
         let pathLengths = findPathLengths(start: end) { current, neighbour in
             if map.contains(neighbour) {
                 let currentHeight = height(current)
@@ -94,12 +94,10 @@ extension HeightMap {
 }
 
 
-fileprivate let day12_input = Bundle.module.text(named: "day12")
-
-public func day12_1() -> Int {
-    HeightMap(day12_input).findShortestPath()
+public func day12_1(_ input: String) -> Int {
+    HeightMap(input).findShortestPath()
 }
 
-public func day12_2() -> Int {
-    HeightMap(day12_input).findAnyShortestPath()
+public func day12_2(_ input: String) -> Int {
+    HeightMap(input).findAnyShortestPath()
 }

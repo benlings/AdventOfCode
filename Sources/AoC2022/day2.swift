@@ -112,12 +112,10 @@ extension GameMove {
     }
 }
 
-fileprivate let day2_input = Bundle.module.text(named: "day2").lines()
-
-public func day2_1() -> Int {
-    GameMove.totalScore1(guide: day2_input)
+public func day2_1(_ input: [String]) -> Int {
+    GameMove.totalScore1(guide: input)
 }
 
-public func day2_2() -> Int {
-    GameMove.totalScore2(guide: day2_input)
+public func day2_2(_ input: [String]) -> Int {
+    GameMove.totalScore2(guide: input)
 }

@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-public struct BeaconSensor {
+struct BeaconSensor {
     var sensor: Offset
     var closestBeacon: Offset
 
@@ -82,12 +82,10 @@ extension BeaconSensor {
 }
 
 
-fileprivate let day15_input = Bundle.module.text(named: "day15").lines()
-
-public func day15_1() -> Int {
-    BeaconSensor.countNonBeacons(day15_input, row: 2000000)
+public func day15_1(_ input: [String], row: Int) -> Int {
+    BeaconSensor.countNonBeacons(input, row: row)
 }
 
-public func day15_2() -> Int {
-    BeaconSensor.findBeaconTuningFrequency(day15_input, range: 0...4000000)
+public func day15_2(_ input: [String], range: ClosedRange<Int>) -> Int {
+    BeaconSensor.findBeaconTuningFrequency(input, range: range)
 }

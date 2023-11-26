@@ -69,8 +69,7 @@ let package = Package(
             resources: [.process("Resources")]),
         .target(
             name: "AoC2022",
-            dependencies: ["AdventCore"],
-            resources: [.process("Resources")]),
+            dependencies: ["AdventCore"]),
         .testTarget(
             name: "AoC2022Tests",
             dependencies: ["AoC2022"],

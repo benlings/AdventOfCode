@@ -11,13 +11,11 @@ let source = """
 import Foundation
 import AdventCore
 
-fileprivate let day\(day)_input = Bundle.module.text(named: "day\(day)").lines()
-
-public func day\(day)_1() -> Int {
+public func day\(day)_1(_ input: String) -> Int {
     0
 }
 
-public func day\(day)_2() -> Int {
+public func day\(day)_2(_ intput: String) -> Int {
     0
 }
 """
@@ -28,36 +26,38 @@ import AoC\#(year)
 
 final class Day\#(day)Tests: XCTestCase {
 
+    let input = Bundle.module.text(named: "day\#(day)")
+
     let exampleInput = """
     """
 
     func testPart1Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(day\#(day)_1(exampleInput), 0)
     }
 
     func testPart1() {
-        XCTAssertEqual(day\#(day)_1(), 0)
+        XCTAssertEqual(day\#(day)_1(input), 0)
     }
 
     func testPart2Example() {
-        XCTAssertEqual(0, 0)
+        XCTAssertEqual(day\#(day)_2(exampleInput), 0)
     }
 
     func testPart2() {
-        XCTAssertEqual(day\#(day)_2(), 0)
+        XCTAssertEqual(day\#(day)_2(input), 0)
     }
 }
 """#
 
 let sourceURL = URL(fileURLWithPath: "Sources/AoC\(year)/day\(day).swift")
 let testURL = URL(fileURLWithPath: "Tests/AoC\(year)Tests/day\(day).swift")
-let inputURL = URL(fileURLWithPath: "Sources/AoC\(year)/Resources/day\(day).txt")
+let inputURL = URL(fileURLWithPath: "Tests/AoC\(year)Tests/Resources/day\(day).txt")
 
-try? FileManager.default.createDirectory(at: sourceURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-try? FileManager.default.createDirectory(at: testURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-try? FileManager.default.createDirectory(at: inputURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+func create(contents: String, url: URL) throws {
+    try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    try contents.write(to: url, atomically: true, encoding: .utf8)
+}
 
-try? source.write(to: sourceURL, atomically: true, encoding: .utf8)
-try? tests.write(to: testURL, atomically: true, encoding: .utf8)
-try? "".write(to: inputURL, atomically: true, encoding: .utf8)
-
+try? create(contents: source, url: sourceURL)
+try? create(contents: tests, url: testURL)
+try? create(contents: "", url: inputURL)

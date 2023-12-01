@@ -15,7 +15,7 @@ public func day\(day)_1(_ input: String) -> Int {
     0
 }
 
-public func day\(day)_2(_ intput: String) -> Int {
+public func day\(day)_2(_ input: String) -> Int {
     0
 }
 """

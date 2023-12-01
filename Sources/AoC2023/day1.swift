@@ -28,13 +28,13 @@ let digitValues = [
   "nine": 9,
 ]
 
-let digitRegex = try! Regex("\(digitValues.keys.joined(separator: "|"))")
-let reverseDigitRegex = try! Regex("\(String(digitValues.keys.map { $0.reversed() }.joined(separator: "|"))))")
+let digitRegex = try! Regex("\(digitValues.keys.joined(separator: "|"))", as: Substring.self)
+let reverseDigitRegex = try! Regex("\(String(digitValues.keys.map { $0.reversed() }.joined(separator: "|")))", as: Substring.self)
 
 func calibrationValue2(_ line: String) -> Int? {
-  if let firstD = line.firstMatch(of: digitRegex)?.output[0].substring,
+  if let firstD = line.firstMatch(of: digitRegex)?.output,
      let firstN = digitValues[String(firstD)],
-     let lastD = String(line.reversed()).firstMatch(of: reverseDigitRegex)?.output[0].substring,
+     let lastD = String(line.reversed()).firstMatch(of: reverseDigitRegex)?.output,
      let lastN = digitValues[String(lastD.reversed())] {
     return firstN * 10 + lastN
   }

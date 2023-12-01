@@ -188,6 +188,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2023"
+               BuildableName = "AoC2023"
+               BlueprintName = "AoC2023"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -253,6 +267,18 @@
                BlueprintIdentifier = "AoC2022Tests"
                BuildableName = "AoC2022Tests"
                BlueprintName = "AoC2022Tests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AoC2023Tests"
+               BuildableName = "AoC2023Tests"
+               BlueprintName = "AoC2023Tests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

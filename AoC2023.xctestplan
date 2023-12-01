@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "D0F840C1-0FD8-4DCE-B9C2-F3A537280B23",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AoC2023Tests",
+        "name" : "AoC2023Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

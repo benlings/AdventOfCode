@@ -2,9 +2,10 @@ import Foundation
 import AdventCore
 
 func calibrationValue(_ line: String) -> Int? {
-  guard let first = line.first(where: \.isNumber),
-        let last = line.last(where: \.isNumber) else { return nil }
-  return Int(String([first, last]))
+  guard let first = line.first(where: \.isNumber)?.wholeNumberValue,
+        let last = line.last(where: \.isNumber)?.wholeNumberValue
+  else { return nil }
+  return first * 10 + last
 }
 
 let digitValues = [

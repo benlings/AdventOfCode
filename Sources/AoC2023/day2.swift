@@ -2,19 +2,25 @@ import Foundation
 import AdventCore
 
 struct GameRecord {
+
+  enum Colour: String {
+    case red, green, blue
+  }
+
   var id: Int
-  var revealedCubes: [[String: Int]]
+  var revealedCubes: [[Colour: Int]]
 }
 
 // Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 
 extension Scanner {
   
-  func scanCubes() -> [String: Int] {
-    var cubes = [String: Int]()
+  func scanCubes() -> [GameRecord.Colour: Int] {
+    var cubes = [GameRecord.Colour: Int]()
     while !isAtEnd, scanString(";") == nil {
       if let num = scanInt(),
-         let colour = scanUpToCharacters(from: CharacterSet(charactersIn: ",;")) {
+         let c = scanUpToCharacters(from: CharacterSet(charactersIn: ",;")),
+         let colour = GameRecord.Colour(rawValue: c) {
         cubes[colour] = num
         _ = scanString(",")
       }
@@ -22,8 +28,8 @@ extension Scanner {
     return cubes
   }
 
-  func scanRevealtedCubes() -> [[String: Int]] {
-    var reveledCubes = [[String: Int]]()
+  func scanRevealtedCubes() -> [[GameRecord.Colour: Int]] {
+    var reveledCubes = [[GameRecord.Colour: Int]]()
     while !isAtEnd {
       let cubes = scanCubes()
       if !cubes.isEmpty {
@@ -51,17 +57,17 @@ extension GameRecord {
   }
 
   // The Elf would first like to know which games would have been possible if the bag contained only 12 red cubes, 13 green cubes, and 14 blue cubes?
-  static func isPossible(cubes: [String: Int]) -> Bool {
-    cubes["red", default: 0] <= 12 &&
-    cubes["green", default: 0] <= 13 &&
-    cubes["blue", default: 0] <= 14
+  static func isPossible(cubes: [GameRecord.Colour: Int]) -> Bool {
+    cubes[.red, default: 0] <= 12 &&
+    cubes[.green, default: 0] <= 13 &&
+    cubes[.blue, default: 0] <= 14
   }
 
-  var fewestCubes: [String: Int] {
+  var fewestCubes: [GameRecord.Colour: Int] {
     revealedCubes.reduce(into: [:]) { result, cubes in
-      result["red", default: 0].formMax(cubes["red", default: 0])
-      result["green", default: 0].formMax(cubes["green", default: 0])
-      result["blue", default: 0].formMax(cubes["blue", default: 0])
+      result[.red, default: 0].formMax(cubes[.red, default: 0])
+      result[.green, default: 0].formMax(cubes[.green, default: 0])
+      result[.blue, default: 0].formMax(cubes[.blue, default: 0])
     }
   }
 

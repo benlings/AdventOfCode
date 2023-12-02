@@ -50,18 +50,30 @@ extension GameRecord {
     revealedCubes.allSatisfy(Self.isPossible(cubes:))
   }
 
+  // The Elf would first like to know which games would have been possible if the bag contained only 12 red cubes, 13 green cubes, and 14 blue cubes?
   static func isPossible(cubes: [String: Int]) -> Bool {
     cubes["red", default: 0] <= 12 &&
     cubes["green", default: 0] <= 13 &&
     cubes["blue", default: 0] <= 14
   }
+
+  var fewestCubes: [String: Int] {
+    revealedCubes.reduce(into: [:]) { result, cubes in
+      result["red", default: 0].formMax(cubes["red", default: 0])
+      result["green", default: 0].formMax(cubes["green", default: 0])
+      result["blue", default: 0].formMax(cubes["blue", default: 0])
+    }
+  }
+
+  var power: Int {
+    fewestCubes.values.product()
+  }
 }
 
-// The Elf would first like to know which games would have been possible if the bag contained only 12 red cubes, 13 green cubes, and 14 blue cubes?
 public func day2_1(_ input: String) -> Int {
   input.lines().compactMap(GameRecord.init).filter(\.isPossible).map(\.id).sum()
 }
 
 public func day2_2(_ input: String) -> Int {
-    0
+  input.lines().compactMap(GameRecord.init).map(\.power).sum()
 }

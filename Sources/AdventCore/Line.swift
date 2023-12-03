@@ -14,6 +14,12 @@ public struct Line {
         self.end = end
     }
 
+    public init(start: Offset, horizontalLength: Int) {
+        self.start = start
+        self.end = start
+        self.end.east += horizontalLength - 1
+    }
+
     var start: Offset
     var end: Offset
 
@@ -51,6 +57,7 @@ public struct Line {
     }
 
     public var points: [Offset] {
+        guard start != end else { return [start] }
         var point = start
         let offset = unitDirection
         let iterator: AnyIterator<Offset> = AnyIterator {

@@ -14,10 +14,15 @@ struct EngineSchematic {
       }
       return n
     }
+
+    var value: Int? {
+      Int(digits)
+    }
   }
   
   var numbers: Set<Number>
   var symbols: Set<Offset>
+  var stars: Set<Offset>
 
   func isPartNumber(_ number: Number) -> Bool {
     !number.neighbours.isDisjoint(with: symbols)
@@ -26,7 +31,14 @@ struct EngineSchematic {
   var partNumbers: [Int] {
     numbers
       .filter { isPartNumber($0) }
-      .compactMap { Int($0.digits) }
+      .compactMap { $0.value }
+  }
+
+  var gearRatios: [Int] {
+    stars.compactMap { star in
+      let neighbours = numbers.filter { $0.neighbours.contains(star) }
+      return neighbours.count == 2 ? neighbours.compactMap(\.value).product() : nil
+    }
   }
 }
 
@@ -67,6 +79,8 @@ extension EngineSchematic {
       }
     }
     self.symbols = symbolsGrid.toSparse()
+
+    self.stars = Grid(description) { Bit($0 == "*") }.toSparse()
   }
 }
 
@@ -77,5 +91,7 @@ public func day3_1(_ input: String) -> Int {
 }
 
 public func day3_2(_ input: String) -> Int {
-  0
+  let schematic = EngineSchematic(input)
+  let partNumbers = schematic.gearRatios
+  return partNumbers.sum()
 }

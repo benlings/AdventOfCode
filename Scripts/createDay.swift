@@ -12,11 +12,11 @@ import Foundation
 import AdventCore
 
 public func day\(day)_1(_ input: String) -> Int {
-    0
+  0
 }
 
 public func day\(day)_2(_ input: String) -> Int {
-    0
+  0
 }
 """
 
@@ -26,26 +26,26 @@ import AoC\#(year)
 
 final class Day\#(day)Tests: XCTestCase {
 
-    let input = Bundle.module.text(named: "day\#(day)")
+  let input = Bundle.module.text(named: "day\#(day)")
 
-    let exampleInput = """
-    """
+  let exampleInput = """
+  """
 
-    func testPart1Example() {
-        XCTAssertEqual(day\#(day)_1(exampleInput), 0)
-    }
+  func testPart1Example() {
+    XCTAssertEqual(day\#(day)_1(exampleInput), 0)
+  }
 
-    func testPart1() {
-        XCTAssertEqual(day\#(day)_1(input), 0)
-    }
+  func testPart1() {
+    XCTAssertEqual(day\#(day)_1(input), 0)
+  }
 
-    func testPart2Example() {
-        XCTAssertEqual(day\#(day)_2(exampleInput), 0)
-    }
+  func testPart2Example() {
+    XCTAssertEqual(day\#(day)_2(exampleInput), 0)
+  }
 
-    func testPart2() {
-        XCTAssertEqual(day\#(day)_2(input), 0)
-    }
+  func testPart2() {
+    XCTAssertEqual(day\#(day)_2(input), 0)
+  }
 }
 """#
 

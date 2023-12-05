@@ -72,10 +72,12 @@ extension Scanner {
   }
 }
 
-public func day5_1(_ input: String) -> Int {
-  var groups = input.groups()
-  let seeds = groups.removeFirst().trimmingPrefix(#/seeds: /#).split(separator: #/\s+/#).compactMap { Int($0) }
-  let maps = groups.map { group in
+func parseSeeds(_ line: String) -> [Int] {
+  line.trimmingPrefix(#/seeds: /#).split(separator: #/\s+/#).compactMap { Int($0) }
+}
+
+func parseRangeMap(_ groups: [String]) -> [RangeMap] {
+  groups.map { group in
     var entries = group.lines()
     _ = entries.removeFirst() // Ignore spec on entry types - they are in the right order to just pass through
     return RangeMap(
@@ -85,6 +87,12 @@ public func day5_1(_ input: String) -> Int {
       }
     )
   }
+}
+
+public func day5_1(_ input: String) -> Int {
+  var groups = input.groups()
+  let seeds = parseSeeds(groups.removeFirst())
+  let maps = parseRangeMap(groups)
   return seeds.map { seed in
     maps.reduce(seed) { source, map in
       map[source]

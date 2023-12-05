@@ -41,13 +41,30 @@ struct RangeMap {
     var destinationStart: Int
     var sourceStart: Int
     var length: Int
-    private var sourceRange: Range<Int> { sourceStart..<(sourceStart + length) }
+    var sourceRange: Range<Int> { sourceStart..<(sourceStart + length) }
     func contains(_ source: Int) -> Bool {
       sourceRange.contains(source)
     }
     subscript(source: Int) -> Int {
       assert(sourceRange.contains(source))
       return source - sourceStart + destinationStart
+    }
+    subscript(range: Range<Int>) -> Range<Int> {
+      self[range.lowerBound]..<self[range.upperBound]
+    }
+    func overlappingRanges(_ range: Range<Int>) -> [Range<Int>] {
+      var result = [Range<Int>]()
+      let sourceRange = self.sourceRange
+      if range.lowerBound < sourceRange.lowerBound {
+        result.append(range.lowerBound..<min(sourceRange.lowerBound, range.upperBound))
+        if range.upperBound > sourceRange.lowerBound {
+          result.append(sourceRange.lowerBound..<min(range.upperBound, sourceRange.upperBound))
+        }
+      }
+      if range.upperBound > sourceRange.upperBound {
+        result.append(max(range.lowerBound, sourceRange.upperBound)..<range.upperBound)
+      }
+      return result
     }
   }
 
@@ -61,15 +78,23 @@ struct RangeMap {
   }
 
   subscript(sourceRange: RangeSet<Int>) -> RangeSet<Int> {
-    // TODO
     // Iterate over ranges + entries to find overlap
-    // sourceRange: ---->------<----------->----------<-------
+    // sourceRange: ---->------<--->------------------<-------
     //     entries: -------->-------<--------->---<-----------
-    // destination: ....1111xxxx...........111xxxxx1111.......
+    // destination: ....1111xxxx...xx111111111xxxxx1111.......
     // 1 = 1:1 mapping
     // x = translate overlapping range with (range) - sourceStart + destinationStart
-
-    sourceRange
+    var rangeSet = RangeSet<Int>()
+    var entriesRangeSet = RangeSet(entries.map(\.sourceRange))
+    for source in sourceRange.ranges {
+      for entry in entries {
+        for splitSource in entry.overlappingRanges(source) {
+          // todo - need to check non-overlapping regions against all entries before mapping them 1:1
+          rangeSet.insert(contentsOf: entry[splitSource])
+        }
+      }
+    }
+    return rangeSet
   }
 
 }

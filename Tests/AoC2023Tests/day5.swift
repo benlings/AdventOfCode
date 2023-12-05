@@ -50,7 +50,7 @@ final class Day5Tests: XCTestCase {
   }
 
   func testPart2Example() {
-    XCTAssertEqual(day5_2(exampleInput), 0)
+    XCTAssertEqual(day5_2(exampleInput), 46)
   }
 
   func testPart2() {

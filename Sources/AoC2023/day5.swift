@@ -1,5 +1,6 @@
 import Foundation
 import AdventCore
+import SE0270_RangeSet
 
 //seeds: 79 14 55 13
 //
@@ -58,6 +59,19 @@ struct RangeMap {
     }
     return source
   }
+
+  subscript(sourceRange: RangeSet<Int>) -> RangeSet<Int> {
+    // TODO
+    // Iterate over ranges + entries to find overlap
+    // sourceRange: ---->------<----------->----------<-------
+    //     entries: -------->-------<--------->---<-----------
+    // destination: ....1111xxxx...........111xxxxx1111.......
+    // 1 = 1:1 mapping
+    // x = translate overlapping range with (range) - sourceStart + destinationStart
+
+    sourceRange
+  }
+
 }
 
 extension Scanner {
@@ -101,5 +115,10 @@ public func day5_1(_ input: String) -> Int {
 }
 
 public func day5_2(_ input: String) -> Int {
-  0
+  var groups = input.groups()
+  let seeds = RangeSet(parseSeeds(groups.removeFirst()).chunks(ofCount: 2).compactMap { $0.first!..<($0.first! + $0.last!) })
+  let maps = parseRangeMap(groups)
+  return maps.reduce(seeds) { source, map in
+    map[source]
+  }.ranges.first?.lowerBound ?? 0
 }

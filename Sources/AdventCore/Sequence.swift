@@ -110,6 +110,10 @@ public extension Sequence {
     func min(on selector: (Element) -> some Comparable) -> Element? {
         self.min { selector($0) < selector($1) }
     }
+    
+    func max(on selector: (Element) -> some Comparable) -> Element? {
+        self.max { selector($0) < selector($1) }
+    }
 }
 
 public extension Sequence<Int> {

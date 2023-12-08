@@ -18,9 +18,16 @@ enum HandType: Comparable {
   case fourOfAKind
   case fiveOfAKind
 
-  init(cards: [Hand.Card]) {
+  init(cards: [Hand.Card], isJoker: Bool) {
     assert(cards.count == 5)
-    let counts = cards.grouped(by: { $0 }).mapValues(\.count)
+    var counts = cards.grouped(by: { $0 }).mapValues(\.count)
+    if isJoker,
+       let jokerCount = counts[.joker],
+       let maxKey = (counts.filter { $0.key != .joker }).max(on: \.value)?.key {
+      // Move joker to card we already have the most of
+      counts[.joker] = nil
+      counts[maxKey, default: 0] += jokerCount
+    }
     switch counts.count {
     case 1:
       self = .fiveOfAKind
@@ -63,6 +70,8 @@ struct Hand {
     case three = "3"
     case two = "2"
 
+    static let joker: Card = .jack
+
     var jackRank: Int {
       switch self {
       case .ace: 13
@@ -80,18 +89,53 @@ struct Hand {
       case .two: 1
       }
     }
+
+    var jokerRank: Int {
+      switch self {
+      case .ace: 13
+      case .king: 12
+      case .queen: 11
+      case .ten: 9
+      case .nine: 8
+      case .eight: 7
+      case .seven: 6
+      case .six: 5
+      case .five: 4
+      case .four: 3
+      case .three: 2
+      case .two: 1
+      case .jack: 0
+      }
+    }
   }
 
   var cards: [Card]
   var type: HandType
+  var jokerType: HandType
 
   var bid: Int
 
   init(cards: [Card], bid: Int) {
     assert(cards.count == 5)
     self.cards = cards
-    self.type = HandType(cards: cards)
+    self.type = HandType(cards: cards, isJoker: false)
+    self.jokerType = HandType(cards: cards, isJoker: true)
     self.bid = bid
+  }
+
+  static func totalWinnings(_ input: String, handType: (Hand) -> HandType, cardRank: (Card) -> Int) -> Int {
+    input
+      .lines()
+      .compactMap(Hand.init)
+      .sorted { lhs, rhs in
+        if handType(lhs) == handType(rhs) {
+          return lhs.cards.lexicographicallyPrecedes(rhs.cards, on: cardRank)
+        }
+        return handType(lhs) < handType(rhs)
+      }
+      .enumerated()
+      .map { (index, hand) in (index + 1) * hand.bid }
+      .sum()
   }
 }
 
@@ -106,20 +150,9 @@ extension Hand {
 }
 
 public func day7_1(_ input: String) -> Int {
-  input
-    .lines()
-    .compactMap(Hand.init)
-    .sorted { lhs, rhs in
-      if lhs.type == rhs.type {
-        return lhs.cards.lexicographicallyPrecedes(rhs.cards, on: \.jackRank)
-      }
-      return lhs.type < rhs.type
-    }
-    .enumerated()
-    .map { (index, hand) in (index + 1) * hand.bid }
-    .sum()
+  Hand.totalWinnings(input, handType: \.type, cardRank: \.jackRank)
 }
 
 public func day7_2(_ input: String) -> Int {
-  0
+  Hand.totalWinnings(input, handType: \.jokerType, cardRank: \.jokerRank)
 }

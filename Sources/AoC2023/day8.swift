@@ -19,6 +19,14 @@ struct Network {
   static let start: ID = "AAA"
   static let end: ID = "ZZZ"
 
+  var ghostStartNodes: [ID] {
+    nodes.keys.filter { $0.hasSuffix("A") }
+  }
+
+  func isGhostEndNode(_ nodes: [ID]) -> Bool {
+    nodes.allSatisfy { $0.hasSuffix("Z") }
+  }
+
   func countSteps() -> Int {
     var count = 0
     var node = Self.start
@@ -27,6 +35,19 @@ struct Network {
         break
       }
       node = instruction.pick(nodes[node]!)
+      count += 1
+    }
+    return count
+  }
+
+  func countGhostSteps() -> Int {
+    var count = 0
+    var nodes = ghostStartNodes
+    for instruction in instructions.cycled() {
+      if isGhostEndNode(nodes) {
+        break
+      }
+      nodes = nodes.map { instruction.pick(self.nodes[$0]!) }
       count += 1
     }
     return count
@@ -64,5 +85,6 @@ public func day8_1(_ input: String) -> Int {
 }
 
 public func day8_2(_ input: String) -> Int {
-  0
+  let network = Network(input)
+  return network.countGhostSteps()
 }

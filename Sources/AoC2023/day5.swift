@@ -50,21 +50,10 @@ struct RangeMap {
       return source - sourceStart + destinationStart
     }
     subscript(range: Range<Int>) -> Range<Int> {
-      self[range.lowerBound]..<self[range.upperBound]
+      self[range.lowerBound]..<(self[range.upperBound - 1] + 1)
     }
-    func overlappingRanges(_ range: Range<Int>) -> [Range<Int>] {
-      var result = [Range<Int>]()
-      let sourceRange = self.sourceRange
-      if range.lowerBound < sourceRange.lowerBound {
-        result.append(range.lowerBound..<min(sourceRange.lowerBound, range.upperBound))
-        if range.upperBound > sourceRange.lowerBound {
-          result.append(sourceRange.lowerBound..<min(range.upperBound, sourceRange.upperBound))
-        }
-      }
-      if range.upperBound > sourceRange.upperBound {
-        result.append(max(range.lowerBound, sourceRange.upperBound)..<range.upperBound)
-      }
-      return result
+    func overlappingRange(_ range: Range<Int>) -> Range<Int> {
+      self.sourceRange.clamped(to: range)
     }
   }
 
@@ -83,18 +72,18 @@ struct RangeMap {
     //     entries: -------->-------<--------->---<-----------
     // destination: ....1111xxxx...xx111111111xxxxx1111.......
     // 1 = 1:1 mapping
+    let oneToOne = sourceRange.subtracting(RangeSet(entries.map(\.sourceRange)))
     // x = translate overlapping range with (range) - sourceStart + destinationStart
-    var rangeSet = RangeSet<Int>()
-    var entriesRangeSet = RangeSet(entries.map(\.sourceRange))
+    var translated = RangeSet<Int>()
     for source in sourceRange.ranges {
       for entry in entries {
-        for splitSource in entry.overlappingRanges(source) {
-          // todo - need to check non-overlapping regions against all entries before mapping them 1:1
-          rangeSet.insert(contentsOf: entry[splitSource])
+        let overlap = entry.overlappingRange(source)
+        if !overlap.isEmpty {
+          translated.insert(contentsOf: entry[overlap])
         }
       }
     }
-    return rangeSet
+    return translated.union(oneToOne)
   }
 
 }
@@ -118,7 +107,9 @@ func parseSeeds(_ line: String) -> [Int] {
 func parseRangeMap(_ groups: [String]) -> [RangeMap] {
   groups.map { group in
     var entries = group.lines()
-    _ = entries.removeFirst() // Ignore spec on entry types - they are in the right order to just pass through
+    // Don't need to parse header that specifies `seed-to-soil` etc.
+    // The groups are in the order they need to be passed through
+    _ = entries.removeFirst()
     return RangeMap(
       entries: entries.compactMap {
         let s = Scanner(string: $0)

@@ -48,7 +48,7 @@ enum HandType: Comparable {
 
 struct Hand {
 
-  enum Card: Character, Comparable {
+  enum Card: Character {
     case ace = "A"
     case king = "K"
     case queen = "Q"
@@ -63,7 +63,7 @@ struct Hand {
     case three = "3"
     case two = "2"
 
-    private var comparisonValue: Int {
+    var jackRank: Int {
       switch self {
       case .ace: 13
       case .king: 12
@@ -79,10 +79,6 @@ struct Hand {
       case .three: 2
       case .two: 1
       }
-    }
-
-    static func < (lhs: Self, rhs: Self) -> Bool {
-      return lhs.comparisonValue < rhs.comparisonValue
     }
   }
 
@@ -115,7 +111,7 @@ public func day7_1(_ input: String) -> Int {
     .compactMap(Hand.init)
     .sorted { lhs, rhs in
       if lhs.type == rhs.type {
-        return lhs.cards.lexicographicallyPrecedes(rhs.cards)
+        return lhs.cards.lexicographicallyPrecedes(rhs.cards, on: \.jackRank)
       }
       return lhs.type < rhs.type
     }

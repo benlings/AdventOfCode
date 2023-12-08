@@ -8,6 +8,12 @@ public extension Collection {
         return try dropFirst().reduce(first, nextPartialResult)
     }
 
+    @inlinable func lexicographicallyPrecedes<OtherSequence>(_ other: OtherSequence, on selector: (Element) -> some Comparable) -> Bool where OtherSequence : Sequence, Self.Element == OtherSequence.Element {
+        lexicographicallyPrecedes(other) {
+            selector($0) < selector($1)
+        }
+    }
+
 }
 
 public extension Collection where Element: Comparable {

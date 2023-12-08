@@ -23,15 +23,15 @@ struct Network {
     nodes.keys.filter { $0.hasSuffix("A") }
   }
 
-  func isGhostEndNode(_ nodes: [ID]) -> Bool {
-    nodes.allSatisfy { $0.hasSuffix("Z") }
+  func isGhostEndNode(_ node: ID) -> Bool {
+    node.hasSuffix("Z")
   }
 
-  func countSteps() -> Int {
+  func countSteps(start: ID = Self.start, isEnd: (ID) -> Bool = { $0 == Self.end }) -> Int {
     var count = 0
-    var node = Self.start
+    var node = start
     for instruction in instructions.cycled() {
-      if node == Self.end {
+      if isEnd(node) {
         break
       }
       node = instruction.pick(nodes[node]!)
@@ -41,16 +41,25 @@ struct Network {
   }
 
   func countGhostSteps() -> Int {
+    let cycleLengths = ghostStartNodes.map {
+      countSteps(start: $0, isEnd: isGhostEndNode)
+    }
+    return cycleLengths.lcm()!
+  }
+
+  func analyseGhostSteps() {
     var count = 0
     var nodes = ghostStartNodes
-    for instruction in instructions.cycled() {
-      if isGhostEndNode(nodes) {
+    for (i, instruction) in instructions.indexed().cycled() {
+      if nodes.allSatisfy(isGhostEndNode) {
         break
+      }
+      if nodes.contains(where: { $0.hasSuffix("Z") || $0.hasSuffix("A") }) {
+        print("\(count) (\(i)): \(nodes.map { $0.hasSuffix("Z") ? "e" : $0.hasSuffix("A") ? "s" : "." }.joined(separator: ", "))")
       }
       nodes = nodes.map { instruction.pick(self.nodes[$0]!) }
       count += 1
     }
-    return count
   }
 }
 

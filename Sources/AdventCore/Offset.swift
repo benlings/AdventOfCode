@@ -67,14 +67,19 @@ public struct Offset {
 }
 
 extension Offset {
+    public static var north: Self = Self(north: 1)
+    public static var south: Self = Self(north: -1)
+    public static var east: Self = Self(east: 1)
+    public static var west: Self = Self(east: -1)
+
     public static func orthoNeighbours() -> [Offset] {
-        return [Self(east: -1), Self(north: -1), Self(east: 1), Self(north: 1)]
+        return [.west, .south, .east, .north]
     }
     public static func neighbours() -> [Offset] {
         return [
             Self(east: -1, north: -1), Self(north: -1), Self(east: 1, north: -1),
             Self(east: -1, north: 0),                   Self(east: 1, north: 0),
-            Self(east: -1, north: 1), Self(north: 1), Self(east: 1, north: 1),
+            Self(east: -1, north: 1),  Self(north: 1),  Self(east: 1, north: 1),
         ]
     }
 }

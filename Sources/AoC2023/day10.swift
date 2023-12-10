@@ -1,7 +1,7 @@
 import Foundation
 import AdventCore
 
-enum Pipe: Character {
+enum Pipe: Character, CaseIterable {
   case northSouth = "|"
   case eastWest = "-"
   // TODO sort out South being up :-/
@@ -23,6 +23,13 @@ enum Pipe: Character {
     case .ground: []
     case .start: [.north, .south, .east, .west]
     }
+  }
+
+  init?(connectingDirections: [Offset]) {
+    let directions = Set(connectingDirections)
+    let pipe = Self.allCases.filter { $0 != .start }.first { $0.connectingDirections == directions }
+    guard let pipe else { return nil }
+    self = pipe
   }
 
 }
@@ -62,6 +69,27 @@ struct PipeMaze {
     return distance
   }
 
+  func traceRoute() -> Grid<Pipe>? {
+    guard let start = grid.firstIndex(of: .start) else { return nil }
+    var next = connections(start)
+    assert(next.count == 2)
+    var current = [start, start]
+    guard let inferredStart = Pipe(connectingDirections: zip(next, current).map(-)) else { return nil }
+    var route = Grid(repeating: Pipe.ground, size: grid.size)
+    route[start] = inferredStart
+    next.forEach { route[$0] = grid[$0] }
+    while next[0] != next[1] && current[0] != next[1] {
+      let previous = current
+      current = next
+      next = zip(previous, current).map { prev, curr in
+        connections(curr).first { $0 != prev }!
+      }
+      next.forEach { route[$0] = grid[$0] }
+    }
+
+    return route
+  }
+
 }
 
 extension PipeMaze {
@@ -76,5 +104,51 @@ public func day10_1(_ input: String) -> Int {
 }
 
 public func day10_2(_ input: String) -> Int {
-  0
+  enum D {
+    case none
+    case north
+    case south
+  }
+  let grid = PipeMaze(input)
+  let route = grid.traceRoute()!
+  var count = 0
+  for row in route.rowIndices {
+    var inside = false
+    var state = D.none
+    for column in route.columnIndices {
+      let offset = Offset(east: column, north: row)
+      let pipe = route[offset]
+      switch pipe {
+      case .northSouth:
+        inside.toggle()
+      case .eastWest:
+        break
+      case .northEast:
+        assert(state == .none)
+        state = .north
+      case .northWest:
+        assert(state != .none)
+        if state == .south {
+          inside.toggle()
+        }
+        state = .none
+      case .southEast:
+        assert(state == .none)
+        state = .south
+      case .southWest:
+        assert(state != .none)
+        if state == .north {
+          inside.toggle()
+        }
+        state = .none
+      case .ground:
+        if inside {
+          count += 1
+        }
+      case .start:
+        fatalError()
+      }
+    }
+  }
+  return count
 }

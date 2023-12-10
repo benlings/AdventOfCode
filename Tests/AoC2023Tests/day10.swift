@@ -33,11 +33,23 @@ final class Day10Tests: XCTestCase {
     XCTAssertEqual(day10_1(input), 6846)
   }
 
+  let exampleInput3 = """
+  ...........
+  .S-------7.
+  .|F-----7|.
+  .||.....||.
+  .||.....||.
+  .|L-7.F-J|.
+  .|..|.|..|.
+  .L--J.L--J.
+  ...........
+  """
+
   func testPart2Example() {
-    XCTAssertEqual(day10_2(exampleInput1), 0)
+    XCTAssertEqual(day10_2(exampleInput3), 4)
   }
 
   func testPart2() {
-    XCTAssertEqual(day10_2(input), 0)
+    XCTAssertEqual(day10_2(input), 325)
   }
 }

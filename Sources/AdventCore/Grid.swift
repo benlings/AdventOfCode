@@ -24,6 +24,10 @@ public struct Grid<Element> {
         columnIndices.map { column($0) }
     }
 
+    public func values() -> [Element] {
+        elements.flatten()
+    }
+
     public var columnIndices: Array.Indices {
         elements.first!.indices
     }

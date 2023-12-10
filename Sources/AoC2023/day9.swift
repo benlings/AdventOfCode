@@ -15,6 +15,11 @@ func propagate(_ differences: [[Int]]) -> Int {
   differences.compactMap(\.last).sum()
 }
 
+func backPropagate(_ differences: [[Int]]) -> Int {
+  zip(differences.compactMap(\.first), [1, -1].cycled()).map { $0 * $1 }.sum()
+}
+
+
 public func day9_1(_ input: String) -> Int {
   input
     .lines()
@@ -25,5 +30,10 @@ public func day9_1(_ input: String) -> Int {
 }
 
 public func day9_2(_ input: String) -> Int {
-  0
+  input
+    .lines()
+    .map {
+      backPropagate(differences($0))
+    }
+    .sum()
 }

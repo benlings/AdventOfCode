@@ -58,7 +58,7 @@ public struct SubmarineDiagnostic {
 
 public extension SubmarineDiagnostic {
     init(_ report: String) {
-        self.bits = Grid(lines: report.lines())
+        self.bits = Grid(report)
     }
 }
 

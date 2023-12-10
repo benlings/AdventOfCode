@@ -60,12 +60,6 @@ public extension Grid where Element: Equatable {
     }
 }
 
-public extension Grid where Element: RawRepresentable {
-    init(lines: some Collection<some Collection<Element.RawValue>>) {
-        self.elements = lines.map { $0.compactMap(Element.init) }
-    }
-}
-
 public extension Grid {
     init(repeating element: Element, size: Offset) {
         self.elements = [[Element]](repeating: [Element](repeating: element, count: size.east), count: size.north)
@@ -73,6 +67,11 @@ public extension Grid {
 }
 
 public extension Grid {
+
+    init(_ description: String) where Element: RawRepresentable<Character> {
+        self.init(description, conversion: { Element(rawValue: $0) })
+    }
+
     init(_ description: String, conversion: (Character) -> Element?) {
         self.elements = description.lines().map { $0.compactMap(conversion) }
     }

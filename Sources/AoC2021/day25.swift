@@ -64,12 +64,12 @@ public struct CucumberMap {
 }
 
 public extension CucumberMap {
-    init(_ lines: [String]) {
-        self.state = Grid(lines: lines)
+    init(_ description: String) {
+        self.state = Grid(description)
     }
 }
 
-fileprivate let day25_input = Bundle.module.text(named: "day25").lines()
+fileprivate let day25_input = Bundle.module.text(named: "day25")
 
 public func day25_1() -> Int {
     var map = CucumberMap(day25_input)

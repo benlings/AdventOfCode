@@ -104,49 +104,18 @@ public func day10_1(_ input: String) -> Int {
 }
 
 public func day10_2(_ input: String) -> Int {
-  enum D {
-    case none
-    case north
-    case south
-  }
   let grid = PipeMaze(input)
   let route = grid.traceRoute()!
   var count = 0
   for row in route.rowIndices {
     var inside = false
-    var state = D.none
     for column in route.columnIndices {
       let offset = Offset(east: column, north: row)
       let pipe = route[offset]
-      switch pipe {
-      case .northSouth:
+      if pipe == .ground {
+        if inside { count += 1 }
+      } else if pipe.connectingDirections.contains(.north) {
         inside.toggle()
-      case .eastWest:
-        break
-      case .northEast:
-        assert(state == .none)
-        state = .north
-      case .northWest:
-        assert(state != .none)
-        if state == .south {
-          inside.toggle()
-        }
-        state = .none
-      case .southEast:
-        assert(state == .none)
-        state = .south
-      case .southWest:
-        assert(state != .none)
-        if state == .north {
-          inside.toggle()
-        }
-        state = .none
-      case .ground:
-        if inside {
-          count += 1
-        }
-      case .start:
-        fatalError()
       }
     }
   }

@@ -27,10 +27,11 @@ final class Day11Tests: XCTestCase {
   }
 
   func testPart2Example() {
-    XCTAssertEqual(day11_2(exampleInput), 0)
+    XCTAssertEqual(galaxyDistances(exampleInput, expansionFactor: 10), 1030)
+    XCTAssertEqual(galaxyDistances(exampleInput, expansionFactor: 100), 8410)
   }
 
   func testPart2() {
-    XCTAssertEqual(day11_2(input), 0)
+    XCTAssertEqual(day11_2(input), 649862989626)
   }
 }

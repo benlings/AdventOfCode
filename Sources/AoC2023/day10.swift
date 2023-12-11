@@ -90,6 +90,22 @@ struct PipeMaze {
     return route
   }
 
+  func countInside() -> Int? {
+    guard let route = traceRoute() else { return nil }
+    var count = 0
+    for row in route.rows() {
+      var inside = false
+      for pipe in row {
+        if pipe == .ground {
+          if inside { count += 1 }
+        } else if pipe.connectingDirections.contains(.north) {
+          inside.toggle()
+        }
+      }
+    }
+    return count
+  }
+
 }
 
 extension PipeMaze {
@@ -105,19 +121,5 @@ public func day10_1(_ input: String) -> Int {
 
 public func day10_2(_ input: String) -> Int {
   let grid = PipeMaze(input)
-  let route = grid.traceRoute()!
-  var count = 0
-  for row in route.rowIndices {
-    var inside = false
-    for column in route.columnIndices {
-      let offset = Offset(east: column, north: row)
-      let pipe = route[offset]
-      if pipe == .ground {
-        if inside { count += 1 }
-      } else if pipe.connectingDirections.contains(.north) {
-        inside.toggle()
-      }
-    }
-  }
-  return count
+  return grid.countInside()!
 }

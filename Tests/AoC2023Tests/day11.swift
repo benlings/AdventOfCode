@@ -6,14 +6,24 @@ final class Day11Tests: XCTestCase {
   let input = Bundle.module.text(named: "day11")
 
   let exampleInput = """
+  ...#......
+  .......#..
+  #.........
+  ..........
+  ......#...
+  .#........
+  .........#
+  ..........
+  .......#..
+  #...#.....
   """
 
   func testPart1Example() {
-    XCTAssertEqual(day11_1(exampleInput), 0)
+    XCTAssertEqual(day11_1(exampleInput), 374)
   }
 
   func testPart1() {
-    XCTAssertEqual(day11_1(input), 0)
+    XCTAssertEqual(day11_1(input), 10289334)
   }
 
   func testPart2Example() {

@@ -83,9 +83,8 @@ public struct TrenchMap {
 extension TrenchMap {
     public init(_ description: String) {
         let groups = description.groups()
-        func read(c: Character) -> Bit { Bit(c == "#") }
-        self.enhancementAlgorithm = groups[0].compactMap(read)
-        self.image = InfiniteImage(pixels: Grid(groups[1], conversion: read).toSparse())
+        self.enhancementAlgorithm = groups[0].compactMap(Bit.init(pixel:))
+        self.image = InfiniteImage(pixels: Grid(groups[1], conversion: Bit.init(pixel:)).toSparse())
     }
 }
 

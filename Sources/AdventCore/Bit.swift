@@ -55,7 +55,7 @@ extension Bit: CustomStringConvertible {
     }
 
     public init(pixel: Character) {
-        self = Self(pixel == "#")
+        self.init(pixel == "#")
     }
 }
 

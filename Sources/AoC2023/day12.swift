@@ -13,7 +13,9 @@ import Algorithms
 
  */
 
-struct Springs {
+var cache: [Springs: Int] = [:]
+
+struct Springs: Hashable {
 
   enum Condition: Character {
     case operational = "."
@@ -25,7 +27,18 @@ struct Springs {
   var groups: [Int]
 
   func arrangementsCount() -> Int {
+
     func count(_ arrangement: some RandomAccessCollection<Condition>, _ groups: some RandomAccessCollection<Int>) -> Int {
+      let key = Springs(arrangement: Array(arrangement), groups: Array(groups))
+      if let c = cache[key] {
+        return c
+      }
+      let c = count0(arrangement, groups)
+      cache[key] = c
+      return c
+    }
+
+    func count0(_ arrangement: some RandomAccessCollection<Condition>, _ groups: some RandomAccessCollection<Int>) -> Int {
       let rest = arrangement.dropFirst()
       guard let firstCondition = arrangement.first,
             let firstGroup = groups.first

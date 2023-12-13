@@ -20,33 +20,29 @@ struct MirrorPattern {
  012345678
  */
 
-  func reflectionCandidates(column: Int) -> (Set<Offset>, Set<Offset>) {
-    let range = max(0, 2 * column - size.east)..<min(size.east, 2 * column)
-    let filtered = rocks.filter { range.contains($0.east) }
-    return (filtered, filtered
-      .map { Offset(east: 2 * column - $0.east - 1, north: $0.north) }
-      .toSet())
-  }
-
-  func reflectionCandidates(row: Int) -> (Set<Offset>, Set<Offset>) {
-    let range = max(0, 2 * row - size.north)..<min(size.north, 2 * row)
-    let filtered = rocks.filter { range.contains($0.north) }
-    return (filtered, filtered
-      .map { Offset(east: $0.east, north: 2 * row - $0.north - 1) }
-      .toSet())
+  func reflectionDiferences(_ dim: WritableKeyPath<Offset, Int>, _ value: Int) -> Int {
+    let dimSize = size[keyPath: dim]
+    let range = max(0, 2 * value - dimSize)..<min(dimSize, 2 * value)
+    let filtered = rocks.filter { range.contains($0[keyPath: dim]) }
+    let reflected = filtered
+      .map {
+        var reflected = $0
+        reflected[keyPath: dim] = 2 * value - $0[keyPath: dim] - 1
+        return reflected
+      }
+      .toSet()
+    return filtered.symmetricDifference(reflected).count
   }
 
   func summary(smudge: Int) -> Int {
     for column in 1..<size.east {
-      let candidates = reflectionCandidates(column: column)
-      let c = candidates.0.symmetricDifference(candidates.1).count
+      let c = reflectionDiferences(\.east, column)
       if c == smudge * 2 {
         return column
       }
     }
     for row in 1..<size.north {
-      let candidates = reflectionCandidates(row: row)
-      let c = candidates.0.symmetricDifference(candidates.1).count
+      let c = reflectionDiferences(\.north, row)
       if c == smudge * 2 {
         return 100 * row
       }

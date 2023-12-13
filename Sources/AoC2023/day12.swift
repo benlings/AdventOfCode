@@ -13,7 +13,7 @@ import Algorithms
 
  */
 
-var cache: [Springs: Int] = [:]
+fileprivate var cache: [Springs: Int] = [:]
 
 struct Springs: Hashable {
 
@@ -39,6 +39,7 @@ struct Springs: Hashable {
     }
 
     func count0(_ arrangement: some RandomAccessCollection<Condition>, _ groups: some RandomAccessCollection<Int>) -> Int {
+//      print(String(arrangement.map(\.rawValue)), groups)
       let rest = arrangement.dropFirst()
       guard let firstCondition = arrangement.first,
             let firstGroup = groups.first
@@ -62,19 +63,21 @@ struct Springs: Hashable {
         let c = remaining.isEmpty ?
         count(remaining, groups.dropFirst()) :
         count(remaining.dropFirst(), groups.dropFirst())
+//        print("found \(c): \(String(prefix.map(\.rawValue))) + \(String(remaining.map(\.rawValue)))")
         return c
       }
     }
     let c = count(arrangement, groups)
+//    print(c)
     return c
   }
 }
 
 extension Springs {
-  init(_ description: String) {
+  init(_ description: String, folded times: Int = 1) {
     let parts = description.split(separator: " ")
-    self.arrangement = parts[0].compactMap(Condition.init(rawValue:))
-    self.groups = parts[1].split(separator: ",").compactMap { Int(String($0)) }
+    self.arrangement = Array(repeating: parts[0].compactMap(Condition.init(rawValue:)), count: times).joined(by: { _, _ in .unknown})
+    self.groups = Array(parts[1].split(separator: ",").compactMap { Int(String($0)) }.cycled(times: times))
   }
 }
 
@@ -85,5 +88,7 @@ public func day12_1(_ input: String) -> Int {
 }
 
 public func day12_2(_ input: String) -> Int {
-  0
+  input.lines().map {
+    Springs($0, folded: 5).arrangementsCount()
+  }.sum()
 }

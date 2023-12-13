@@ -1,5 +1,6 @@
 import Foundation
 import AdventCore
+import Algorithms
 
 /*
 
@@ -24,28 +25,35 @@ struct Springs {
   var groups: [Int]
 
   func arrangementsCount() -> Int {
-    var combinations = [arrangement]
-    for (i, condition) in arrangement.indexed() {
-      if condition == .unknown {
-        combinations = combinations.flatMap { a in
-          var damaged = a
-          damaged[i] = .damaged
-          var operational = a
-          operational[i] = .operational
-          return [damaged, operational]
-        }
+    func count(_ arrangement: some RandomAccessCollection<Condition>, _ groups: some RandomAccessCollection<Int>) -> Int {
+      let rest = arrangement.dropFirst()
+      guard let firstCondition = arrangement.first,
+            let firstGroup = groups.first
+      else { return arrangement.allSatisfy { $0 != .damaged } && groups.isEmpty ? 1 : 0 }
+      if arrangement.count < groups.sum() + groups.count - 1 {
+        return 0
+      }
+      switch firstCondition {
+      case .operational: return count(rest, groups)
+      case .unknown:
+        return count(rest, groups)
+        + count(chain(CollectionOfOne(Condition.damaged), rest), groups)
+      case .damaged:
+        let prefix = arrangement.prefix(firstGroup)
+        let remaining = arrangement.dropFirst(firstGroup)
+        guard prefix.count == firstGroup,
+              !prefix.contains(.operational),
+              remaining.count == 0 || remaining.first != .damaged
+        else { return 0 }
+
+        let c = remaining.isEmpty ?
+        count(remaining, groups.dropFirst()) :
+        count(remaining.dropFirst(), groups.dropFirst())
+        return c
       }
     }
-    let totalDamaged = groups.sum()
-    let possible = combinations
-      .lazy
-      .filter { $0.count(of: .damaged) == totalDamaged }
-      .map { String($0.lazy.map(\.rawValue)) }
-    let pattern = groups.map { "[?#]{\($0)}" }.joined(separator: "\\.+")
-    let regex = try! Regex(pattern)
-    return possible.count { p in 
-      p.contains(regex)
-    }
+    let c = count(arrangement, groups)
+    return c
   }
 }
 

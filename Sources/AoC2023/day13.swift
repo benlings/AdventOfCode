@@ -20,28 +20,34 @@ struct MirrorPattern {
  012345678
  */
 
-  func hasReflection(column: Int) -> Bool {
+  func reflectionCandidates(column: Int) -> (Set<Offset>, Set<Offset>) {
     let range = max(0, 2 * column - size.east)..<min(size.east, 2 * column)
-    return rocks.lazy
-      .filter { range.contains($0.east) }
-      .allSatisfy { rocks.contains(Offset(east: 2 * column - $0.east - 1, north: $0.north)) }
+    let filtered = rocks.filter { range.contains($0.east) }
+    return (filtered, filtered
+      .map { Offset(east: 2 * column - $0.east - 1, north: $0.north) }
+      .toSet())
   }
 
-  func hasReflection(row: Int) -> Bool {
+  func reflectionCandidates(row: Int) -> (Set<Offset>, Set<Offset>) {
     let range = max(0, 2 * row - size.north)..<min(size.north, 2 * row)
-    return rocks.lazy
-      .filter { range.contains($0.north) }
-      .allSatisfy { rocks.contains(Offset(east: $0.east, north: 2 * row - $0.north - 1)) }
+    let filtered = rocks.filter { range.contains($0.north) }
+    return (filtered, filtered
+      .map { Offset(east: $0.east, north: 2 * row - $0.north - 1) }
+      .toSet())
   }
 
-  func summary() -> Int {
+  func summary(smudge: Int) -> Int {
     for column in 1..<size.east {
-      if hasReflection(column: column) {
+      let candidates = reflectionCandidates(column: column)
+      let c = candidates.0.symmetricDifference(candidates.1).count
+      if c == smudge * 2 {
         return column
       }
     }
     for row in 1..<size.north {
-      if hasReflection(row: row) {
+      let candidates = reflectionCandidates(row: row)
+      let c = candidates.0.symmetricDifference(candidates.1).count
+      if c == smudge * 2 {
         return 100 * row
       }
     }
@@ -61,10 +67,13 @@ extension MirrorPattern {
 public func day13_1(_ input: String) -> Int {
   input
     .groups()
-    .map { MirrorPattern($0).summary() }
+    .map { MirrorPattern($0).summary(smudge: 0) }
     .sum()
 }
 
 public func day13_2(_ input: String) -> Int {
-  0
+  input
+    .groups()
+    .map { MirrorPattern($0).summary(smudge: 1) }
+    .sum()
 }

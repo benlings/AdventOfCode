@@ -27,20 +27,15 @@ fileprivate struct State: Hashable {
   }
 }
 
-fileprivate func findShortestPath(start: [State], end: Offset, cost: (State, State) -> Int?) -> Int? {
-  var costs = [State: Int]()
-  var toVisit = PriorityQueue<State, Int>()
-  for s in start {
-    costs[s] = 0
-    toVisit.insert(s, priority: 0)
-  }
+fileprivate func findShortestPath(start: State, isEnd: (State) -> Bool, nextStates: (State) -> [(cost: Int, next: State)]) -> Int? {
+  var costs = [start: 0]
+  var toVisit = [start : 0] as PriorityQueue
   while let current = toVisit.popMin() {
-    if current.position == end {
+    if isEnd(current) {
       return costs[current]
     }
     let currentCost = costs[current, default: .max]
-    for neighbour in current.neighbours() {
-      guard let neighbourCost = cost(current, neighbour) else { continue }
+    for (neighbourCost, neighbour) in nextStates(current) {
       let alt = currentCost + neighbourCost
       if alt < costs[neighbour, default: .max] {
         costs[neighbour] = alt
@@ -54,9 +49,12 @@ fileprivate func findShortestPath(start: [State], end: Offset, cost: (State, Sta
 public func day17_1(_ input: String) -> Int {
   let grid = Grid(input) { $0.wholeNumberValue }
   let end = grid.size - Offset(east: 1, north: 1)
-  return findShortestPath(start: [State(direction: .east), State(direction: .north)],
-                          end: end,
-                          cost: { grid.contains($1.position) ? grid[$1.position] : nil })!
+  return findShortestPath(start: State(direction: .east)) {
+    $0.position == end } nextStates: { current in
+      current.neighbours().compactMap {
+        grid.contains($0.position) ? (grid[$0.position], $0) : nil
+      }
+    } ?? 0
 }
 
 public func day17_2(_ input: String) -> Int {

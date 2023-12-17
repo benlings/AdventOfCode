@@ -25,6 +25,17 @@ fileprivate struct State: Hashable {
     }
     return neighbours
   }
+
+  func neighboursUltra() -> [State] {
+    var neighbours = [State]()
+    if moves >= 4 {
+      neighbours.append(contentsOf: [next(angle: -90), next(angle: 90)])
+    }
+    if moves < 10 {
+      neighbours.append(next(angle: 0))
+    }
+    return neighbours
+  }
 }
 
 fileprivate func findShortestPath(start: State, isEnd: (State) -> Bool, nextStates: (State) -> [(cost: Int, next: State)]) -> Int? {
@@ -50,13 +61,22 @@ public func day17_1(_ input: String) -> Int {
   let grid = Grid(input) { $0.wholeNumberValue }
   let end = grid.size - Offset(east: 1, north: 1)
   return findShortestPath(start: State(direction: .east)) {
-    $0.position == end } nextStates: { current in
-      current.neighbours().compactMap {
-        grid.contains($0.position) ? (grid[$0.position], $0) : nil
-      }
-    } ?? 0
+    $0.position == end
+  } nextStates: { current in
+    current.neighbours().compactMap {
+      grid.contains($0.position) ? (grid[$0.position], $0) : nil
+    }
+  } ?? 0
 }
 
 public func day17_2(_ input: String) -> Int {
-  0
+  let grid = Grid(input) { $0.wholeNumberValue }
+  let end = grid.size - Offset(east: 1, north: 1)
+  return findShortestPath(start: State(direction: .east)) {
+    $0.position == end && $0.moves >= 4
+  } nextStates: { current in
+    current.neighboursUltra().compactMap {
+      grid.contains($0.position) ? (grid[$0.position], $0) : nil
+    }
+  } ?? 0
 }

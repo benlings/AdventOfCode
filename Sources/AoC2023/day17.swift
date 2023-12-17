@@ -4,14 +4,14 @@ import AdventCore
 fileprivate struct State: Hashable {
   var position: Offset = .zero
   var direction: Offset
-  var moves: Int = 0
+  var moves: Int = 1
 
   func next(angle: Int) -> State {
     var copy = self
     if angle == 0 {
       copy.moves += 1
     } else {
-      copy.moves = 0
+      copy.moves = 1
     }
     copy.direction.rotate(angle: angle)
     copy.position += copy.direction
@@ -20,7 +20,7 @@ fileprivate struct State: Hashable {
 
   func neighbours() -> [State] {
     var neighbours = [next(angle: -90), next(angle: 90)]
-    if moves < 2 {
+    if moves < 3 {
       neighbours.append(next(angle: 0))
     }
     return neighbours

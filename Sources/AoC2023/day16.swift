@@ -55,10 +55,9 @@ struct Beam: Hashable {
 struct MirrorGrid {
   var grid: Grid<Mirror>
 
-  var beams: Set<Beam> = [Beam(position: .zero, direction: .east)]
-  var energized: Set<Offset> = [.zero]
-
-  mutating func propagate() {
+  func propagate(entry: Beam) -> Int {
+    var beams = Set([entry])
+    var energized = Set([entry.position])
     var visited = beams
     while !beams.isEmpty {
       beams = beams
@@ -70,6 +69,7 @@ struct MirrorGrid {
       visited.formUnion(beams)
       energized.formUnion(beams.map(\.position))
     }
+    return energized.count
   }
 }
 
@@ -81,10 +81,19 @@ extension MirrorGrid {
 
 public func day16_1(_ input: String) -> Int {
   var mirrors = MirrorGrid(input)
-  mirrors.propagate()
-  return mirrors.energized.count
+  return mirrors.propagate(entry: Beam(position: .zero, direction: .east))
 }
 
 public func day16_2(_ input: String) -> Int {
-  0
+  let mirrors = MirrorGrid(input)
+  var maxCount = 0
+  for column in mirrors.grid.columnIndices {
+    maxCount = max(maxCount, mirrors.propagate(entry: Beam(position: Offset(east: column, north: 0), direction: .north)))
+    maxCount = max(maxCount, mirrors.propagate(entry: Beam(position: Offset(east: column, north: mirrors.grid.size.north - 1), direction: .south)))
+  }
+  for row in mirrors.grid.rowIndices {
+    maxCount = max(maxCount, mirrors.propagate(entry: Beam(position: Offset(east: 0, north: row), direction: .east)))
+    maxCount = max(maxCount, mirrors.propagate(entry: Beam(position: Offset(east: mirrors.grid.size.east - 1, north: row), direction: .west)))
+  }
+  return maxCount
 }

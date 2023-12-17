@@ -5,15 +5,25 @@ final class Day16Tests: XCTestCase {
 
   let input = Bundle.module.text(named: "day16")
 
-  let exampleInput = """
-  """
+  let exampleInput = #"""
+  .|...\....
+  |.-.\.....
+  .....|-...
+  ........|.
+  ..........
+  .........\
+  ..../.\\..
+  .-.-/..|..
+  .|....-|.\
+  ..//.|....
+  """#
 
   func testPart1Example() {
-    XCTAssertEqual(day16_1(exampleInput), 0)
+    XCTAssertEqual(day16_1(exampleInput), 46)
   }
 
   func testPart1() {
-    XCTAssertEqual(day16_1(input), 0)
+    XCTAssertEqual(day16_1(input), 7034)
   }
 
   func testPart2Example() {

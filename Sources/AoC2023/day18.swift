@@ -1,18 +1,14 @@
 import Foundation
 import AdventCore
 
-enum DigDirection: Character {
-  case right = "R"
-  case left = "L"
-  case up = "U"
-  case down = "D"
-
-  var dir: Offset {
-    switch self {
-    case .right: .east
-    case .left: .west
-    case .up: .south
-    case .down: .north
+extension Offset {
+  init?(digDirection: Character) {
+    switch digDirection {
+    case "R": self = .east
+    case "L": self = .west
+    case "U": self = .south
+    case "D": self = .north
+    default: return nil
     }
   }
 }
@@ -21,10 +17,10 @@ public func day18_1(_ input: String) -> Int {
   let instructions = input.lines().compactMap { line -> Offset? in
     let s = Scanner(string: line)
     guard let c = s.scanCharacter(),
-          let direction = DigDirection(rawValue: c),
+          let direction = Offset(digDirection: c),
           let dist = s.scanInt()
     else { return nil }
-    return dist * direction.dir
+    return dist * direction
   }
   var start = Offset.zero
   var edge = Set<Offset>()

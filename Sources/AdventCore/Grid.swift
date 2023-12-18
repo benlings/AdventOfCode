@@ -62,12 +62,14 @@ public struct Grid<Element> {
         case otherEdge
     }
 
-    public func area(classify: (Element) -> Boundary) -> Int {
+    public func area(classify: (Element, Offset) -> Boundary) -> Int {
         var area = 0
-        for row in rows() {
+        for n in rowIndices {
             var inside = false
-            for element in row {
-                switch classify(element) {
+            for e in columnIndices {
+                let offset = Offset(east: e, north: n)
+                let element = self[offset]
+                switch classify(element, offset) {
                 case .nonEdge:
                     if inside { area += 1 }
                 case .northEdge:

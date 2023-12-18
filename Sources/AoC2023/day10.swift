@@ -92,7 +92,7 @@ struct PipeMaze {
 
   func countInside() -> Int? {
     guard let route = traceRoute() else { return nil }
-    return route.area { pipe in
+    return route.area { pipe, _ in
       if pipe == .ground {
         return .nonEdge
       } else if pipe.connectingDirections.contains(.north) {

@@ -53,6 +53,33 @@ public struct Grid<Element> {
         OffsetRange(southWest: .zero, northEast: size - Offset(east: 1, north: 1))
     }
 
+    public enum Boundary {
+        // Non-ege
+        case nonEdge
+        /// Edge connected to the north
+        case northEdge
+        /// Edge not connected to the north
+        case otherEdge
+    }
+
+    public func area(classify: (Element) -> Boundary) -> Int {
+        var area = 0
+        for row in rows() {
+            var inside = false
+            for element in row {
+                switch classify(element) {
+                case .nonEdge:
+                    if inside { area += 1 }
+                case .northEdge:
+                    inside.toggle()
+                case .otherEdge:
+                    break
+                }
+            }
+        }
+        return area
+    }
+
 }
 
 public extension Grid where Element: Equatable {

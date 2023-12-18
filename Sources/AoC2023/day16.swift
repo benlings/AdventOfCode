@@ -80,7 +80,7 @@ extension MirrorGrid {
 }
 
 public func day16_1(_ input: String) -> Int {
-  var mirrors = MirrorGrid(input)
+  let mirrors = MirrorGrid(input)
   return mirrors.propagate(entry: Beam(position: .zero, direction: .east))
 }
 

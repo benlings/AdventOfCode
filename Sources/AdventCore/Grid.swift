@@ -87,9 +87,9 @@ extension Grid: CustomStringConvertible where Element: CustomStringConvertible {
     }
 }
 
-extension Grid: Equatable where Element: Equatable {
-    
-}
+extension Grid: Equatable where Element: Equatable { }
+
+extension Grid: Hashable where Element: Hashable { }
 
 extension Set<Offset> {
 

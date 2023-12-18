@@ -1,7 +1,8 @@
 import Foundation
 import AdventCore
+import OrderedCollections
 
-enum Rock: Character, CustomStringConvertible {
+enum Rock: Character, Hashable, CustomStringConvertible {
   var description: String { String(rawValue) }
 
   case rounded = "O"
@@ -9,18 +10,33 @@ enum Rock: Character, CustomStringConvertible {
   case space = "."
 }
 
-struct ReflectorDish {
+struct ReflectorDish: Hashable {
   var grid: Grid<Rock>
 
-  mutating func tilt() {
-    for start in grid.range() {
+
+  func range(_ direction: Offset) -> [Offset] {
+    switch direction {
+    case .south:
+      grid.rowIndices.flatMap { n in grid.columnIndices.map { e in Offset(east: e, north: n) } }
+    case .north:
+      grid.rowIndices.reversed().flatMap { n in grid.columnIndices.map { e in Offset(east: e, north: n) } }
+    case .east:
+      grid.columnIndices.reversed().flatMap { e in grid.rowIndices.map { n in Offset(east: e, north: n) } }
+    case .west:
+      grid.columnIndices.flatMap { e in grid.rowIndices.map { n in Offset(east: e, north: n) } }
+    default: fatalError()
+    }
+  }
+
+  mutating func tilt(_ direction: Offset) {
+    for start in range(direction) {
       let rock = grid[start]
       if rock == .rounded {
         var pos = start
         repeat {
-          pos += .south
+          pos += direction
         } while grid.contains(pos) && grid[pos] == .space
-        pos -= .south
+        pos -= direction
         if pos != start {
           grid[start] = .space
           grid[pos] = .rounded
@@ -45,10 +61,27 @@ extension ReflectorDish {
 
 public func day14_1(_ input: String) -> Int {
   var dish = ReflectorDish(input)
-  dish.tilt()
+  dish.tilt(.south)
   return dish.northSupportLoad
 }
 
 public func day14_2(_ input: String) -> Int {
-  0
+  var dish = ReflectorDish(input)
+  var previous = OrderedSet<ReflectorDish>()
+  var count = 1_000_000_000
+  repeat {
+    dish.tilt(.south)
+    dish.tilt(.west)
+    dish.tilt(.north)
+    dish.tilt(.east)
+    count -= 1
+    let (inserted, index) = previous.append(dish)
+    guard inserted else {
+      let period = previous.count - index
+      let offset = count % period
+      dish = previous[offset + index]
+      break
+    }
+  } while count > 0
+  return dish.northSupportLoad
 }

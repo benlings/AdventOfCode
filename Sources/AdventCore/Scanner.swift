@@ -7,6 +7,16 @@ public extension Scanner {
         return scanString(s) != nil
     }
 
+    /// Reset index if optional is nil
+    func scanOptional<T>(scanItem: () -> T?) -> T? {
+        let i = currentIndex
+        guard let item = scanItem() else {
+            currentIndex = i
+            return nil
+        }
+        return item
+    }
+
     func scanSequence<T>(separator: String, scanElement: (Scanner) -> T?) -> [T] {
         var result = [T]()
         while let r = scanElement(self) {

@@ -77,6 +77,11 @@ public extension Sequence where Element : RawRepresentable, Element.RawValue == 
 }
 
 public extension Sequence {
+
+    func toDictionary() -> Dictionary<Element.ID, Element> where Element: Identifiable {
+        self.lazy.map { ($0.id, $0) }.toDictionary()
+    }
+
     func toDictionary<K, V>() -> Dictionary<K, V> where Element == (K, V) {
         Dictionary(uniqueKeysWithValues: self)
     }

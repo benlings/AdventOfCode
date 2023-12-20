@@ -1,5 +1,6 @@
 import Foundation
 import AdventCore
+import SE0270_RangeSet
 
 struct Workflow: Identifiable {
 
@@ -9,7 +10,7 @@ struct Workflow: Identifiable {
   }
 
   struct Rule {
-    typealias Condition = (field: KeyPath<Part, Int>, operation: Operation, number: Int)
+    typealias Condition = (field: Character, operation: Operation, number: Int)
     enum Operation: Character {
       case lt = "<"
       case gt = ">"
@@ -17,9 +18,30 @@ struct Workflow: Identifiable {
     var condition: Condition?
     var destination: Destination
 
+    var range: (any RangeExpression<Int>)? {
+      guard let condition else { return nil }
+      switch condition.operation {
+      case .lt: return ..<condition.number
+      case .gt: return (condition.number + 1)...
+      }
+    }
+
+    func refine(_ partRange: PartRange) -> (matching: PartRange, remaining: PartRange?) {
+      guard let condition else { return (partRange, nil) }
+      let range = switch condition.operation {
+      case .lt: 0..<condition.number
+      case .gt: (condition.number + 1)..<4001
+      }
+      var matching = partRange
+      matching.fields[condition.field, default: RangeSet()].formIntersection(RangeSet(range))
+      var remaining = partRange
+      remaining.fields[condition.field, default: RangeSet()].remove(contentsOf: range)
+      return (matching, remaining)
+    }
+
     func matches(_ part: Part) -> Bool {
       guard let condition else { return true }
-      let value = part[keyPath: condition.field]
+      let value = part.fields[condition.field]!
       switch condition.operation {
       case .lt: return value < condition.number
       case .gt: return value > condition.number
@@ -35,6 +57,12 @@ struct Part {
   var fields: [Character: Int]
 
   var total: Int { fields.values.sum() }
+}
+
+struct PartRange {
+  var fields: [Character: RangeSet<Int>]
+
+  var count: Int { fields.values.map(\.count).product() }
 }
 
 extension Scanner {
@@ -124,5 +152,28 @@ public func day19_1(_ input: String) -> Int {
 }
 
 public func day19_2(_ input: String) -> Int {
-  0
+  let g = input.groups()
+  let workflows = g[0].lines().compactMap(Workflow.init).toDictionary()
+  let r = RangeSet(1..<4001)
+  var accepted = [PartRange]()
+  var toVisit = [("in", PartRange(fields: "xmas".map { ($0, r) }.toDictionary()))]
+  while let (id, range) = toVisit.popLast() {
+    let workflow = workflows[id]!
+    var range = range
+    for rule in workflow.rules {
+      let (matching, remaining) = rule.refine(range)
+      if let remaining {
+        range = remaining
+      }
+      switch rule.destination {
+      case .terminal(let t):
+        if t == "A" {
+          accepted.append(matching)
+        }
+      case .id(let id):
+        toVisit.append((id, matching))
+      }
+    }
+  }
+  return accepted.map(\.count).sum()
 }

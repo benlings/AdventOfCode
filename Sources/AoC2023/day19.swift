@@ -32,9 +32,9 @@ struct Workflow: Identifiable {
 }
 
 struct Part {
-  var x, m, a, s: Int
+  var fields: [Character: Int]
 
-  var total: Int { x + m + a + s }
+  var total: Int { fields.values.sum() }
 }
 
 extension Scanner {
@@ -50,20 +50,12 @@ extension Scanner {
 
   func scanCondition() -> Workflow.Rule.Condition? {
     scanOptional {
-      guard let id = scanCharacters(from: .letters),
+      guard let field = scanCharacter(),
             let op = scanCharacter(),
             let operation = Workflow.Rule.Operation(rawValue: op),
             let number = scanInt(),
             let _ = scanString(":")
       else { return nil }
-      let field: KeyPath<Part, Int>
-      switch id {
-      case "x": field = \.x
-      case "m": field = \.m
-      case "a": field = \.a
-      case "s": field = \.s
-      default: return nil
-      }
       return (field, operation, number)
     }
   }
@@ -78,19 +70,21 @@ extension Scanner {
     )
   }
 
+  func scanField() -> (Character, Int)? {
+    guard let key = scanCharacter(),
+          let _ = scanString("="),
+          let value = scanInt()
+    else { return nil }
+    return (key, value)
+  }
+
   // {x=787,m=2655,a=1222,s=2876}
   func scanPart() -> Part? {
-    guard let _ = scanString("{x="),
-          let x = scanInt(),
-          let _ = scanString(",m="),
-          let m = scanInt(),
-          let _ = scanString(",a="),
-          let a = scanInt(),
-          let _ = scanString(",s="),
-          let s = scanInt(),
+    guard let _ = scanString("{"),
+          case let fields = scanSequence(separator: ",", scanElement: scanField),
           let _ = scanString("}")
     else { return nil }
-    return Part(x: x, m: m, a: a, s: s)
+    return Part(fields: fields.toDictionary())
   }
 }
 

@@ -9,8 +9,22 @@ struct Workflow: Identifiable {
   }
 
   struct Rule {
-    var predicate: (Part) -> Bool
+    typealias Condition = (field: KeyPath<Part, Int>, operation: Operation, number: Int)
+    enum Operation: Character {
+      case lt = "<"
+      case gt = ">"
+    }
+    var condition: Condition?
     var destination: Destination
+
+    func matches(_ part: Part) -> Bool {
+      guard let condition else { return true }
+      let value = part[keyPath: condition.field]
+      switch condition.operation {
+      case .lt: return value < condition.number
+      case .gt: return value > condition.number
+      }
+    }
   }
 
   var id: String
@@ -34,10 +48,11 @@ extension Scanner {
     return Workflow(id: id, rules: rules)
   }
 
-  func scanPredicate() -> ((Part) -> Bool)? {
+  func scanCondition() -> Workflow.Rule.Condition? {
     scanOptional {
       guard let id = scanCharacters(from: .letters),
             let op = scanCharacter(),
+            let operation = Workflow.Rule.Operation(rawValue: op),
             let number = scanInt(),
             let _ = scanString(":")
       else { return nil }
@@ -49,22 +64,16 @@ extension Scanner {
       case "s": field = \.s
       default: return nil
       }
-      let operation: (Int, Int) -> Bool
-      switch op {
-      case ">": operation = { $0 > $1 }
-      case "<": operation = { $0 < $1 }
-      default: return nil
-      }
-      return { operation($0[keyPath: field], number) }
+      return (field, operation, number)
     }
   }
 
   func scanRule() -> Workflow.Rule? {
-    let pred = scanPredicate() ?? { _ in true }
+    let cond = scanCondition()
     guard let dest = scanCharacters(from: .letters)
     else { return nil }
     return Workflow.Rule(
-      predicate: pred,
+      condition: cond,
       destination: dest.allSatisfy(\.isUppercase) ? .terminal(dest) : .id(dest)
     )
   }
@@ -110,7 +119,7 @@ public func day19_1(_ input: String) -> Int {
     while case let .id(id) = dest {
       let workflow = workflows[id]!
       for rule in workflow.rules {
-        if rule.predicate(p) {
+        if rule.matches(p) {
           dest = rule.destination
           break
         }

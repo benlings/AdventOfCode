@@ -60,7 +60,7 @@ extension CaveStructure {
 }
 extension Scanner {
     func scanLineSequence() -> [Line] {
-        let points = scanSequence(separator: "->") { $0.scanOffset() }
+        let points = scanSequence(separator: "->") { scanOffset() }
         return points.adjacentPairs().map { Line(start: $0.0, end: $0.1) }
     }
 }

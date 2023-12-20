@@ -17,9 +17,9 @@ public extension Scanner {
         return item
     }
 
-    func scanSequence<T>(separator: String, scanElement: (Scanner) -> T?) -> [T] {
+    func scanSequence<T>(separator: String, scanElement: () -> T?) -> [T] {
         var result = [T]()
-        while let r = scanElement(self) {
+        while let r = scanOptional(scanItem: scanElement) {
             result.append(r)
             _ = scanString(separator)
         }

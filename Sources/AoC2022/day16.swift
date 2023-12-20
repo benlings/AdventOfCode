@@ -127,7 +127,7 @@ extension ValveScan {
                   let _ = scanner.scanString("has flow rate="),
                   let rate = scanner.scanInt(),
                   scanner.scanString("; tunnels lead to valves") != nil || scanner.scanString("; tunnel leads to valve") != nil,
-                  case let dest = scanner.scanSequence(separator: ",", scanElement: { $0.scanCharacters(from: .uppercaseLetters) })
+                  case let dest = scanner.scanSequence(separator: ",", scanElement: { scanner.scanCharacters(from: .uppercaseLetters) })
             else { continue }
             startingState.flowRates[valve] = rate
             tunnels[valve] = dest

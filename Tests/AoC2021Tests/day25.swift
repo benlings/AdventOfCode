@@ -13,7 +13,7 @@ final class Day25Tests: XCTestCase {
     .vv..>.>v.
     v.v..>>v.v
     ....v..v.>
-    """.lines()
+    """
 
     func testPart1Example() {
         var map = CucumberMap(exampleInput)

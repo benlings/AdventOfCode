@@ -42,7 +42,7 @@ extension Scanner {
   func scanWorkflow() -> Workflow? {
     guard let id = scanUpToString("{"),
        let _ = scanString("{"),
-       case let rules = scanSequence(separator: ",", scanElement: { $0.scanRule() }),
+       case let rules = scanSequence(separator: ",", scanElement: { scanRule() }),
        let _ = scanString("}")
     else { return nil }
     return Workflow(id: id, rules: rules)

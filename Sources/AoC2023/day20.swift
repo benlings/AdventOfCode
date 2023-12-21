@@ -112,5 +112,14 @@ public func day20_1(_ input: String) -> Int {
 }
 
 public func day20_2(_ input: String) -> Int {
-  0
+  var system = ModuleSystem(input)
+  var isRxLow = false
+  var count = 0
+  while !isRxLow {
+    count += 1
+    system.sendPulse { onward in
+      isRxLow = onward.contains { $0.pulse == .low && $0.to == "rx" }
+    }
+  }
+  return count
 }

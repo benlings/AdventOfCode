@@ -66,22 +66,10 @@ public func day14_1(_ input: String) -> Int {
 }
 
 public func day14_2(_ input: String) -> Int {
-  var dish = ReflectorDish(input)
-  var previous = OrderedSet<ReflectorDish>()
-  var count = 1_000_000_000
-  repeat {
+  ReflectorDish(input).extrapolate(count: 1_000_000_000) { dish in
     dish.tilt(.south)
     dish.tilt(.west)
     dish.tilt(.north)
     dish.tilt(.east)
-    count -= 1
-    let (inserted, index) = previous.append(dish)
-    guard inserted else {
-      let period = previous.count - index
-      let offset = count % period
-      dish = previous[offset + index]
-      break
-    }
-  } while count > 0
-  return dish.northSupportLoad
+  }.northSupportLoad
 }

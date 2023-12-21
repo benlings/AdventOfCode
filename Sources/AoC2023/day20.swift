@@ -23,7 +23,9 @@ struct Module: Identifiable, Hashable {
     self.type = .conjuction(lastInput: inputs)
   }
 
-  mutating func receive(_ pulse: Pulse, from input: Module.ID) -> [(to: Module.ID, pulse: Pulse)] {
+  typealias Output = (to: Module.ID, pulse: Pulse)
+
+  mutating func receive(_ pulse: Pulse, from input: Module.ID) -> [Output] {
     switch self.type {
     case .broadcast:
       return destinations.map { ($0, pulse) }
@@ -70,7 +72,6 @@ extension Module {
 
 struct ModuleSystem {
   var modules: [Module.ID: Module]
-  var counts: [Module.Pulse: Int]
 
   init(_ description: String) {
     modules = description.lines().compactMap(Module.init).toDictionary()
@@ -80,18 +81,15 @@ struct ModuleSystem {
         modules[d]?.register(input: m.id)
       }
     }
-    counts = [:]
   }
 
-  mutating func sendPulse() {
-    counts[.low, default: 0] += 1
+  mutating func sendPulse(receivingOutputs: ([Module.Output]) -> ()) {
     var pulses: Deque<(from: Module.ID, to: Module.ID, Module.Pulse)> = [("button", "broadcaster", .low)]
+    receivingOutputs([(to: "broadcaster", pulse: .low)])
     while let (from, to, pulse) = pulses.popFirst() {
       if var m = modules[to] {
         let onward = m.receive(pulse, from: from)
-        for (pulse, o) in onward.grouped(by: \.pulse) {
-          counts[pulse, default: 0] += o.count
-        }
+        receivingOutputs(onward)
         pulses.append(contentsOf: onward.map { (from: to, to: $0.to, pulse: $0.pulse) })
         modules[to] = m
       }
@@ -102,10 +100,15 @@ struct ModuleSystem {
 
 public func day20_1(_ input: String) -> Int {
   var system = ModuleSystem(input)
+  var counts: [Module.Pulse: Int] = [:]
   for _ in 0..<1000 {
-    system.sendPulse()
+    system.sendPulse { onward in
+      for (pulse, o) in onward.grouped(by: \.pulse) {
+        counts[pulse, default: 0] += o.count
+      }
+    }
   }
-  return system.counts.values.product()
+  return counts.values.product()
 }
 
 public func day20_2(_ input: String) -> Int {

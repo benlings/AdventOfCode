@@ -1,20 +1,40 @@
 import Foundation
 import AdventCore
 
-public func day21_1(_ input: String, steps: Int) -> Int {
-  let map = Grid(input, conversion: { $0 })
-  guard let start = map.firstIndex(of: "S") else { return 0 }
-  var positions = Set([start])
-  for _ in 0..<steps {
+struct Garden {
+  var map: Grid<Character>
+
+  init(_ description: String) {
+    self.map = Grid(description, conversion: { $0 })
+  }
+
+  var start: Set<Offset> {
+    guard let start = map.firstIndex(of: "S") else { return [] }
+    return [start]
+  }
+
+  func canMove(to neighbour: Offset) -> Bool {
+    map.contains(neighbour) && map[neighbour] != "#"
+  }
+
+  func findNext(positions: inout Set<Offset>) {
     var nextPositions = Set<Offset>()
     for p in positions {
       for n in p.orthoNeighbours() {
-        if map.contains(n) && map[n] != "#" {
+        if canMove(to: n) {
           nextPositions.insert(n)
         }
       }
     }
     positions = nextPositions
+  }
+}
+
+public func day21_1(_ input: String, steps: Int) -> Int {
+  let garden = Garden(input)
+  var positions = garden.start
+  for _ in 0..<steps {
+    garden.findNext(positions: &positions)
   }
   return positions.count
 }

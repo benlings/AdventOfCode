@@ -5,7 +5,7 @@ import SE0270_RangeSet
 struct Workflow: Identifiable {
 
   enum Destination: Equatable {
-    case id(String)
+    case id(Workflow.ID)
     case terminal(String)
   }
 

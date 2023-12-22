@@ -26,6 +26,15 @@ extension Offset3D : AdditiveArithmetic {
     }
 }
 
+extension Offset3D {
+    public static func * (lhs: Int, rhs: Self) -> Self {
+      Self(x: lhs * rhs.x, y: lhs * rhs.y, z: lhs * rhs.z)
+    }
+
+    public static func / (lhs: Self, rhs: Int) -> Self {
+      Self(x: lhs.x / rhs, y: lhs.y / rhs, z: lhs.z / rhs)
+    }
+}
 
 public enum Axis3D {
     case x, y, z
@@ -101,7 +110,7 @@ public extension Set<Offset3D> {
 }
 
 extension Scanner {
-  
+
   public func scanOffset3D() -> Offset3D? {
     if let x = scanInt(),
        let _ = scanString(","),

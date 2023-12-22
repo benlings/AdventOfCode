@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Line3D {
+public struct Line3D: Hashable {
 
   public init(start: Offset3D, end: Offset3D) {
     self.start = start
@@ -16,6 +16,10 @@ public struct Line3D {
     case .y: abs(direction.y)
     case .z: abs(direction.z)
     }
+  }
+
+  public func min(axis: Axis3D) -> Int {
+    Swift.min(start[axis: axis], end[axis: axis])
   }
 
   var direction: Offset3D {

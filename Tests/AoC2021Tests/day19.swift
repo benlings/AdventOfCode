@@ -1,4 +1,5 @@
 import XCTest
+import AdventCore
 import AoC2021
 
 final class Day19Tests: XCTestCase {

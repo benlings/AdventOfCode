@@ -40,5 +40,10 @@ public func day21_1(_ input: String, steps: Int) -> Int {
 }
 
 public func day21_2(_ input: String, steps: Int) -> Int {
-  0
+  let garden = Garden(input)
+  // Separate extrapolation for each grid. initial grid reaches equilibrium some time before 50 steps
+  // Extrapolate positions within each extra grid from their starting Set<Offset>
+  return garden.start.extrapolate(count: steps) { positions in
+    garden.findNext(positions: &positions)
+  }.count
 }

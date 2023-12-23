@@ -24,10 +24,10 @@ final class Day22Tests: XCTestCase {
   }
 
   func testPart2Example() {
-    XCTAssertEqual(day22_2(exampleInput), 0)
+    XCTAssertEqual(day22_2(exampleInput), 7)
   }
 
   func testPart2() {
-    XCTAssertEqual(day22_2(input), 0)
+    XCTAssertEqual(day22_2(input), 61209)
   }
 }

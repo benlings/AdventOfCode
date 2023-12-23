@@ -38,7 +38,9 @@ struct Bricks {
 }
 
 struct DroppedBricks {
+  // bricks above
   var supporting: [Int: Set<Int>]
+  // bricks below
   var supportedBy: [Int: Set<Int>]
 
   init(brickIds: some Sequence<Int>) {
@@ -53,6 +55,21 @@ struct DroppedBricks {
     }
   }
 
+  mutating func remove(brick: Int) -> Set<Int> {
+    let bricksAbove = supporting[brick]!
+    for above in bricksAbove {
+      supportedBy[above, default: []].remove(brick)
+    }
+    for below in supportedBy[brick]! {
+      supporting[below, default: []].remove(brick)
+    }
+    return bricksAbove
+  }
+
+  func isBrick(_ brick: Int, onlySupportedBy other: Int) -> Bool {
+    !supportedBy[brick]!.subtracting([other]).isEmpty
+  }
+
   var countSafeToDisintegrate: Int {
     /*
      Can be disintegrated if:
@@ -60,9 +77,36 @@ struct DroppedBricks {
      * all brick it supports are supported by another brick
      */
     return supporting.count { brick, supporting in
-      supporting.allSatisfy { !supportedBy[$0]!.subtracting([brick]).isEmpty }
+      supporting.allSatisfy { isBrick($0, onlySupportedBy: brick) }
     }
   }
+
+  func chainReaction(brick: Int) -> Int {
+    var removed = Set<Int>()
+    var copy = self
+    var toRemove = [[brick]]
+    while let r = toRemove.popLast() {
+      guard !r.isEmpty else { continue }
+      let above = r.map {
+        removed.insert($0)
+        return copy.remove(brick: $0)
+      }
+      toRemove.append(contentsOf: above.map {
+        $0.filter { copy.supportedBy[$0]!.isEmpty }
+      })
+    }
+    return removed.count - 1
+  }
+
+  var chainReactionTotal: Int {
+    return supporting.map { brick, s in
+      if s.allSatisfy({ !supportedBy[$0]!.subtracting([brick]).isEmpty }) {
+        return 0
+      }
+      return chainReaction(brick: brick)
+    }.sum()
+  }
+
 }
 
 extension Bricks {
@@ -76,5 +120,5 @@ public func day22_1(_ input: String) -> Int {
 }
 
 public func day22_2(_ input: String) -> Int {
-  0
+  Bricks(input).dropBricks().chainReactionTotal
 }

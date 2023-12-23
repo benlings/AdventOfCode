@@ -5,7 +5,7 @@ struct Bricks {
 
   var initialBricks: [Line3D]
 
-  func dropBricks() -> (supporting: [Int: Set<Int>], supportedBy: [Int: Set<Int>]) {
+  func dropBricks() -> DroppedBricks {
     let bricks = initialBricks.sorted(on: { $0.min(axis: .z) }).indexed()
 
     /*
@@ -16,8 +16,7 @@ struct Bricks {
     var stoppedIds: [Line3D: Int] = [:]
 
     // Keep track of which bricks are supporting a brick and supported by a brick
-    var supporting: [Int: Set<Int>] = bricks.indices.map { ($0, Set()) }.toDictionary()
-    var supportedBy: [Int: Set<Int>] = bricks.indices.map { ($0, Set()) }.toDictionary()
+    var droppedBricks = DroppedBricks(brickIds: bricks.indices)
 
     for (i, var brick) in bricks {
       // Move brick until it's one past its resting place
@@ -27,28 +26,41 @@ struct Bricks {
       let cubes = Set(brick.points)
       // Record support while it's intersecting stopped cubes
       let supportingBrickIds = stoppedIds.filter { !cubes.isDisjoint(with: $0.key.points) }.map(\.value)
-      supportedBy[i, default: []].formUnion(supportingBrickIds)
-      for s in supportingBrickIds {
-        supporting[s, default: []].insert(i)
-      }
+      droppedBricks.add(brick: i, supporting: supportingBrickIds)
 
       // move brick back to its resting place before recording it in its stopping place
       brick.move(axis: .z, distance: 1)
       stoppedCubes.formUnion(brick.points)
       stoppedIds[brick] = i
     }
-    return (supporting, supportedBy)
+    return droppedBricks
+  }
+}
+
+struct DroppedBricks {
+  var supporting: [Int: Set<Int>]
+  var supportedBy: [Int: Set<Int>]
+
+  init(brickIds: some Sequence<Int>) {
+    supporting = brickIds.map { ($0, Set()) }.toDictionary()
+    supportedBy = brickIds.map { ($0, Set()) }.toDictionary()
+  }
+
+  mutating func add(brick: Int, supporting supportingBricks: some Sequence<Int>) {
+    supportedBy[brick, default: []].formUnion(supportingBricks)
+    for s in supportingBricks {
+      supporting[s, default: []].insert(brick)
+    }
   }
 
   var countSafeToDisintegrate: Int {
-    let (supporting, supportedBy) = dropBricks()
     /*
      Can be disintegrated if:
      * it supports no bricks
      * all brick it supports are supported by another brick
      */
     return supporting.count { brick, supporting in
-      supporting.isEmpty || supporting.allSatisfy { !supportedBy[$0]!.subtracting([brick]).isEmpty }
+      supporting.allSatisfy { !supportedBy[$0]!.subtracting([brick]).isEmpty }
     }
   }
 }
@@ -60,8 +72,7 @@ extension Bricks {
 }
 
 public func day22_1(_ input: String) -> Int {
-  let bricks = Bricks(input)
-  return bricks.countSafeToDisintegrate
+  Bricks(input).dropBricks().countSafeToDisintegrate
 }
 
 public func day22_2(_ input: String) -> Int {

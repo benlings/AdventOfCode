@@ -42,11 +42,20 @@ public enum Axis3D {
 
 extension Offset3D {
     public subscript(axis axis: Axis3D) -> Int {
+      get {
         switch axis {
         case .x: return x
         case .y: return y
         case .z: return z
         }
+      }
+      set {
+        switch axis {
+        case .x: x = newValue
+        case .y: y = newValue
+        case .z: z = newValue
+        }
+      }
     }
 
     public func manhattanDistance(to other: Offset3D) -> Int {

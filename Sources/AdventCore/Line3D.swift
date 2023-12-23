@@ -4,11 +4,14 @@ public struct Line3D: Hashable {
 
   public init(start: Offset3D, end: Offset3D) {
     self.start = start
-    self.end = end
+    self.direction = end - start
   }
 
   var start: Offset3D
-  var end: Offset3D
+  var end: Offset3D {
+    start + direction
+  }
+  var direction: Offset3D
 
   var length: Int {
     switch orientation {
@@ -18,16 +21,16 @@ public struct Line3D: Hashable {
     }
   }
 
+  public mutating func move(axis: Axis3D, distance: Int) {
+    self.start[axis: axis] += distance
+  }
+
   public func min(axis: Axis3D) -> Int {
     Swift.min(start[axis: axis], end[axis: axis])
   }
 
-  var direction: Offset3D {
-    end - start
-  }
-
   var unitDirection: Offset3D {
-    (end - start) / length
+    direction / length
   }
 
   public var orientation: Axis3D {
@@ -41,7 +44,7 @@ public struct Line3D: Hashable {
   }
 
   public var points: [Offset3D] {
-    guard start != end else { return [start] }
+    guard direction != .zero else { return [start] }
     var point = start
     let offset = unitDirection
     let iterator: AnyIterator<Offset3D> = AnyIterator {
